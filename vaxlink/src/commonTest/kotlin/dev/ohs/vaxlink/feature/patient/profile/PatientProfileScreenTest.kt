@@ -18,7 +18,10 @@ package dev.ohs.vaxlink.feature.patient.profile
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.runComposeUiTest
 import dev.ohs.player.client.registry.LocalViewRegistry
 import dev.ohs.vaxlink.buildAppViewRegistry
@@ -75,10 +78,16 @@ class PatientProfileScreenTest {
     }
 
     waitUntil(timeoutMillis = 5_000L) {
-      onAllNodesWithText("Waiting at facility").fetchSemanticsNodes().isNotEmpty()
+      onAllNodesWithText("Amina Diallo").fetchSemanticsNodes().isNotEmpty()
     }
+    // The summary profile lists many sections; scroll each one into view before looking.
+    onNodeWithTag(PROFILE_LIST_TAG).performScrollToNode(hasText("Amoxicillin 250 mg dispersible"))
     assertTrue(
       onAllNodesWithText("Amoxicillin 250 mg dispersible").fetchSemanticsNodes().isNotEmpty()
     )
+    onNodeWithTag(PROFILE_LIST_TAG).performScrollToNode(hasText("Waiting at facility"))
+    assertTrue(onAllNodesWithText("Waiting at facility").fetchSemanticsNodes().isNotEmpty())
+    onNodeWithTag(PROFILE_LIST_TAG).performScrollToNode(hasText("Immunisations".uppercase()))
+    assertTrue(onAllNodesWithText("None recorded").fetchSemanticsNodes().isNotEmpty())
   }
 }

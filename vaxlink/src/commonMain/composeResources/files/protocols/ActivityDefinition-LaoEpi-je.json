@@ -1,0 +1,25 @@
+{
+  "resourceType": "ActivityDefinition",
+  "id": "LaoEpi-je",
+  "url": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-je",
+  "title": "JE",
+  "description": "Lao PDR schedule dose JE.",
+  "name": "LaoEpiJE",
+  "status": "active",
+  "kind": "Task",
+  "extension": [
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/dose-number",
+      "valueString": "1"
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "code": "JE-9-11M",
+        "system": "https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose",
+        "display": "JE"
+      }
+    ]
+  }
+}

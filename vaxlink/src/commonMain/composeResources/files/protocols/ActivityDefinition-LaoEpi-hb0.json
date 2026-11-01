@@ -1,0 +1,25 @@
+{
+  "resourceType": "ActivityDefinition",
+  "id": "LaoEpi-hb0",
+  "url": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-hb0",
+  "title": "HB0",
+  "description": "Lao PDR schedule dose HB0: Birth dose; HB0-24H on the birth date, HB0-7D within the week.",
+  "name": "LaoEpiHB0",
+  "status": "active",
+  "kind": "Task",
+  "extension": [
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/dose-number",
+      "valueString": "0"
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "code": "HB0-24H",
+        "system": "https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose",
+        "display": "HB0"
+      }
+    ]
+  }
+}

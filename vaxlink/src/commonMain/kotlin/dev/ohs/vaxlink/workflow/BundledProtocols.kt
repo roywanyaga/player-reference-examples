@@ -26,10 +26,32 @@ import dev.ohs.vaxlink.util.FhirJson
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 /**
- * PlanDefinition and ActivityDefinition files bundled under `files/protocols/`. Empty until NE-5
- * adds the Lao PDR schedule PlanDefinition and its ActivityDefinitions for the clinic (J3).
+ * PlanDefinition and ActivityDefinition files bundled under `files/protocols/`: the Lao PDR
+ * immunisation schedule from the VaxLink IG, one ActivityDefinition per dose.
  */
-private val PROTOCOL_FILES: List<String> = emptyList()
+private val PROTOCOL_FILES: List<String> =
+  listOf(
+    "PlanDefinition-LaoEpiSchedule.json",
+    "ActivityDefinition-LaoEpi-hb0.json",
+    "ActivityDefinition-LaoEpi-penta-1.json",
+    "ActivityDefinition-LaoEpi-penta-2.json",
+    "ActivityDefinition-LaoEpi-penta-3.json",
+    "ActivityDefinition-LaoEpi-opv-1.json",
+    "ActivityDefinition-LaoEpi-opv-2.json",
+    "ActivityDefinition-LaoEpi-opv-3.json",
+    "ActivityDefinition-LaoEpi-pcv-1.json",
+    "ActivityDefinition-LaoEpi-pcv-2.json",
+    "ActivityDefinition-LaoEpi-pcv-3.json",
+    "ActivityDefinition-LaoEpi-rota-1.json",
+    "ActivityDefinition-LaoEpi-rota-2.json",
+    "ActivityDefinition-LaoEpi-rota-3.json",
+    "ActivityDefinition-LaoEpi-ipv-1.json",
+    "ActivityDefinition-LaoEpi-ipv-2.json",
+    "ActivityDefinition-LaoEpi-ipv-3.json",
+    "ActivityDefinition-LaoEpi-mr-1.json",
+    "ActivityDefinition-LaoEpi-je.json",
+    "ActivityDefinition-LaoEpi-mr-2.json",
+  )
 
 class BundledProtocols(private val resources: List<Resource>) : CanonicalResolver {
 

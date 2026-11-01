@@ -10,6 +10,7 @@
     <string name="login_error_dismiss">Dismiss</string>
 
     <!-- Home screen -->
+    <string name="home_destination_households">Households</string>
     <string name="home_destination_patients">Patients</string>
     <string name="home_registers">Registers</string>
     <string name="home_signed_in">Signed in</string>
@@ -53,6 +54,7 @@
     <string name="care_status_done">Done</string>
     <string name="care_status_referred">Referred</string>
     <string name="care_status_follow_up_due">Follow-up due</string>
+    <string name="care_status_needs_verification">Needs verification</string>
     <string name="care_status_waiting">Waiting</string>
     <string name="care_status_seen">Seen</string>
     <string name="care_opd_visit">OPD visit</string>
@@ -65,6 +67,32 @@
     <string name="patient_profile_default_name">Patient</string>
     <string name="patient_profile_back">Back</string>
     <string name="patient_profile_not_found">Patient not found</string>
+    <string name="patient_profile_household">Household: %1$s</string>
+    <string name="profile_none_recorded">None recorded</string>
+    <string name="record_recorded_on">Recorded %1$s</string>
+    <string name="immunization_lot">Lot %1$s</string>
+    <string name="immunization_verified">Verified</string>
+    <string name="immunization_not_verified">Not verified</string>
+    <string name="immunization_lao_dose">Lao schedule: %1$s</string>
+    <string name="immunization_foreign_dose">Foreign dose, not on the Lao schedule</string>
+    <string name="task_due_window">Due %1$s to %2$s</string>
+    <string name="task_overdue">Overdue</string>
+    <string name="task_plan_lao_schedule">Lao immunisation schedule</string>
+    <string name="referral_refer_to_clinic">Refer to clinic</string>
+    <string name="referral_referred">Referred to the clinic</string>
+
+    <!-- Households (NE-2) -->
+    <string name="household_list_empty">No households</string>
+    <string name="household_list_register">Register household</string>
+    <string name="household_back">Back</string>
+    <string name="household_not_found">Household not found</string>
+    <string name="household_members">Members</string>
+    <string name="household_head">Head</string>
+    <string name="household_head_name">Head of household: %1$s</string>
+    <string name="household_member_count">%1$s members</string>
+    <string name="household_village">Village %1$s</string>
+    <string name="household_add_member">Add member</string>
+    <string name="household_register_newborn">Register newborn</string>
 
     <!-- Questionnaire screen -->
     <string name="questionnaire_title">Questionnaire</string>
@@ -104,6 +132,12 @@
     <string name="scan_trust_list">Trust list: %1$s, fetched %2$s ago</string>
     <string name="scan_trust_list_bundled">Trust list: bundled copy, %1$s old</string>
     <string name="scan_trust_list_none">No trust list on this device</string>
+    <string name="scan_record">Record on this child's record</string>
+    <string name="scan_recorded">Recorded</string>
+    <string name="scan_recorded_already">This card is already recorded</string>
+    <string name="scan_recorded_lao">Recorded as Lao schedule dose %1$s</string>
+    <string name="scan_recorded_foreign">Recorded as a foreign dose, not on the Lao schedule</string>
+    <string name="scan_recorded_none">This certificate carries no vaccination entry</string>
     <string name="scan_camera_unavailable">Camera scanning is not available on this platform. Paste the certificate text below.</string>
     <string name="scan_camera_permission">Camera permission is needed to scan a certificate.</string>
 </resources>

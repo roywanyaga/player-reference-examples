@@ -21,25 +21,30 @@ import dev.ohs.player.generated.state.PatientSummaryState
 import dev.ohs.vaxlink.feature.component.common.Chip
 import dev.ohs.vaxlink.generated.resources.Res
 import dev.ohs.vaxlink.generated.resources.care_status_follow_up_due
+import dev.ohs.vaxlink.generated.resources.care_status_needs_verification
 import dev.ohs.vaxlink.generated.resources.care_status_referred
 import dev.ohs.vaxlink.generated.resources.work_seen_at_facility
 import org.jetbrains.compose.resources.stringResource
 
 /** Where a patient stands in the referral loop, as shown on their list row and header. */
 enum class CareStatus {
+  /** A foreign immunisation record is on file and no referral has gone to the clinic yet. */
+  NeedsVerification,
   Referred,
   SeenAtFacility,
   FollowUpDue,
 }
 
 /**
- * An open follow-up comes first; otherwise the latest referral decides, and a completed referral
- * whose follow-up is already done means the loop is closed.
+ * An open follow-up comes first; then an open referral; then a foreign record still waiting for a
+ * referral; otherwise a completed referral whose follow-up is already done means the loop is
+ * closed.
  */
 fun PatientSummaryState.careStatus(): CareStatus? =
   when {
     followUpStatus == "requested" -> CareStatus.FollowUpDue
     referralStatus == "active" -> CareStatus.Referred
+    unverifiedImmunizationId != null -> CareStatus.NeedsVerification
     referralStatus == "completed" && followUpFocus != "ServiceRequest/$referralId" ->
       CareStatus.SeenAtFacility
     else -> null
@@ -49,6 +54,9 @@ fun PatientSummaryState.careStatus(): CareStatus? =
 fun CareStatusChip(status: CareStatus) {
   val (label, color) =
     when (status) {
+      CareStatus.NeedsVerification ->
+        stringResource(Res.string.care_status_needs_verification) to
+          MaterialTheme.colorScheme.tertiary
       CareStatus.Referred ->
         stringResource(Res.string.care_status_referred) to MaterialTheme.colorScheme.error
       CareStatus.SeenAtFacility ->

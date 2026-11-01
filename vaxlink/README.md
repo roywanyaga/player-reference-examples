@@ -50,22 +50,22 @@ Each run also grants the account `ORG_SCOPE_EXEMPT` and the `GET_*`/`PUT_*` role
 
 ### Demo data
 
-The seed creates only what three users need to sign in and sync, and no patients. Ids are fixed UUIDs in [`scripts/seed-bundle.json`](./scripts/seed-bundle.json), so re-running updates rather than duplicates.
+The seed creates what three users need to sign in and sync, plus the family the story starts with. Ids are fixed UUIDs in [`scripts/seed-bundle.json`](./scripts/seed-bundle.json), so re-running updates rather than duplicates. Names are realistic but fictional; dates are placeholders.
 
 ```
-Kiambu County Department of Health          county code 022
-└─ Ruiru Sub-County Health Management Team
-   └─ Kimbo Health Centre                    KE-022-0417     Outpatient Department
-      └─ Kimbo Community Health Unit         KE-022-0417-01  Kimbo Village
+Vientiane Capital Health Department               LA-01
+└─ Sikhottabong District Health Office             LA-01-04
+   └─ Nongbuathong Health Centre                   LA-01-0412     Outpatient Department
+      └─ Ban Nongbuathong Community Health Unit    LA-01-0412-01  Ban Nongbuathong
 ```
 
 | User | Password | Name | Role | Organization |
 |---|---|---|---|---|
-| `chw1` | `chw_1234!` | Mwanaisha Juma Mwinyi | `chw` | Kimbo Community Health Unit |
-| `nurse1` | `nurse_1234!` | Kadzo Zawadi Baya | `nurse` | Kimbo Health Centre |
-| `clinician1` | `clinician_1234!` | Hamisi Kazungu Charo | `clinician` | Kimbo Health Centre |
+| `chw1` | `chw_1234!` | Soukanh Inthavong | `chw` | Ban Nongbuathong Community Health Unit |
+| `nurse1` | `nurse_1234!` | Chanthasone Vongsa | `nurse` | Nongbuathong Health Centre |
+| `clinician1` | `clinician_1234!` | Somphone Keomany | `clinician` | Nongbuathong Health Centre |
 
-CHW referrals go to Kimbo Health Centre, the unit's `partOf`. Names and codes are realistic but fictional. The server is public, so these passwords are for demos only.
+The Souvannalath household is seeded in the community unit's catchment with the father, Khamsing, as head and the mother, Mali. The newborn, Chanthala, is not seeded: the CHW registers her in the demo and scans her two cards. CHW referrals go to Nongbuathong Health Centre, the unit's `partOf`. The server is public, so these passwords are for demos only.
 
 ## Run
 

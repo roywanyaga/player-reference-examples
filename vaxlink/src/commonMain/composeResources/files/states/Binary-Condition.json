@@ -1,0 +1,36 @@
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "url": "http://ohs.dev/ViewDefinition/Condition",
+  "fhirVersion": [
+    "4.0.1"
+  ],
+  "select": [
+    {
+      "column": [
+        {
+          "name": "conditionId",
+          "path": "id",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "conditionName",
+          "path": "iif(code.text.exists(), code.text, code.coding.display.first())",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "clinicalStatus",
+          "path": "clinicalStatus.coding.code.first()",
+          "type": "http://hl7.org/fhir/StructureDefinition/code"
+        },
+        {
+          "name": "recordedOn",
+          "path": "recordedDate",
+          "type": "http://hl7.org/fhir/StructureDefinition/dateTime"
+        }
+      ]
+    }
+  ],
+  "name": "Condition",
+  "status": "active",
+  "resource": "Condition"
+}

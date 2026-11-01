@@ -1,0 +1,41 @@
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "url": "http://ohs.dev/ViewDefinition/Relationship",
+  "fhirVersion": [
+    "4.0.1"
+  ],
+  "select": [
+    {
+      "column": [
+        {
+          "name": "relationshipId",
+          "path": "id",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "relationshipCode",
+          "path": "relationship.coding.code.first()",
+          "type": "http://hl7.org/fhir/StructureDefinition/code"
+        },
+        {
+          "name": "relationshipLabel",
+          "path": "relationship.coding.display.first()",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "relatedName",
+          "path": "name.text.first()",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "relatedPatientId",
+          "path": "extension.where(url = 'https://nawitech.github.io/vaxlink-ig/StructureDefinition/related-patient').value.reference.substring(8).first()",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        }
+      ]
+    }
+  ],
+  "name": "Relationship",
+  "status": "active",
+  "resource": "RelatedPerson"
+}

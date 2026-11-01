@@ -61,6 +61,12 @@ import dev.ohs.vaxlink.generated.resources.scan_field_name
 import dev.ohs.vaxlink.generated.resources.scan_field_vaccine
 import dev.ohs.vaxlink.generated.resources.scan_not_verified
 import dev.ohs.vaxlink.generated.resources.scan_paste_label
+import dev.ohs.vaxlink.generated.resources.scan_record
+import dev.ohs.vaxlink.generated.resources.scan_recorded
+import dev.ohs.vaxlink.generated.resources.scan_recorded_already
+import dev.ohs.vaxlink.generated.resources.scan_recorded_foreign
+import dev.ohs.vaxlink.generated.resources.scan_recorded_lao
+import dev.ohs.vaxlink.generated.resources.scan_recorded_none
 import dev.ohs.vaxlink.generated.resources.scan_scan_again
 import dev.ohs.vaxlink.generated.resources.scan_title
 import dev.ohs.vaxlink.generated.resources.scan_trust_list
@@ -70,31 +76,42 @@ import dev.ohs.vaxlink.generated.resources.scan_use_text
 import dev.ohs.vaxlink.generated.resources.scan_verified
 import dev.ohs.vaxlink.generated.resources.scan_verify
 import dev.ohs.vaxlink.generated.resources.scan_working
+import dev.ohs.vaxlink.hcert.DoseProposal
 import dev.ohs.vaxlink.hcert.DvcMin
 import dev.ohs.vaxlink.hcert.HcertClock
 import dev.ohs.vaxlink.hcert.PreQualProducts
 import dev.ohs.vaxlink.hcert.TrustListSnapshot
+import dev.ohs.vaxlink.workflow.RecordOutcome
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 /**
- * The profile action NE-2 and NE-3 build on: a button that opens the scanner. The CHW role reads
- * without verifying; the clinic roles verify first. Recording the result as an Immunization is the
- * next ticket's job; this screen proves the scan, decode and verify path on the device.
+ * The profile action: a button that opens the scanner. The CHW role reads without verifying and
+ * records the card on the child's record (J2, NE-2); the clinic roles verify first (J3). With no
+ * [patientId] the screen only proves the scan, decode and verify path on the device.
  */
 @Composable
-fun ScanCertificateAction(mode: ScanMode, modifier: Modifier = Modifier) {
+fun ScanCertificateAction(
+  mode: ScanMode,
+  patientId: String? = null,
+  modifier: Modifier = Modifier,
+) {
   var open by remember { mutableStateOf(false) }
   Button(onClick = { open = true }, modifier = modifier.fillMaxWidth()) {
     Text(stringResource(Res.string.scan_action))
   }
-  if (open) CertificateScanDialog(mode = mode, onDismiss = { open = false })
+  if (open) {
+    CertificateScanDialog(mode = mode, patientId = patientId, onDismiss = { open = false })
+  }
 }
 
 @Composable
-fun CertificateScanDialog(mode: ScanMode, onDismiss: () -> Unit) {
-  val viewModel = koinViewModel<CertificateScanViewModel>(key = mode.name) { parametersOf(mode) }
+fun CertificateScanDialog(mode: ScanMode, patientId: String? = null, onDismiss: () -> Unit) {
+  val viewModel =
+    koinViewModel<CertificateScanViewModel>(key = "${mode.name}:$patientId") {
+      parametersOf(mode, patientId)
+    }
   val state by viewModel.uiState.collectAsStateWithLifecycle()
   Dialog(
     onDismissRequest = onDismiss,
@@ -132,14 +149,54 @@ fun CertificateScanDialog(mode: ScanMode, onDismiss: () -> Unit) {
               stage.hcert.dvc?.let { CertificateFields(it, viewModel.products) }
               Field(stringResource(Res.string.scan_field_issuer), stage.hcert.iss ?: "?")
               TrustListLine(state.trustList)
+              state.scanError?.let { Text(it, color = MaterialTheme.colorScheme.error) }
               Spacer(Modifier.height(16.dp))
+              if (mode == ScanMode.ReadOnly && viewModel.canRecord) {
+                Button(onClick = viewModel::recordDecoded, Modifier.fillMaxWidth()) {
+                  Text(stringResource(Res.string.scan_record))
+                }
+              }
               if (mode == ScanMode.ReadOnly) {
-                Button(onClick = viewModel::verifyDecoded, Modifier.fillMaxWidth()) {
+                OutlinedButton(onClick = viewModel::verifyDecoded, Modifier.fillMaxWidth()) {
                   Text(stringResource(Res.string.scan_verify))
                 }
               }
               OutlinedButton(onClick = viewModel::reset, Modifier.fillMaxWidth()) {
                 Text(stringResource(Res.string.scan_scan_again))
+              }
+            }
+          is ScanStage.Recorded ->
+            Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
+              val outcome = stage.outcome
+              Badge(
+                stringResource(
+                  if (outcome is RecordOutcome.Recorded) Res.string.scan_recorded
+                  else Res.string.scan_recorded_already
+                ),
+                if (outcome is RecordOutcome.Recorded) MaterialTheme.colorScheme.primary
+                else MaterialTheme.colorScheme.error,
+              )
+              Text(
+                when (outcome) {
+                  is RecordOutcome.Recorded ->
+                    when (val proposal = outcome.proposal) {
+                      is DoseProposal.Mapped ->
+                        stringResource(
+                          Res.string.scan_recorded_lao,
+                          proposal.display ?: proposal.code,
+                        )
+                      else -> stringResource(Res.string.scan_recorded_foreign)
+                    }
+                  is RecordOutcome.AlreadyRecorded ->
+                    stringResource(Res.string.scan_recorded_already)
+                  RecordOutcome.NoVaccination -> stringResource(Res.string.scan_recorded_none)
+                },
+                style = MaterialTheme.typography.bodyLarge,
+              )
+              stage.hcert.dvc?.let { CertificateFields(it, viewModel.products) }
+              Spacer(Modifier.height(16.dp))
+              Button(onClick = onDismiss, Modifier.fillMaxWidth()) {
+                Text(stringResource(Res.string.scan_done))
               }
             }
           is ScanStage.Verified ->

@@ -16,6 +16,8 @@
 package dev.ohs.vaxlink.data.repository
 
 import dev.ohs.fhir.model.r4.Resource
+import dev.ohs.vaxlink.feature.patient.CareStatus
+import dev.ohs.vaxlink.feature.patient.careStatus
 import dev.ohs.vaxlink.util.FhirJson
 import dev.ohs.vaxlink.util.calendarDate
 import kotlin.test.Test
@@ -92,6 +94,95 @@ class PatientCareRecordTest {
     )
   }
 
+  private suspend fun chanthala() =
+    store(
+      """{"resourceType":"Patient","id":"baby","name":[{"given":["Chanthala"],"family":"SOUVANNALATH"}],
+         "gender":"female","birthDate":"2026-10-21"}""",
+      """{"resourceType":"Patient","id":"mali","name":[{"given":["Mali"],"family":"SOUVANNALATH"}],"gender":"female"}""",
+      """{"resourceType":"Group","id":"hh","type":"person","actual":true,"active":true,"name":"Souvannalath household",
+         "code":{"coding":[{"system":"http://hl7.org/fhir/group-code","code":"household"}]},
+         "characteristic":[{"code":{"coding":[{"system":"http://smartregister.org/fhir/CodeSystem/household","code":"village"}]},
+           "valueCodeableConcept":{"text":"Ban Nongbuathong"},"exclude":false}],
+         "member":[{"entity":{"reference":"Patient/mali"},"extension":[{"url":"http://smartregister.org/fhir/StructureDefinition/group-member-involvement",
+           "valueCodeableConcept":{"coding":[{"system":"http://hl7.org/fhir/group-involvement","code":"primary-contact"}]}}]},
+           {"entity":{"reference":"Patient/baby"}}]}""",
+      """{"resourceType":"RelatedPerson","id":"rp-mother","patient":{"reference":"Patient/baby"},
+         "relationship":[{"coding":[{"system":"http://terminology.hl7.org/CodeSystem/v3-RoleCode","code":"MTH","display":"Mother"}]}],
+         "name":[{"text":"Mali SOUVANNALATH"}],
+         "extension":[{"url":"https://nawitech.github.io/vaxlink-ig/StructureDefinition/related-patient","valueReference":{"reference":"Patient/mali"}}]}""",
+      """{"resourceType":"Immunization","id":"imm-hepb","status":"completed","primarySource":false,"lotNumber":"HEPB-2026-0914",
+         "identifier":[{"system":"http://ohs.dev/vaxlink/identifier/hcert-sha256","value":"abc"}],
+         "vaccineCode":{"text":"Hepatitis B Vaccine (rDNA) (Paediatric)","coding":[
+           {"system":"http://smart.who.int/pcmt-vaxprequal/CodeSystem/PreQualProductIds","code":"a3K3X000006MiiXUAS"},
+           {"system":"https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose","code":"HB0-24H","display":"HB0 <24 Hours"}]},
+         "patient":{"reference":"Patient/baby"},"occurrenceDateTime":"2026-10-21"}""",
+      """{"resourceType":"Immunization","id":"imm-bcg","status":"completed","primarySource":false,"lotNumber":"BCG-2026-0477",
+         "vaccineCode":{"text":"BCG Vaccine","coding":[
+           {"system":"http://smart.who.int/pcmt-vaxprequal/CodeSystem/PreQualProductIds","code":"a3K3X000006MiiCUAS"}]},
+         "patient":{"reference":"Patient/baby"},"occurrenceDateTime":"2026-10-22"}""",
+      """{"resourceType":"Task","id":"task-hb0","status":"completed","intent":"plan",
+         "instantiatesCanonical":"https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-hb0",
+         "code":{"text":"HB0","coding":[{"system":"https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose","code":"HB0-24H"}]},
+         "for":{"reference":"Patient/baby"},"restriction":{"period":{"start":"2026-10-21","end":"2026-10-28"}}}""",
+      """{"resourceType":"Task","id":"task-penta1","status":"requested","intent":"plan",
+         "instantiatesCanonical":"https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-penta-1",
+         "code":{"text":"Penta 1"},"for":{"reference":"Patient/baby"},
+         "restriction":{"period":{"start":"2026-11-25","end":"2026-12-30"}}}""",
+      """{"resourceType":"Condition","id":"cond","clinicalStatus":{"coding":[{"code":"active"}]},
+         "code":{"text":"Low birth weight"},"subject":{"reference":"Patient/baby"},"recordedDate":"2026-10-21"}""",
+      """{"resourceType":"AllergyIntolerance","id":"allergy","criticality":"high","code":{"text":"Penicillin"},
+         "patient":{"reference":"Patient/baby"},"recordedDate":"2026-10-22"}""",
+      """{"resourceType":"MedicationStatement","id":"ms","status":"active",
+         "medicationCodeableConcept":{"text":"Vitamin K"},"subject":{"reference":"Patient/baby"},"dateAsserted":"2026-10-21"}""",
+    )
+
+  @Test
+  fun theSummaryProfileCarriesEverySectionForANewborn() = runTest {
+    chanthala()
+
+    val profile = patients.getPatientProfile("baby")
+
+    assertEquals(
+      "Souvannalath household" to "Ban Nongbuathong",
+      profile.household?.householdName to profile.household?.village,
+    )
+    assertEquals("mali", profile.household?.headId)
+    assertEquals(
+      listOf("Mali SOUVANNALATH" to "Mother"),
+      profile.relationships.map { it.relatedName to it.relationshipLabel },
+    )
+    assertEquals(listOf("imm-bcg", "imm-hepb"), profile.immunizations.map { it.immunizationId })
+    val hepb = profile.immunizations.single { it.immunizationId == "imm-hepb" }
+    assertEquals("Hepatitis B Vaccine (rDNA) (Paediatric)", hepb.vaccineName)
+    assertEquals("2026-10-21", hepb.givenOn.calendarDate())
+    assertEquals("HEPB-2026-0914", hepb.lotNumber)
+    assertEquals(false, hepb.verified)
+    assertEquals("HB0-24H" to "HB0 <24 Hours", hepb.laoDoseCode to hepb.laoDoseDisplay)
+    assertEquals("abc", hepb.certificateFingerprint)
+    val bcg = profile.immunizations.single { it.immunizationId == "imm-bcg" }
+    assertEquals("a3K3X000006MiiCUAS", bcg.preQualCode)
+    assertEquals(null, bcg.laoDoseCode)
+    assertEquals(
+      listOf("Low birth weight" to "active"),
+      profile.conditions.map { it.conditionName to it.clinicalStatus },
+    )
+    assertEquals(
+      listOf("Penicillin" to "high"),
+      profile.allergies.map { it.allergyName to it.allergyCriticality },
+    )
+    assertEquals(listOf("Vitamin K"), profile.medicationStatements.map { it.statementMedicine })
+    assertEquals(
+      listOf("HB0" to "completed", "Penta 1" to "requested"),
+      profile.careTasks.map { it.taskTitle to it.taskStatus },
+    )
+    assertEquals("2026-12-30", profile.careTasks[1].dueBy.calendarDate())
+    assertEquals(true, profile.needsVerification)
+    assertEquals(false, profile.referred)
+    assertEquals(emptyList(), profile.followUps)
+    val row = patients.getPatients().single { it.patientId == "baby" }
+    assertEquals(CareStatus.NeedsVerification, row.careStatus())
+  }
+
   @Test
   fun theRegisterReadsEachTableOncePerRefresh() = runTest {
     store(
@@ -109,6 +200,9 @@ class PatientCareRecordTest {
       }
 
     assertEquals(3, PatientRepository(counting).getPatients().size)
-    assertEquals(mapOf("Patient" to 1, "ServiceRequest" to 1, "Task" to 1), reads.toMap())
+    assertEquals(
+      mapOf("Patient" to 1, "ServiceRequest" to 1, "Task" to 1, "Immunization" to 1),
+      reads.toMap(),
+    )
   }
 }

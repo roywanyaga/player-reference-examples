@@ -22,15 +22,25 @@ import kotlin.test.Test
 import kotlin.test.assertTrue
 import kotlinx.serialization.json.Json
 
-/** Types and params the org-scoped gateway allows; anything else is a 403 at sync time. */
+/**
+ * Types and params the org-scoped gateway allows; anything else is a 403 at sync time. NE-2 adds
+ * the household and record types (Group, RelatedPerson, Immunization, Condition,
+ * MedicationStatement, AllergyIntolerance), which the gateway's allow-list has to gain too.
+ */
 private val GATEWAY_ALLOWED_TYPES =
   setOf(
     "Patient",
+    "Group",
+    "RelatedPerson",
+    "Immunization",
     "Encounter",
     "Observation",
+    "Condition",
+    "AllergyIntolerance",
     "QuestionnaireResponse",
     "ServiceRequest",
     "MedicationRequest",
+    "MedicationStatement",
     "Task",
     "CarePlan",
     "Procedure",

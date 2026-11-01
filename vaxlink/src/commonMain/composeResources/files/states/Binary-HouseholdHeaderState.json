@@ -1,0 +1,16 @@
+{
+  "resourceType": "http://ohs.dev/StructureDefinition/ViewJoinMap",
+  "name": "householdHeader",
+  "from": "root",
+  "resource": "Group",
+  "view": "Household",
+  "joins": [
+    {
+      "view": "HouseholdHeadPerson",
+      "from": "included",
+      "resource": "Patient",
+      "searchParam": "member",
+      "matchKey": "headId"
+    }
+  ]
+}

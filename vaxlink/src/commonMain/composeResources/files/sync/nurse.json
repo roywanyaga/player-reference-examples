@@ -4,12 +4,39 @@
       "type": "Patient"
     },
     {
+      "type": "Group"
+    },
+    {
+      "type": "RelatedPerson"
+    },
+    {
+      "type": "Immunization"
+    },
+    {
       "type": "ServiceRequest",
       "params": {
         "code": "http://snomed.info/sct|3457005",
         "intent": "order",
         "performer": "Organization/{organization}"
       }
+    },
+    {
+      "type": "Task"
+    },
+    {
+      "type": "CarePlan"
+    },
+    {
+      "type": "Condition"
+    },
+    {
+      "type": "MedicationStatement"
+    },
+    {
+      "type": "AllergyIntolerance"
+    },
+    {
+      "type": "Observation"
     },
     {
       "type": "Encounter",

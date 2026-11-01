@@ -16,6 +16,7 @@
 package dev.ohs.vaxlink.data.di
 
 import dev.ohs.fhir.engine.FhirEngineProvider
+import dev.ohs.fhir.workflow.FhirOperator
 import dev.ohs.vaxlink.auth.AuthService
 import dev.ohs.vaxlink.auth.AuthViewModel
 import dev.ohs.vaxlink.auth.OAuthConfig
@@ -29,11 +30,15 @@ import dev.ohs.vaxlink.data.hcert.HcertService
 import dev.ohs.vaxlink.data.hcert.createTrustListDataStore
 import dev.ohs.vaxlink.data.repository.FhirEngineRepository
 import dev.ohs.vaxlink.data.repository.FhirRepository
+import dev.ohs.vaxlink.data.repository.HouseholdRepository
 import dev.ohs.vaxlink.data.repository.PatientRepository
 import dev.ohs.vaxlink.data.sync.DataStoreInitialSyncStore
 import dev.ohs.vaxlink.data.sync.InitialSyncStore
 import dev.ohs.vaxlink.data.sync.createSyncTimestampDataStore
+import dev.ohs.vaxlink.data.terminology.BundledTerminology
 import dev.ohs.vaxlink.feature.home.HomeViewModel
+import dev.ohs.vaxlink.feature.household.HouseholdListViewModel
+import dev.ohs.vaxlink.feature.household.HouseholdViewModel
 import dev.ohs.vaxlink.feature.patient.list.PatientListViewModel
 import dev.ohs.vaxlink.feature.patient.profile.PatientProfileViewModel
 import dev.ohs.vaxlink.feature.questionnaire.QuestionnaireHostViewModel
@@ -44,7 +49,12 @@ import dev.ohs.vaxlink.feature.scan.CertificateScanViewModel
 import dev.ohs.vaxlink.feature.scan.ScanMode
 import dev.ohs.vaxlink.feature.sync.InitialSyncViewModel
 import dev.ohs.vaxlink.hcert.TrustListCache
+import dev.ohs.vaxlink.workflow.BundledProtocols
+import dev.ohs.vaxlink.workflow.CertificateRecorder
 import dev.ohs.vaxlink.workflow.EngineTransactor
+import dev.ohs.vaxlink.workflow.EngineWorkflowRepository
+import dev.ohs.vaxlink.workflow.LaoScheduleService
+import dev.ohs.vaxlink.workflow.ReferralService
 import dev.ohs.vaxlink.workflow.Transactor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -67,12 +77,26 @@ internal val fhirEngineRepositoryModule = module {
  */
 internal val repositoryModule = module {
   single { PatientRepository(get()) }
+  single { HouseholdRepository(get()) }
   single { CoroutineScope(SupervisorJob() + Dispatchers.Default) }
 }
 
 internal val serviceModule = module {
   single<Transactor> { EngineTransactor(get()) }
-  factory { QuestionnaireService(get(), get()) }
+  // The Lao schedule runs through the workflow library over the engine, with the bundled plan.
+  single {
+    LaoScheduleService(
+      get(),
+      operatorFactory = {
+        FhirOperator(EngineWorkflowRepository(get()), resolver = BundledProtocols.load())
+      },
+      protocolsFactory = { BundledProtocols.load() },
+    )
+  }
+  single { BundledTerminology() }
+  single { CertificateRecorder(get(), get(), get(), get()) }
+  single { ReferralService(get()) }
+  factory { QuestionnaireService(get(), get(), get()) }
   // The GDHCN DEV trust list: bundled until the first sync fetches a fresh copy.
   single {
     TrustListCache(
@@ -122,7 +146,11 @@ internal val viewModelModule = module {
       afterSync = { getOrNull<HcertService>()?.refreshTrustListQuietly() },
     )
   }
-  viewModel { (mode: ScanMode) -> CertificateScanViewModel(get(), mode) }
+  viewModel { (mode: ScanMode, patientId: String?) ->
+    CertificateScanViewModel(get(), mode, patientId, recorder = getOrNull())
+  }
+  viewModel { HouseholdListViewModel(get()) }
+  viewModel { (householdId: String) -> HouseholdViewModel(householdId, get()) }
   viewModel { AuthViewModel(get(), get()) }
   viewModel {
     UserContextViewModel(

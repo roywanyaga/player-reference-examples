@@ -4,16 +4,37 @@
       "type": "Patient"
     },
     {
+      "type": "Group",
+      "params": {
+        "managing-entity": "Organization/{organization}"
+      }
+    },
+    {
+      "type": "RelatedPerson"
+    },
+    {
+      "type": "Immunization"
+    },
+    {
       "type": "ServiceRequest",
       "params": {
         "requester": "Practitioner/{practitioner}"
       }
     },
     {
-      "type": "Procedure",
-      "params": {
-        "code": "http://snomed.info/sct|3457005"
-      }
+      "type": "Task"
+    },
+    {
+      "type": "CarePlan"
+    },
+    {
+      "type": "Encounter"
+    },
+    {
+      "type": "Observation"
+    },
+    {
+      "type": "Condition"
     },
     {
       "type": "MedicationRequest",
@@ -22,10 +43,15 @@
       }
     },
     {
-      "type": "Task",
+      "type": "MedicationStatement"
+    },
+    {
+      "type": "AllergyIntolerance"
+    },
+    {
+      "type": "Procedure",
       "params": {
-        "owner": "Practitioner/{practitioner}",
-        "code": "http://ohs.dev/fhir/CodeSystem/task-type|iccm-follow-up"
+        "code": "http://snomed.info/sct|3457005"
       }
     },
     {

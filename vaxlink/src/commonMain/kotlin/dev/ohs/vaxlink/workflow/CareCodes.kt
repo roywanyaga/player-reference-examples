@@ -26,3 +26,30 @@ const val REFERRAL_CODE = "3457005"
  * sits in `files/states/Binary-FollowUp.json` and `files/sync/chw.json`; rename all three together.
  */
 const val FOLLOW_UP_TASK = "iccm-follow-up"
+
+/** The VaxLink IG: the Lao schedule plan and its dose code system. */
+const val LAO_SCHEDULE_PLAN = "https://nawitech.github.io/vaxlink-ig/PlanDefinition/LaoEpiSchedule"
+const val LAO_DOSE_SYSTEM = "https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose"
+
+/**
+ * On a vaccineCode coding: `automatic` when the national map added it, `confirmed` when a clinician
+ * did.
+ */
+const val CODING_ORIGIN_EXTENSION =
+  "https://nawitech.github.io/vaxlink-ig/StructureDefinition/coding-origin"
+
+/** On a RelatedPerson: the Patient record of the related person, when they are registered too. */
+const val RELATED_PATIENT_EXTENSION =
+  "https://nawitech.github.io/vaxlink-ig/StructureDefinition/related-patient"
+
+/* The eCHIS conventions the household model and the schedule plan use, kept so the content ports. */
+const val SCHEDULE_OFFSET_EXTENSION =
+  "http://smartregister.org/fhir/StructureDefinition/schedule-offset"
+const val GROUP_MEMBER_INVOLVEMENT_EXTENSION =
+  "http://smartregister.org/fhir/StructureDefinition/group-member-involvement"
+const val GROUP_INVOLVEMENT_SYSTEM = "http://hl7.org/fhir/group-involvement"
+const val HOUSEHOLD_CHARACTERISTIC_SYSTEM = "http://smartregister.org/fhir/CodeSystem/household"
+const val GROUP_CODE_SYSTEM = "http://hl7.org/fhir/group-code"
+const val V3_ROLE_CODE = "http://terminology.hl7.org/CodeSystem/v3-RoleCode"
+const val HCERT_FINGERPRINT_SYSTEM = "http://ohs.dev/vaxlink/identifier/hcert-sha256"
+const val REFERRAL_REASON_FOREIGN_RECORD = "Foreign immunization record to verify"

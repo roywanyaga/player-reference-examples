@@ -68,13 +68,19 @@ fun QuestionnaireHostScreen(
   questionnaireId: String,
   patientId: String? = null,
   taskId: String? = null,
+  householdId: String? = null,
   user: UserContext? = null,
   onBack: () -> Unit,
   onSubmitted: (message: String) -> Unit,
 ) {
   val launchContext =
-    remember(patientId, user, taskId) {
-      QuestionnaireLaunchContext(patientId = patientId, user = user, taskId = taskId)
+    remember(patientId, user, taskId, householdId) {
+      QuestionnaireLaunchContext(
+        patientId = patientId,
+        user = user,
+        taskId = taskId,
+        householdId = householdId,
+      )
     }
   val viewItemMatchersProvider = remember {
     object : QuestionnaireItemViewFactoryMatchersProvider {
@@ -83,7 +89,9 @@ fun QuestionnaireHostScreen(
   }
 
   val viewModel =
-    koinViewModel<QuestionnaireHostViewModel>(key = "$questionnaireId:$patientId:$taskId") {
+    koinViewModel<QuestionnaireHostViewModel>(
+      key = "$questionnaireId:$patientId:$taskId:$householdId"
+    ) {
       parametersOf(questionnaireId, launchContext)
     }
   val uiState by viewModel.uiState.collectAsState()

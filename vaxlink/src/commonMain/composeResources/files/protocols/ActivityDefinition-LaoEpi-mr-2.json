@@ -1,0 +1,25 @@
+{
+  "resourceType": "ActivityDefinition",
+  "id": "LaoEpi-mr-2",
+  "url": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-mr-2",
+  "title": "MR 2",
+  "description": "Lao PDR schedule dose MR 2: Given at 12 to 18 months; MR2-19-59M is the catch-up coding.",
+  "name": "LaoEpiMR2",
+  "status": "active",
+  "kind": "Task",
+  "extension": [
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/dose-number",
+      "valueString": "2"
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "code": "MR2-12-18M",
+        "system": "https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose",
+        "display": "MR 2"
+      }
+    ]
+  }
+}

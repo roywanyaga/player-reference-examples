@@ -1,0 +1,46 @@
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "url": "http://ohs.dev/ViewDefinition/Household",
+  "fhirVersion": [
+    "4.0.1"
+  ],
+  "select": [
+    {
+      "column": [
+        {
+          "name": "householdId",
+          "path": "id",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "householdName",
+          "path": "name",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "memberCount",
+          "path": "member.count().toString()",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "village",
+          "path": "characteristic.where(code.coding.code = 'village').value.text.first()",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "headId",
+          "path": "member.where(extension.where(url = 'http://smartregister.org/fhir/StructureDefinition/group-member-involvement').value.coding.where(code = 'primary-contact').exists()).entity.reference.substring(8).first()",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "householdActive",
+          "path": "active",
+          "type": "http://hl7.org/fhir/StructureDefinition/boolean"
+        }
+      ]
+    }
+  ],
+  "name": "Household",
+  "status": "active",
+  "resource": "Group"
+}

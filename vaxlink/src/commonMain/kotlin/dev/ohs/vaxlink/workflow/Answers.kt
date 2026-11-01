@@ -43,6 +43,9 @@ fun QuestionnaireResponse.string(linkId: String): String? =
 fun QuestionnaireResponse.code(linkId: String): String? =
   (answer(linkId) as? Value.Coding)?.value?.code?.value
 
+fun QuestionnaireResponse.display(linkId: String): String? =
+  (answer(linkId) as? Value.Coding)?.value?.display?.value
+
 fun QuestionnaireResponse.date(linkId: String): Date? = (answer(linkId) as? Value.Date)?.value
 
 fun QuestionnaireResponse.decimal(linkId: String): FhirDecimal? =

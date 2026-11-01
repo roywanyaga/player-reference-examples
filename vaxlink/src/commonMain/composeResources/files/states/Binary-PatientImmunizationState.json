@@ -1,0 +1,8 @@
+{
+  "resourceType": "http://ohs.dev/StructureDefinition/ViewJoinMap",
+  "name": "patientImmunization",
+  "from": "revIncluded",
+  "resource": "Immunization",
+  "view": "Immunization",
+  "searchParam": "patient"
+}

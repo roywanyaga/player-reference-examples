@@ -1,0 +1,87 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "register-newborn",
+  "url": "https://nawitech.github.io/vaxlink-ig/Questionnaire/register-newborn",
+  "title": "Register newborn",
+  "status": "active",
+  "publisher": "Nawitech Limited",
+  "description": "Adds a newborn to the household and links the parents. The mother and father options are filled from the household's adult members when the form opens.",
+  "subjectType": [
+    "Patient"
+  ],
+  "item": [
+    {
+      "linkId": "given-name",
+      "text": "Given name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "linkId": "family-name",
+      "text": "Family name",
+      "type": "string",
+      "required": false
+    },
+    {
+      "linkId": "sex",
+      "text": "Sex",
+      "type": "choice",
+      "required": true,
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "radio-button"
+              }
+            ]
+          }
+        }
+      ],
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://hl7.org/fhir/administrative-gender",
+            "code": "male",
+            "display": "Male"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://hl7.org/fhir/administrative-gender",
+            "code": "female",
+            "display": "Female"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "birth-date",
+      "text": "Date of birth",
+      "type": "date",
+      "required": true
+    },
+    {
+      "linkId": "birth-place",
+      "text": "Place of birth (facility, town, country)",
+      "type": "string",
+      "required": false
+    },
+    {
+      "linkId": "mother",
+      "text": "Mother",
+      "type": "choice",
+      "required": false,
+      "answerOption": []
+    },
+    {
+      "linkId": "father",
+      "text": "Father",
+      "type": "choice",
+      "required": false,
+      "answerOption": []
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "resourceType": "http://ohs.dev/StructureDefinition/ViewConfig",
+  "viewType": "MemberItem",
+  "property": [
+    {
+      "name": "showAge",
+      "type": "boolean",
+      "valueBoolean": true
+    },
+    {
+      "name": "showGender",
+      "type": "boolean",
+      "valueBoolean": true
+    }
+  ]
+}

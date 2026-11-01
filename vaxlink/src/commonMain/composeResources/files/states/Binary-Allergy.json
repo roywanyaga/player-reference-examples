@@ -1,0 +1,36 @@
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "url": "http://ohs.dev/ViewDefinition/Allergy",
+  "fhirVersion": [
+    "4.0.1"
+  ],
+  "select": [
+    {
+      "column": [
+        {
+          "name": "allergyId",
+          "path": "id",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "allergyName",
+          "path": "iif(code.text.exists(), code.text, code.coding.display.first())",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "allergyCriticality",
+          "path": "criticality",
+          "type": "http://hl7.org/fhir/StructureDefinition/code"
+        },
+        {
+          "name": "allergyRecordedOn",
+          "path": "recordedDate",
+          "type": "http://hl7.org/fhir/StructureDefinition/dateTime"
+        }
+      ]
+    }
+  ],
+  "name": "Allergy",
+  "status": "active",
+  "resource": "AllergyIntolerance"
+}

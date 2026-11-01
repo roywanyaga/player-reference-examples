@@ -1,0 +1,56 @@
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "url": "http://ohs.dev/ViewDefinition/CareTask",
+  "fhirVersion": [
+    "4.0.1"
+  ],
+  "select": [
+    {
+      "column": [
+        {
+          "name": "careTaskId",
+          "path": "id",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "taskTitle",
+          "path": "iif(code.text.exists(), code.text, code.coding.display.first())",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "taskPlan",
+          "path": "instantiatesCanonical",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "taskStatus",
+          "path": "status",
+          "type": "http://hl7.org/fhir/StructureDefinition/code"
+        },
+        {
+          "name": "dueFrom",
+          "path": "restriction.period.start",
+          "type": "http://hl7.org/fhir/StructureDefinition/dateTime"
+        },
+        {
+          "name": "dueBy",
+          "path": "restriction.period.end",
+          "type": "http://hl7.org/fhir/StructureDefinition/dateTime"
+        },
+        {
+          "name": "taskDoseCode",
+          "path": "code.coding.where(system = 'https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose').code.first()",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        }
+      ]
+    }
+  ],
+  "name": "CareTask",
+  "status": "active",
+  "resource": "Task",
+  "where": [
+    {
+      "path": "instantiatesCanonical.exists()"
+    }
+  ]
+}

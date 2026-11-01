@@ -1,0 +1,8 @@
+{
+  "resourceType": "http://ohs.dev/StructureDefinition/ViewJoinMap",
+  "name": "patientCondition",
+  "from": "revIncluded",
+  "resource": "Condition",
+  "view": "Condition",
+  "searchParam": "subject"
+}

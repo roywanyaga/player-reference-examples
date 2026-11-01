@@ -1,0 +1,7 @@
+{
+  "resourceType": "http://ohs.dev/StructureDefinition/ViewJoinMap",
+  "name": "householdList",
+  "from": "root",
+  "resource": "Group",
+  "view": "Household"
+}

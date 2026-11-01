@@ -15,14 +15,36 @@
  */
 package dev.ohs.vaxlink.feature.questionnaire
 
+import dev.ohs.fhir.model.r4.Code
+import dev.ohs.fhir.model.r4.Coding
+import dev.ohs.fhir.model.r4.FhirDate
+import dev.ohs.fhir.model.r4.Group
+import dev.ohs.fhir.model.r4.Patient
 import dev.ohs.fhir.model.r4.Questionnaire as QuestionnaireR4
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.String as FhirString
+import dev.ohs.fhir.model.r4.Uri
+import dev.ohs.fhir.model.r4.terminologies.AdministrativeGender
 import dev.ohs.vaxlink.auth.UserContext
 import dev.ohs.vaxlink.data.repository.FhirRepository
 import dev.ohs.vaxlink.generated.resources.Res
 import dev.ohs.vaxlink.util.FhirJson
+import dev.ohs.vaxlink.util.displayName
+import dev.ohs.vaxlink.workflow.LaoScheduleService
 import dev.ohs.vaxlink.workflow.Transactor
+import dev.ohs.vaxlink.workflow.code
+import dev.ohs.vaxlink.workflow.headId
+import dev.ohs.vaxlink.workflow.memberIds
+import dev.ohs.vaxlink.workflow.registerHousehold
+import dev.ohs.vaxlink.workflow.registerMember
+import dev.ohs.vaxlink.workflow.registerNewborn
 import dev.ohs.vaxlink.workflow.registrationPatient
+import kotlin.time.Clock
+import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
+import kotlinx.datetime.todayIn
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 /** Caller-supplied identifiers describing why/for-whom a questionnaire was launched. */
@@ -30,39 +52,66 @@ data class QuestionnaireLaunchContext(
   val patientId: String? = null,
   val user: UserContext? = null,
   val taskId: String? = null,
+  /** The household a member or newborn is registered into. */
+  val householdId: String? = null,
 )
 
 /** Outcome of submitting a QuestionnaireResponse, ready for the UI to render. */
 data class QuestionnaireSubmissionResult(val successMessage: String)
 
 object QuestionnaireIds {
-  /** Newborn registration (NE-2 adapts the form: name, sex, date of birth, guardian). */
+  /** Plain patient registration, kept for the clinic roles. */
   const val PATIENT_REGISTRATION = "patient-registration"
+
+  /** A household and its head, in the eCHIS household model. */
+  const val REGISTER_HOUSEHOLD = "register-household"
+
+  /** Another member of an existing household, related to the head. */
+  const val REGISTER_MEMBER = "register-member"
+
+  /** A newborn in an existing household, linked to the parents chosen from its members. */
+  const val REGISTER_NEWBORN = "register-newborn"
+
+  /** The coding system the parent choices on the newborn form use; the code is the Patient id. */
+  const val PARENT_CHOICE_SYSTEM = "http://ohs.dev/vaxlink/household-member"
 }
 
 /** Bundled Questionnaire JSON, keyed by the id it should be read under. */
 private val BUNDLED_QUESTIONNAIRE_PATHS: Map<String, String> =
   mapOf(
     QuestionnaireIds.PATIENT_REGISTRATION to
-      "files/protocols/Questionnaire-PatientRegistration.json"
+      "files/protocols/Questionnaire-PatientRegistration.json",
+    QuestionnaireIds.REGISTER_HOUSEHOLD to "files/configs/Questionnaire-RegisterHousehold.json",
+    QuestionnaireIds.REGISTER_MEMBER to "files/configs/Questionnaire-RegisterMember.json",
+    QuestionnaireIds.REGISTER_NEWBORN to "files/configs/Questionnaire-RegisterNewborn.json",
   )
 
 /** Reads bundled Questionnaires and persists what their responses produce via [FhirRepository]. */
 class QuestionnaireService(
   private val repository: FhirRepository,
   private val transactor: Transactor = Transactor { it() },
+  /** Brings a newborn's Lao schedule up after registration; null skips the schedule. */
+  private val schedule: LaoScheduleService? = null,
+  private val today: () -> LocalDate = { Clock.System.todayIn(TimeZone.currentSystemDefault()) },
 ) {
 
   private val fhirJson = FhirJson.instance
 
   /** Reads a Questionnaire from the bundled config files. */
   @OptIn(ExperimentalResourceApi::class)
-  suspend fun getQuestionnaire(id: String): QuestionnaireR4 {
+  suspend fun getQuestionnaire(
+    id: String,
+    launchContext: QuestionnaireLaunchContext = QuestionnaireLaunchContext(),
+  ): QuestionnaireR4 {
     val path =
       BUNDLED_QUESTIONNAIRE_PATHS[id]
         ?: error("Questionnaire '$id' was not found in the app config.")
     val json = Res.readBytes(path).decodeToString()
-    return fhirJson.decodeFromString(QuestionnaireR4.serializer(), json).copy(id = id)
+    val questionnaire = fhirJson.decodeFromString(QuestionnaireR4.serializer(), json).copy(id = id)
+    return when (id) {
+      QuestionnaireIds.REGISTER_NEWBORN -> questionnaire.withParentChoices(launchContext)
+      else -> questionnaire
+    }
   }
 
   fun toJson(questionnaire: QuestionnaireR4): String =
@@ -79,8 +128,8 @@ class QuestionnaireService(
   }
 
   /**
-   * Extracts the response's resources and stores them. One branch per bundled questionnaire; NE-2
-   * (scan certificate, refer) and NE-3 (verify, confirm dose) add theirs here.
+   * Extracts the response's resources and stores them. One branch per bundled questionnaire; the
+   * household forms keep the eCHIS linkIds so the content ports between the two platforms.
    */
   private suspend fun record(
     questionnaire: QuestionnaireR4,
@@ -92,8 +141,83 @@ class QuestionnaireService(
         repository.upsert(registrationPatient(response, launchContext.user().organizationId))
         QuestionnaireSubmissionResult("Patient registered.")
       }
+      QuestionnaireIds.REGISTER_HOUSEHOLD -> {
+        val registration = registerHousehold(response, launchContext.user().organizationId)
+        repository.upsert(registration.head)
+        repository.upsert(registration.household)
+        QuestionnaireSubmissionResult("Household registered.")
+      }
+      QuestionnaireIds.REGISTER_MEMBER -> {
+        val household = launchContext.household()
+        val head = household.headId()?.let { repository.get("Patient", it) as? Patient }
+        val registration =
+          registerMember(response, household, head, launchContext.user().organizationId)
+        repository.upsert(registration.member)
+        repository.upsert(registration.household)
+        registration.relationToHead?.let { repository.upsert(it) }
+        QuestionnaireSubmissionResult("Member added to the household.")
+      }
+      QuestionnaireIds.REGISTER_NEWBORN -> {
+        val household = launchContext.household()
+        val mother = response.code("mother")?.let { repository.get("Patient", it) as? Patient }
+        val father = response.code("father")?.let { repository.get("Patient", it) as? Patient }
+        val registration =
+          registerNewborn(response, household, mother, father, launchContext.user().organizationId)
+        repository.upsert(registration.child)
+        repository.upsert(registration.household)
+        registration.parents.forEach { repository.upsert(it) }
+        schedule?.refresh(registration.child)
+        QuestionnaireSubmissionResult("Newborn registered.")
+      }
       else -> error("No submission handling is defined for questionnaire '${questionnaire.id}'.")
     }
+
+  /** The newborn form offers the household's adults as mother and father. */
+  private suspend fun QuestionnaireR4.withParentChoices(
+    launchContext: QuestionnaireLaunchContext
+  ): QuestionnaireR4 {
+    val householdId = launchContext.householdId ?: return this
+    val household = repository.get("Group", householdId) as? Group ?: return this
+    val adults =
+      household
+        .memberIds()
+        .mapNotNull { repository.get("Patient", it) as? Patient }
+        .filter { it.isAdult() }
+    fun options(gender: AdministrativeGender) =
+      adults
+        .filter { it.gender?.value == gender || it.gender == null }
+        .map { patient ->
+          QuestionnaireR4.Item.AnswerOption(
+            value =
+              QuestionnaireR4.Item.AnswerOption.Value.Coding(
+                Coding(
+                  system = Uri(value = QuestionnaireIds.PARENT_CHOICE_SYSTEM),
+                  code = Code(value = patient.id!!),
+                  display = FhirString(value = patient.displayName()),
+                )
+              )
+          )
+        }
+    return copy(
+      item =
+        item.map { item ->
+          when (item.linkId.value) {
+            "mother" -> item.copy(answerOption = options(AdministrativeGender.Female))
+            "father" -> item.copy(answerOption = options(AdministrativeGender.Male))
+            else -> item
+          }
+        }
+    )
+  }
+
+  private fun Patient.isAdult(): Boolean {
+    val born = (birthDate?.value as? FhirDate.Date)?.date ?: return true
+    return born <= today().minus(DatePeriod(years = 10))
+  }
+
+  private suspend fun QuestionnaireLaunchContext.household(): Group =
+    householdId?.let { repository.get("Group", it) as? Group }
+      ?: error("This questionnaire needs a household to register into.")
 }
 
 private fun QuestionnaireLaunchContext.user(): UserContext =

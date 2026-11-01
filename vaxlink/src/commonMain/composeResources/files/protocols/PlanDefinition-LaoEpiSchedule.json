@@ -1,0 +1,750 @@
+{
+  "resourceType": "PlanDefinition",
+  "id": "LaoEpiSchedule",
+  "url": "https://nawitech.github.io/vaxlink-ig/PlanDefinition/LaoEpiSchedule",
+  "title": "Lao PDR immunization schedule, birth to first birthday",
+  "description": "The Lao PDR Expanded Programme on Immunization schedule from the Ministry of Health 2026 list, as a protocol over a child's immunization history. One Task per dose not yet given, due by age.",
+  "name": "LaoEpiSchedule",
+  "status": "active",
+  "date": "2026-11-01",
+  "publisher": "Nawitech Limited",
+  "extension": [
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/enrollment",
+      "extension": [
+        {
+          "url": "mode",
+          "valueString": "auto"
+        },
+        {
+          "url": "eligibility",
+          "valueString": "Patient.birthDate > (today() - 5 years)"
+        }
+      ]
+    }
+  ],
+  "action": [
+    {
+      "id": "hb0",
+      "title": "HB0",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "birthDate"
+            },
+            {
+              "url": "offset",
+              "valueString": "P0D"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P0D"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P7D"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%immunizations.entry.resource.where(vaccineCode.coding.where(system='https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose' and (code='HB0-24H' or code='HB0-7D')).exists() and status='completed').empty()"
+          }
+        }
+      ],
+      "definitionCanonical": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-hb0"
+    },
+    {
+      "id": "penta-1",
+      "title": "Penta 1",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "birthDate"
+            },
+            {
+              "url": "offset",
+              "valueString": "P42D"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P7D"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P28D"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%immunizations.entry.resource.where(vaccineCode.coding.where(system='https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose' and (code='PENTA-1')).exists() and status='completed').empty()"
+          }
+        }
+      ],
+      "definitionCanonical": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-penta-1"
+    },
+    {
+      "id": "opv-1",
+      "title": "OPV 1",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "birthDate"
+            },
+            {
+              "url": "offset",
+              "valueString": "P42D"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P7D"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P28D"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%immunizations.entry.resource.where(vaccineCode.coding.where(system='https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose' and (code='OPV-1')).exists() and status='completed').empty()"
+          }
+        }
+      ],
+      "definitionCanonical": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-opv-1"
+    },
+    {
+      "id": "pcv-1",
+      "title": "PCV 1",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "birthDate"
+            },
+            {
+              "url": "offset",
+              "valueString": "P42D"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P7D"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P28D"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%immunizations.entry.resource.where(vaccineCode.coding.where(system='https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose' and (code='PCV-1')).exists() and status='completed').empty()"
+          }
+        }
+      ],
+      "definitionCanonical": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-pcv-1"
+    },
+    {
+      "id": "rota-1",
+      "title": "Rota 1",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "birthDate"
+            },
+            {
+              "url": "offset",
+              "valueString": "P42D"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P7D"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P28D"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%immunizations.entry.resource.where(vaccineCode.coding.where(system='https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose' and (code='ROTA-1')).exists() and status='completed').empty()"
+          }
+        }
+      ],
+      "definitionCanonical": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-rota-1"
+    },
+    {
+      "id": "ipv-1",
+      "title": "IPV 1",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "birthDate"
+            },
+            {
+              "url": "offset",
+              "valueString": "P42D"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P7D"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P28D"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%immunizations.entry.resource.where(vaccineCode.coding.where(system='https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose' and (code='IPV-1')).exists() and status='completed').empty()"
+          }
+        }
+      ],
+      "definitionCanonical": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-ipv-1"
+    },
+    {
+      "id": "penta-2",
+      "title": "Penta 2",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "birthDate"
+            },
+            {
+              "url": "offset",
+              "valueString": "P70D"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P7D"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P28D"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%immunizations.entry.resource.where(vaccineCode.coding.where(system='https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose' and (code='PENTA-2')).exists() and status='completed').empty()"
+          }
+        }
+      ],
+      "definitionCanonical": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-penta-2"
+    },
+    {
+      "id": "opv-2",
+      "title": "OPV 2",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "birthDate"
+            },
+            {
+              "url": "offset",
+              "valueString": "P70D"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P7D"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P28D"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%immunizations.entry.resource.where(vaccineCode.coding.where(system='https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose' and (code='OPV-2')).exists() and status='completed').empty()"
+          }
+        }
+      ],
+      "definitionCanonical": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-opv-2"
+    },
+    {
+      "id": "pcv-2",
+      "title": "PCV 2",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "birthDate"
+            },
+            {
+              "url": "offset",
+              "valueString": "P70D"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P7D"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P28D"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%immunizations.entry.resource.where(vaccineCode.coding.where(system='https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose' and (code='PCV-2')).exists() and status='completed').empty()"
+          }
+        }
+      ],
+      "definitionCanonical": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-pcv-2"
+    },
+    {
+      "id": "rota-2",
+      "title": "Rota 2",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "birthDate"
+            },
+            {
+              "url": "offset",
+              "valueString": "P70D"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P7D"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P28D"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%immunizations.entry.resource.where(vaccineCode.coding.where(system='https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose' and (code='ROTA-2')).exists() and status='completed').empty()"
+          }
+        }
+      ],
+      "definitionCanonical": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-rota-2"
+    },
+    {
+      "id": "ipv-2",
+      "title": "IPV 2",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "birthDate"
+            },
+            {
+              "url": "offset",
+              "valueString": "P70D"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P7D"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P28D"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%immunizations.entry.resource.where(vaccineCode.coding.where(system='https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose' and (code='IPV-2')).exists() and status='completed').empty()"
+          }
+        }
+      ],
+      "definitionCanonical": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-ipv-2"
+    },
+    {
+      "id": "penta-3",
+      "title": "Penta 3",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "birthDate"
+            },
+            {
+              "url": "offset",
+              "valueString": "P98D"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P7D"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P28D"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%immunizations.entry.resource.where(vaccineCode.coding.where(system='https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose' and (code='PENTA-3')).exists() and status='completed').empty()"
+          }
+        }
+      ],
+      "definitionCanonical": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-penta-3"
+    },
+    {
+      "id": "opv-3",
+      "title": "OPV 3",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "birthDate"
+            },
+            {
+              "url": "offset",
+              "valueString": "P98D"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P7D"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P28D"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%immunizations.entry.resource.where(vaccineCode.coding.where(system='https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose' and (code='OPV-3')).exists() and status='completed').empty()"
+          }
+        }
+      ],
+      "definitionCanonical": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-opv-3"
+    },
+    {
+      "id": "pcv-3",
+      "title": "PCV 3",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "birthDate"
+            },
+            {
+              "url": "offset",
+              "valueString": "P98D"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P7D"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P28D"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%immunizations.entry.resource.where(vaccineCode.coding.where(system='https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose' and (code='PCV-3')).exists() and status='completed').empty()"
+          }
+        }
+      ],
+      "definitionCanonical": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-pcv-3"
+    },
+    {
+      "id": "rota-3",
+      "title": "Rota 3",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "birthDate"
+            },
+            {
+              "url": "offset",
+              "valueString": "P98D"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P7D"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P28D"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%immunizations.entry.resource.where(vaccineCode.coding.where(system='https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose' and (code='ROTA-3')).exists() and status='completed').empty()"
+          }
+        }
+      ],
+      "definitionCanonical": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-rota-3"
+    },
+    {
+      "id": "ipv-3",
+      "title": "IPV 3",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "birthDate"
+            },
+            {
+              "url": "offset",
+              "valueString": "P98D"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P7D"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P28D"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%immunizations.entry.resource.where(vaccineCode.coding.where(system='https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose' and (code='IPV-3')).exists() and status='completed').empty()"
+          }
+        }
+      ],
+      "definitionCanonical": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-ipv-3"
+    },
+    {
+      "id": "mr-1",
+      "title": "MR 1",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "birthDate"
+            },
+            {
+              "url": "offset",
+              "valueString": "P270D"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P0D"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P60D"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%immunizations.entry.resource.where(vaccineCode.coding.where(system='https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose' and (code='MR1-9-11M' or code='MR1-12-59M')).exists() and status='completed').empty()"
+          }
+        }
+      ],
+      "definitionCanonical": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-mr-1"
+    },
+    {
+      "id": "je",
+      "title": "JE",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "birthDate"
+            },
+            {
+              "url": "offset",
+              "valueString": "P270D"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P0D"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P60D"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%immunizations.entry.resource.where(vaccineCode.coding.where(system='https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose' and (code='JE-9-11M' or code='JE-OVER-1Y')).exists() and status='completed').empty()"
+          }
+        }
+      ],
+      "definitionCanonical": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-je"
+    },
+    {
+      "id": "mr-2",
+      "title": "MR 2",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "birthDate"
+            },
+            {
+              "url": "offset",
+              "valueString": "P365D"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P0D"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P180D"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%immunizations.entry.resource.where(vaccineCode.coding.where(system='https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose' and (code='MR2-12-18M' or code='MR2-19-59M')).exists() and status='completed').empty()"
+          }
+        }
+      ],
+      "definitionCanonical": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-mr-2"
+    }
+  ]
+}

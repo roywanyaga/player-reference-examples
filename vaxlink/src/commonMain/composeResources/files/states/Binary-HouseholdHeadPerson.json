@@ -1,0 +1,26 @@
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "url": "http://ohs.dev/ViewDefinition/HouseholdHeadPerson",
+  "fhirVersion": [
+    "4.0.1"
+  ],
+  "select": [
+    {
+      "column": [
+        {
+          "name": "headGivenName",
+          "path": "name.given.first()",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "headFamilyName",
+          "path": "name.family.first()",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        }
+      ]
+    }
+  ],
+  "name": "HouseholdHeadPerson",
+  "status": "active",
+  "resource": "Patient"
+}

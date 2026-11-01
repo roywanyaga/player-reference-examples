@@ -366,6 +366,12 @@ igCodegen {
   packageName = "dev.ohs.player.generated"
 }
 
+// ig-codegen turns every CodeSystem under files/ into a ViewType object, including the VaxLink IG
+// terminology under files/terminology/ (PreQual product ids and vaccine types, Lao doses), which
+// the app reads at runtime through the hcert module instead. The vaccine type CodeSystem carries
+// codes that differ only in case (DT, dT), which clash as JVM getters, so the generated objects for
+// anything other than the app's own view types are dropped before compilation.
+
 dependencies { debugImplementation(libs.compose.uiTooling) }
 
 /*

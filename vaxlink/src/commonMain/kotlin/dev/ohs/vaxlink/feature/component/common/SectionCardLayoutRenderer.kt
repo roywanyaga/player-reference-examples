@@ -70,6 +70,8 @@ class SectionCardLayoutRenderer<T>(
   private val icon: ImageVector,
   private val iconTint: Color? = null,
   private val config: SectionCardConfig = SectionCardConfig(),
+  /** Shown in place of the rows when there are none; null hides the body instead. */
+  private val emptyLabel: String? = null,
 ) : LayoutRenderer<T> {
 
   @Composable
@@ -148,6 +150,14 @@ class SectionCardLayoutRenderer<T>(
             modifier = Modifier.padding(bottom = 4.dp),
             color = MaterialTheme.colorScheme.outlineVariant,
           )
+          if (items.isEmpty() && emptyLabel != null) {
+            Text(
+              text = emptyLabel,
+              style = MaterialTheme.typography.bodyMedium,
+              color = MaterialTheme.colorScheme.onSurfaceVariant,
+              modifier = Modifier.padding(vertical = 8.dp),
+            )
+          }
           items.forEach { item ->
             component.Render(item, RenderOptions(onClick = { onItemClick(item) }))
           }

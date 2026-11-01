@@ -8,7 +8,7 @@
         "resourceType": "Organization",
         "id": "58de21fd-6a31-4429-883a-9552ff44b133",
         "active": true,
-        "name": "Kiambu County Department of Health",
+        "name": "Vientiane Capital Health Department",
         "type": [
           {
             "coding": [
@@ -22,7 +22,7 @@
         "identifier": [
           {
             "system": "http://ohs.dev/identifiers/county-code",
-            "value": "022"
+            "value": "LA-01"
           }
         ]
       },
@@ -37,7 +37,7 @@
         "resourceType": "Organization",
         "id": "840d81a6-5fda-4585-a125-9bef5a6c8a7e",
         "active": true,
-        "name": "Ruiru Sub-County Health Management Team",
+        "name": "Sikhottabong District Health Office",
         "type": [
           {
             "coding": [
@@ -63,7 +63,7 @@
         "resourceType": "Organization",
         "id": "8ccec472-e3c6-4de3-a8aa-ed68c5c4e221",
         "active": true,
-        "name": "Kimbo Health Centre",
+        "name": "Nongbuathong Health Centre",
         "type": [
           {
             "coding": [
@@ -77,7 +77,7 @@
         "identifier": [
           {
             "system": "http://ohs.dev/identifiers/facility-code",
-            "value": "KE-022-0417"
+            "value": "LA-01-0412"
           }
         ],
         "partOf": {
@@ -113,7 +113,7 @@
         "resourceType": "Organization",
         "id": "5e608359-ba7d-4a4c-a143-db40f32912a3",
         "active": true,
-        "name": "Kimbo Community Health Unit",
+        "name": "Ban Nongbuathong Community Health Unit",
         "type": [
           {
             "coding": [
@@ -127,7 +127,7 @@
         "identifier": [
           {
             "system": "http://ohs.dev/identifiers/chu-code",
-            "value": "KE-022-0417-01"
+            "value": "LA-01-0412-01"
           }
         ],
         "partOf": {
@@ -145,7 +145,7 @@
         "resourceType": "Location",
         "id": "0de9e6bc-d107-4931-8296-3620e4dc52d5",
         "status": "active",
-        "name": "Kimbo Health Centre",
+        "name": "Nongbuathong Health Centre",
         "mode": "instance",
         "physicalType": {
           "coding": [
@@ -157,17 +157,17 @@
           ]
         },
         "address": {
+          "city": "Vientiane",
+          "district": "Sikhottabong",
+          "state": "Vientiane Capital",
+          "country": "LA",
           "line": [
-            "Kimbo Road"
-          ],
-          "city": "Ruiru",
-          "district": "Ruiru",
-          "state": "Kiambu",
-          "country": "KE"
+            "Road 13 North"
+          ]
         },
         "position": {
-          "latitude": -1.152,
-          "longitude": 36.961
+          "latitude": 17.966,
+          "longitude": 102.573
         },
         "managingOrganization": {
           "reference": "Organization/8ccec472-e3c6-4de3-a8aa-ed68c5c4e221"
@@ -184,7 +184,7 @@
         "resourceType": "Location",
         "id": "bafa01bf-1ceb-4643-9df9-c0cbe122883a",
         "status": "active",
-        "name": "Kimbo Health Centre Outpatient Department",
+        "name": "Nongbuathong Health Centre Outpatient Department",
         "alias": [
           "OPD"
         ],
@@ -203,7 +203,8 @@
         },
         "managingOrganization": {
           "reference": "Organization/8ccec472-e3c6-4de3-a8aa-ed68c5c4e221"
-        }
+        },
+        "address": null
       },
       "request": {
         "method": "PUT",
@@ -216,7 +217,7 @@
         "resourceType": "Location",
         "id": "fc34795a-610f-44f2-9f34-c919ca5a7f3f",
         "status": "active",
-        "name": "Kimbo Village",
+        "name": "Ban Nongbuathong",
         "mode": "instance",
         "physicalType": {
           "coding": [
@@ -229,7 +230,8 @@
         },
         "managingOrganization": {
           "reference": "Organization/5e608359-ba7d-4a4c-a143-db40f32912a3"
-        }
+        },
+        "address": null
       },
       "request": {
         "method": "PUT",
@@ -252,17 +254,16 @@
           {
             "use": "official",
             "given": [
-              "Mwanaisha",
-              "Juma"
+              "Soukanh"
             ],
-            "family": "Mwinyi"
+            "family": "Inthavong"
           }
         ],
         "gender": "female",
         "telecom": [
           {
             "system": "phone",
-            "value": "+254 712 418 205",
+            "value": "+856 20 5541 8820",
             "use": "mobile"
           }
         ]
@@ -298,10 +299,10 @@
               {
                 "system": "http://ohs.dev/fhir/CodeSystem/app-role",
                 "code": "chw",
-                "display": "Community Health Promoter"
+                "display": "Village Health Volunteer"
               }
             ],
-            "text": "Community Health Promoter"
+            "text": "Village Health Volunteer"
           }
         ]
       },
@@ -326,17 +327,16 @@
           {
             "use": "official",
             "given": [
-              "Kadzo",
-              "Zawadi"
+              "Chanthasone"
             ],
-            "family": "Baya"
+            "family": "Vongsa"
           }
         ],
         "gender": "female",
         "telecom": [
           {
             "system": "phone",
-            "value": "+254 722 604 117",
+            "value": "+856 20 2260 4117",
             "use": "mobile"
           }
         ]
@@ -400,17 +400,16 @@
           {
             "use": "official",
             "given": [
-              "Hamisi",
-              "Kazungu"
+              "Somphone"
             ],
-            "family": "Charo"
+            "family": "Keomany"
           }
         ],
         "gender": "male",
         "telecom": [
           {
             "system": "phone",
-            "value": "+254 733 291 846",
+            "value": "+856 20 7733 2918",
             "use": "mobile"
           }
         ]
@@ -446,16 +445,205 @@
               {
                 "system": "http://ohs.dev/fhir/CodeSystem/app-role",
                 "code": "clinician",
-                "display": "Clinical Officer"
+                "display": "Medical Doctor"
               }
             ],
-            "text": "Clinical Officer"
+            "text": "Medical Doctor"
           }
         ]
       },
       "request": {
         "method": "PUT",
         "url": "PractitionerRole/2d2b14ee-e7a7-48cc-aaf4-f1938f7221a2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:3b1c6a7e-2f0d-4c7e-9a51-7d2e0b4c1a01",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "3b1c6a7e-2f0d-4c7e-9a51-7d2e0b4c1a01",
+        "active": true,
+        "name": [
+          {
+            "use": "official",
+            "given": [
+              "Khamsing"
+            ],
+            "family": "SOUVANNALATH"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1998-03-14",
+        "address": [
+          {
+            "use": "home",
+            "line": [
+              "Ban Nongbuathong"
+            ],
+            "city": "Vientiane",
+            "district": "Sikhottabong",
+            "state": "Vientiane Capital",
+            "country": "LA"
+          }
+        ],
+        "managingOrganization": {
+          "reference": "Organization/5e608359-ba7d-4a4c-a143-db40f32912a3"
+        },
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/patient-nationality",
+            "extension": [
+              {
+                "url": "code",
+                "valueCodeableConcept": {
+                  "coding": [
+                    {
+                      "system": "urn:iso:std:iso:3166",
+                      "code": "LAO"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+856 20 9912 3344",
+            "use": "mobile"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/3b1c6a7e-2f0d-4c7e-9a51-7d2e0b4c1a01"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:9e4d2c1b-7a63-4f08-b2d5-1c0e8f6a2b02",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "9e4d2c1b-7a63-4f08-b2d5-1c0e8f6a2b02",
+        "active": true,
+        "name": [
+          {
+            "use": "official",
+            "given": [
+              "Mali"
+            ],
+            "family": "SOUVANNALATH"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "2001-07-22",
+        "address": [
+          {
+            "use": "home",
+            "line": [
+              "Ban Nongbuathong"
+            ],
+            "city": "Vientiane",
+            "district": "Sikhottabong",
+            "state": "Vientiane Capital",
+            "country": "LA"
+          }
+        ],
+        "managingOrganization": {
+          "reference": "Organization/5e608359-ba7d-4a4c-a143-db40f32912a3"
+        },
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/patient-nationality",
+            "extension": [
+              {
+                "url": "code",
+                "valueCodeableConcept": {
+                  "coding": [
+                    {
+                      "system": "urn:iso:std:iso:3166",
+                      "code": "LAO"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/9e4d2c1b-7a63-4f08-b2d5-1c0e8f6a2b02"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:c7f3e9a1-5b2d-4e8c-a1f6-3d9b7c5e4a03",
+      "resource": {
+        "resourceType": "Group",
+        "id": "c7f3e9a1-5b2d-4e8c-a1f6-3d9b7c5e4a03",
+        "active": true,
+        "type": "person",
+        "actual": true,
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/group-code",
+              "code": "household",
+              "display": "Household"
+            }
+          ]
+        },
+        "name": "Souvannalath household",
+        "managingEntity": {
+          "reference": "Organization/5e608359-ba7d-4a4c-a143-db40f32912a3",
+          "display": "Ban Nongbuathong Community Health Unit"
+        },
+        "characteristic": [
+          {
+            "code": {
+              "coding": [
+                {
+                  "system": "http://smartregister.org/fhir/CodeSystem/household",
+                  "code": "village"
+                }
+              ]
+            },
+            "valueCodeableConcept": {
+              "text": "Ban Nongbuathong"
+            },
+            "exclude": false
+          }
+        ],
+        "member": [
+          {
+            "entity": {
+              "reference": "Patient/3b1c6a7e-2f0d-4c7e-9a51-7d2e0b4c1a01"
+            },
+            "extension": [
+              {
+                "url": "http://smartregister.org/fhir/StructureDefinition/group-member-involvement",
+                "valueCodeableConcept": {
+                  "coding": [
+                    {
+                      "system": "http://hl7.org/fhir/group-involvement",
+                      "code": "primary-contact",
+                      "display": "Primary contact"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "entity": {
+              "reference": "Patient/9e4d2c1b-7a63-4f08-b2d5-1c0e8f6a2b02"
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Group/c7f3e9a1-5b2d-4e8c-a1f6-3d9b7c5e4a03"
       }
     }
   ]

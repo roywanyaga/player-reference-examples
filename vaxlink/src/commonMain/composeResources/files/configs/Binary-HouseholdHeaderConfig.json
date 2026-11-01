@@ -1,0 +1,16 @@
+{
+  "resourceType": "http://ohs.dev/StructureDefinition/ViewConfig",
+  "viewType": "HouseholdHeader",
+  "property": [
+    {
+      "name": "showMemberCount",
+      "type": "boolean",
+      "valueBoolean": true
+    },
+    {
+      "name": "showHeadName",
+      "type": "boolean",
+      "valueBoolean": true
+    }
+  ]
+}

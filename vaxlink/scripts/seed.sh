@@ -11,7 +11,7 @@ fi
 : "${FHIR_URL:?}"
 
 types=(Patient Encounter Observation QuestionnaireResponse ServiceRequest MedicationRequest
-  Task Procedure Practitioner PractitionerRole Location Organization Questionnaire)
+  Task Procedure Practitioner PractitionerRole Location Organization Questionnaire Patient Group RelatedPerson)
 verbs=(GET POST PUT PATCH DELETE)
 api="$KEYCLOAK_URL/admin/realms/$KEYCLOAK_REALM"
 fhir_base="${FHIR_URL%/}"
@@ -56,9 +56,9 @@ ensure_user() {
   echo "$id"
 }
 
-chw=$(ensure_user chw1 'chw_1234!' Mwanaisha Mwinyi)
-nurse=$(ensure_user nurse1 'nurse_1234!' Kadzo Baya)
-clinician=$(ensure_user clinician1 'clinician_1234!' Hamisi Charo)
+chw=$(ensure_user chw1 'chw_1234!' Soukanh Inthavong)
+nurse=$(ensure_user nurse1 'nurse_1234!' Chanthasone Vongsa)
+clinician=$(ensure_user clinician1 'clinician_1234!' Somphone Keomany)
 token=$(new_token)
 
 sed -e "s/__CHW_SUB__/$chw/" -e "s/__NURSE_SUB__/$nurse/" -e "s/__CLINICIAN_SUB__/$clinician/" \

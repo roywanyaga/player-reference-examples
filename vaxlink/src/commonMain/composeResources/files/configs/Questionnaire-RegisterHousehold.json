@@ -1,0 +1,99 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "register-household",
+  "url": "https://nawitech.github.io/vaxlink-ig/Questionnaire/register-household",
+  "title": "Register household",
+  "status": "active",
+  "publisher": "Nawitech Limited",
+  "description": "Ported from Nawi's eCHIS configuration (opensrp-config data.fi/echis) for the VaxLink example; extraction is done by the app, not by template extraction, so the contained templates are left out.",
+  "subjectType": [
+    "Group"
+  ],
+  "item": [
+    {
+      "linkId": "household",
+      "text": "Household",
+      "type": "group",
+      "item": [
+        {
+          "linkId": "household-name",
+          "text": "Household name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "linkId": "village",
+          "text": "Village",
+          "type": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "linkId": "head",
+      "text": "Head of household",
+      "type": "group",
+      "item": [
+        {
+          "linkId": "head-given-name",
+          "text": "Given name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "linkId": "head-family-name",
+          "text": "Family name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "linkId": "head-sex",
+          "text": "Sex",
+          "type": "choice",
+          "required": true,
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "radio-button"
+                  }
+                ]
+              }
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "system": "http://hl7.org/fhir/administrative-gender",
+                "code": "male",
+                "display": "Male"
+              }
+            },
+            {
+              "valueCoding": {
+                "system": "http://hl7.org/fhir/administrative-gender",
+                "code": "female",
+                "display": "Female"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "head-birth-date",
+          "text": "Date of birth",
+          "type": "date",
+          "required": true
+        },
+        {
+          "linkId": "head-phone",
+          "text": "Phone number",
+          "type": "string",
+          "required": false
+        }
+      ]
+    }
+  ]
+}

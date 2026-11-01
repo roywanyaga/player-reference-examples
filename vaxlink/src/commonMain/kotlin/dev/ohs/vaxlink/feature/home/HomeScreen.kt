@@ -76,6 +76,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowSizeClass
 import dev.ohs.vaxlink.auth.UserContext
+import dev.ohs.vaxlink.feature.household.HouseholdListScreen
 import dev.ohs.vaxlink.feature.patient.list.PatientListScreen
 import dev.ohs.vaxlink.generated.resources.Res
 import dev.ohs.vaxlink.generated.resources.home_cancel_sync
@@ -99,6 +100,8 @@ fun HomeScreen(
   userName: String,
   onPatientClick: (String) -> Unit,
   onRegisterPatient: () -> Unit,
+  onHouseholdClick: (String) -> Unit = {},
+  onRegisterHousehold: () -> Unit = {},
   onSignOut: () -> Unit,
 ) {
   val homeViewModel: HomeViewModel = koinViewModel()
@@ -259,6 +262,8 @@ fun HomeScreen(
 
     val content: @Composable () -> Unit = {
       when (selectedDestination) {
+        HomeDestination.Households ->
+          HouseholdListScreen(onHouseholdClick = onHouseholdClick, onRegister = onRegisterHousehold)
         HomeDestination.Patients ->
           PatientListScreen(onPatientClick = onPatientClick, onRegister = onRegisterPatient)
       }

@@ -15,12 +15,17 @@
  */
 package dev.ohs.vaxlink.data.datasource
 
+import dev.ohs.fhir.model.r4.AllergyIntolerance
+import dev.ohs.fhir.model.r4.Condition
 import dev.ohs.fhir.model.r4.Encounter
+import dev.ohs.fhir.model.r4.Immunization
 import dev.ohs.fhir.model.r4.MedicationRequest
+import dev.ohs.fhir.model.r4.MedicationStatement
 import dev.ohs.fhir.model.r4.Observation
 import dev.ohs.fhir.model.r4.Patient
 import dev.ohs.fhir.model.r4.Procedure
 import dev.ohs.fhir.model.r4.Reference
+import dev.ohs.fhir.model.r4.RelatedPerson
 import dev.ohs.fhir.model.r4.Resource
 import dev.ohs.fhir.model.r4.ServiceRequest
 import dev.ohs.fhir.model.r4.Task
@@ -31,15 +36,16 @@ import dev.ohs.vaxlink.workflow.FOLLOW_UP_TASK
 import dev.ohs.vaxlink.workflow.REFERRAL_CODE
 
 /**
- * Patient list rows: each Patient plus its referral orders (newest first) and follow-up tasks (open
- * first). The row's joins read the first of each, mirroring a search with `_revinclude` sorted by
- * the server. Each table is read once and grouped by patient.
+ * Patient list rows: each Patient plus its referral orders (newest first), follow-up tasks (open
+ * first) and unverified immunisations. The row's joins read the first of each, mirroring a search
+ * with `_revinclude` sorted by the server. Each table is read once and grouped by patient.
  */
 suspend fun patientSummarySearchResults(repository: FhirRepository): List<SearchResult<Resource>> {
   val referrals = referralOrdersByPatient(repository)
   val followUps = followUpsByPatient(repository)
+  val unverified = unverifiedImmunizationsByPatient(repository)
   return repository.all("Patient").filterIsInstance<Patient>().map {
-    summary(it, referrals[it.id].orEmpty(), followUps[it.id].orEmpty())
+    summary(it, referrals[it.id].orEmpty(), followUps[it.id].orEmpty(), unverified[it.id].orEmpty())
   }
 }
 
@@ -53,10 +59,16 @@ suspend fun patientSummarySearchResult(
     patient,
     referralOrdersByPatient(repository)[patientId].orEmpty(),
     followUpsByPatient(repository)[patientId].orEmpty(),
+    unverifiedImmunizationsByPatient(repository)[patientId].orEmpty(),
   )
 }
 
-private fun summary(patient: Patient, referrals: List<ServiceRequest>, followUps: List<Task>) =
+private fun summary(
+  patient: Patient,
+  referrals: List<ServiceRequest>,
+  followUps: List<Task>,
+  unverified: List<Immunization>,
+) =
   SearchResult<Resource>(
     resource = patient,
     revIncluded =
@@ -68,8 +80,16 @@ private fun summary(patient: Patient, referrals: List<ServiceRequest>, followUps
             compareBy<Task> { it.status.value != Task.TaskStatus.Requested }
               .thenByDescending { it.authoredOn?.value?.toString() }
           ),
+        ("Immunization" to "patient") to unverified,
       ),
   )
+
+private suspend fun unverifiedImmunizationsByPatient(repository: FhirRepository) =
+  repository
+    .all("Immunization")
+    .filterIsInstance<Immunization>()
+    .filter { it.primarySource?.value != true }
+    .groupBy { it.patient.idOf("Patient") }
 
 private suspend fun referralOrdersByPatient(repository: FhirRepository) =
   repository
@@ -104,6 +124,22 @@ suspend fun patientProfileSearchResult(
         revIncluded("Task") { (it as Task).`for` },
         revIncluded("Encounter") { (it as Encounter).subject },
         revIncluded("Observation") { (it as Observation).subject },
+        revIncluded("Condition") { (it as Condition).subject },
+        revIncluded("MedicationStatement") { (it as MedicationStatement).subject },
+        ("Immunization" to "patient") to
+          repository
+            .all("Immunization")
+            .filter { (it as Immunization).patient.idOf("Patient") == patientId }
+            .newestFirst(),
+        ("AllergyIntolerance" to "patient") to
+          repository
+            .all("AllergyIntolerance")
+            .filter { (it as AllergyIntolerance).patient.idOf("Patient") == patientId }
+            .newestFirst(),
+        ("RelatedPerson" to "patient") to
+          repository.all("RelatedPerson").filter {
+            (it as RelatedPerson).patient.idOf("Patient") == patientId
+          },
       ),
   )
 }
@@ -121,6 +157,10 @@ private fun List<Resource>.newestFirst() = sortedByDescending {
     is Task -> it.authoredOn?.value
     is Encounter -> it.period?.start?.value
     is Observation -> (it.effective as? Observation.Effective.DateTime)?.value?.value
+    is Immunization -> (it.occurrence as? Immunization.Occurrence.DateTime)?.value?.value
+    is Condition -> it.recordedDate?.value
+    is AllergyIntolerance -> it.recordedDate?.value
+    is MedicationStatement -> it.dateAsserted?.value
     else -> null
   }?.toString() ?: it.meta?.lastUpdated?.value?.toString()
 }

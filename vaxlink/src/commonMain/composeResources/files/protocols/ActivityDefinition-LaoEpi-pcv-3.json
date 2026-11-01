@@ -1,0 +1,25 @@
+{
+  "resourceType": "ActivityDefinition",
+  "id": "LaoEpi-pcv-3",
+  "url": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-pcv-3",
+  "title": "PCV 3",
+  "description": "Lao PDR schedule dose PCV 3.",
+  "name": "LaoEpiPCV3",
+  "status": "active",
+  "kind": "Task",
+  "extension": [
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/dose-number",
+      "valueString": "3"
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "code": "PCV-3",
+        "system": "https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose",
+        "display": "PCV 3"
+      }
+    ]
+  }
+}

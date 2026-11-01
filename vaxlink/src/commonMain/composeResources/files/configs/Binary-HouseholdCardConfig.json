@@ -1,0 +1,16 @@
+{
+  "resourceType": "http://ohs.dev/StructureDefinition/ViewConfig",
+  "viewType": "HouseholdCard",
+  "property": [
+    {
+      "name": "showMemberCount",
+      "type": "boolean",
+      "valueBoolean": true
+    },
+    {
+      "name": "showVillage",
+      "type": "boolean",
+      "valueBoolean": true
+    }
+  ]
+}

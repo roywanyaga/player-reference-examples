@@ -1,0 +1,25 @@
+{
+  "resourceType": "ActivityDefinition",
+  "id": "LaoEpi-rota-2",
+  "url": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-rota-2",
+  "title": "Rota 2",
+  "description": "Lao PDR schedule dose Rota 2.",
+  "name": "LaoEpiROTA2",
+  "status": "active",
+  "kind": "Task",
+  "extension": [
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/dose-number",
+      "valueString": "2"
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "code": "ROTA-2",
+        "system": "https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose",
+        "display": "Rota 2"
+      }
+    ]
+  }
+}

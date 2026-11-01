@@ -81,8 +81,11 @@ abstract class IgCodegenTask : DefaultTask() {
         .walkTopDown()
         .filter {
           it.isFile &&
-            (it.name.startsWith("Binary-") || it.name.startsWith("CodeSystem-")) &&
-            it.extension == "json"
+            it.extension == "json" &&
+            // Binaries anywhere; CodeSystems only under viewtypes/, since bundled terminology
+            // (PreQual, the Lao schedule) is also a CodeSystem but is data, not view types.
+            (it.name.startsWith("Binary-") ||
+              (it.name.startsWith("CodeSystem-") && it.parentFile.name == "viewtypes"))
         }
         .toList()
 

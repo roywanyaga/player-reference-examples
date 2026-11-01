@@ -1,0 +1,25 @@
+{
+  "resourceType": "ActivityDefinition",
+  "id": "LaoEpi-ipv-1",
+  "url": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-ipv-1",
+  "title": "IPV 1",
+  "description": "Lao PDR schedule dose IPV 1: Ages for the three IPV doses to confirm with the Ministry.",
+  "name": "LaoEpiIPV1",
+  "status": "active",
+  "kind": "Task",
+  "extension": [
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/dose-number",
+      "valueString": "1"
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "code": "IPV-1",
+        "system": "https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose",
+        "display": "IPV 1"
+      }
+    ]
+  }
+}

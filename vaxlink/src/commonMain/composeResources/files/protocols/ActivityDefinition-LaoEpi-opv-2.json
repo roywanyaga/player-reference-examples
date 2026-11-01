@@ -1,0 +1,25 @@
+{
+  "resourceType": "ActivityDefinition",
+  "id": "LaoEpi-opv-2",
+  "url": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-opv-2",
+  "title": "OPV 2",
+  "description": "Lao PDR schedule dose OPV 2.",
+  "name": "LaoEpiOPV2",
+  "status": "active",
+  "kind": "Task",
+  "extension": [
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/dose-number",
+      "valueString": "2"
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "code": "OPV-2",
+        "system": "https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose",
+        "display": "OPV 2"
+      }
+    ]
+  }
+}

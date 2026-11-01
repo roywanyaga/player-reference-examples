@@ -16,10 +16,12 @@
 package dev.ohs.vaxlink.feature.home
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.ui.graphics.vector.ImageVector
 import dev.ohs.vaxlink.auth.AppRole
 import dev.ohs.vaxlink.generated.resources.Res
+import dev.ohs.vaxlink.generated.resources.home_destination_households
 import dev.ohs.vaxlink.generated.resources.home_destination_patients
 import dev.ohs.vaxlink.generated.resources.role_chw
 import dev.ohs.vaxlink.generated.resources.role_clinician
@@ -28,18 +30,20 @@ import org.jetbrains.compose.resources.StringResource
 
 /** A top-level destination reachable from [HomeScreen]'s navigation drawer. */
 enum class HomeDestination(val label: StringResource, val icon: ImageVector) {
-  Patients(label = Res.string.home_destination_patients, icon = Icons.Filled.Person)
+  Households(label = Res.string.home_destination_households, icon = Icons.Filled.Home),
+  Patients(label = Res.string.home_destination_patients, icon = Icons.Filled.Person),
 }
 
 /**
- * The destinations a role works in, the first being where it lands. Every role starts on the
- * patient register; NE-3 adds the clinic's referral inbox and NE-4 the viewer.
+ * The destinations a role works in, the first being where it lands. The CHW works household by
+ * household (J2); the clinic roles start on the patient register. NE-3 adds the clinic's referral
+ * inbox and NE-4 the viewer.
  */
 fun AppRole.destinations(): List<HomeDestination> =
   when (this) {
-    AppRole.CHW,
+    AppRole.CHW -> listOf(HomeDestination.Households, HomeDestination.Patients)
     AppRole.NURSE,
-    AppRole.CLINICIAN -> listOf(HomeDestination.Patients)
+    AppRole.CLINICIAN -> listOf(HomeDestination.Patients, HomeDestination.Households)
   }
 
 val AppRole.label: StringResource

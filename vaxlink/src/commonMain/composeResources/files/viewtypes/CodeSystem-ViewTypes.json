@@ -23,6 +23,18 @@
     {
       "code": "SectionCard",
       "display": "Titled section on the patient profile"
+    },
+    {
+      "code": "HouseholdCard",
+      "display": "Household list card"
+    },
+    {
+      "code": "HouseholdHeader",
+      "display": "Household detail header"
+    },
+    {
+      "code": "MemberItem",
+      "display": "Household member row"
     }
   ]
 }

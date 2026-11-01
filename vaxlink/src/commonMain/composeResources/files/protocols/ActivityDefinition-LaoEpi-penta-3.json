@@ -1,0 +1,25 @@
+{
+  "resourceType": "ActivityDefinition",
+  "id": "LaoEpi-penta-3",
+  "url": "https://nawitech.github.io/vaxlink-ig/ActivityDefinition/LaoEpi-penta-3",
+  "title": "Penta 3",
+  "description": "Lao PDR schedule dose Penta 3.",
+  "name": "LaoEpiPENTA3",
+  "status": "active",
+  "kind": "Task",
+  "extension": [
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/dose-number",
+      "valueString": "3"
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "code": "PENTA-3",
+        "system": "https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose",
+        "display": "Penta 3"
+      }
+    ]
+  }
+}

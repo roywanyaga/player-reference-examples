@@ -1,0 +1,66 @@
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "url": "http://ohs.dev/ViewDefinition/Immunization",
+  "fhirVersion": [
+    "4.0.1"
+  ],
+  "select": [
+    {
+      "column": [
+        {
+          "name": "immunizationId",
+          "path": "id",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "vaccineName",
+          "path": "iif(vaccineCode.text.exists(), vaccineCode.text, vaccineCode.coding.display.first())",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "givenOn",
+          "path": "occurrence",
+          "type": "http://hl7.org/fhir/StructureDefinition/dateTime"
+        },
+        {
+          "name": "immunizationStatus",
+          "path": "status",
+          "type": "http://hl7.org/fhir/StructureDefinition/code"
+        },
+        {
+          "name": "lotNumber",
+          "path": "lotNumber",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "verified",
+          "path": "primarySource",
+          "type": "http://hl7.org/fhir/StructureDefinition/boolean"
+        },
+        {
+          "name": "preQualCode",
+          "path": "vaccineCode.coding.where(system = 'http://smart.who.int/pcmt-vaxprequal/CodeSystem/PreQualProductIds').code.first()",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "laoDoseCode",
+          "path": "vaccineCode.coding.where(system = 'https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose').code.first()",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "laoDoseDisplay",
+          "path": "vaccineCode.coding.where(system = 'https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose').display.first()",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "certificateFingerprint",
+          "path": "identifier.where(system = 'http://ohs.dev/vaxlink/identifier/hcert-sha256').value.first()",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        }
+      ]
+    }
+  ],
+  "name": "Immunization",
+  "status": "active",
+  "resource": "Immunization"
+}

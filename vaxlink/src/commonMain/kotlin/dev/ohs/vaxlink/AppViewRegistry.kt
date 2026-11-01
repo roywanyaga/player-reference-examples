@@ -16,11 +16,13 @@
 package dev.ohs.vaxlink
 
 import dev.ohs.player.client.registry.ViewRegistry
+import dev.ohs.vaxlink.feature.household.registerHouseholds
 import dev.ohs.vaxlink.feature.patient.list.registerPatientList
 import dev.ohs.vaxlink.feature.patient.profile.registerPatientProfile
 
 fun buildAppViewRegistry(): ViewRegistry =
   ViewRegistry().apply {
+    registerHouseholds()
     registerPatientList()
     registerPatientProfile()
   }

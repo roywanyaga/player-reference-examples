@@ -1,1 +1,27 @@
-{"resourceType": "http://ohs.dev/StructureDefinition/ViewJoinMap", "name": "patientSummary", "from": "root", "resource": "Patient", "view": "PatientSummary", "joins": [{"view": "ReferralStatus", "from": "revIncluded", "resource": "ServiceRequest", "searchParam": "subject"}, {"view": "FollowUpStatus", "from": "revIncluded", "resource": "Task", "searchParam": "subject"}]}
+{
+  "resourceType": "http://ohs.dev/StructureDefinition/ViewJoinMap",
+  "name": "patientSummary",
+  "from": "root",
+  "resource": "Patient",
+  "view": "PatientSummary",
+  "joins": [
+    {
+      "view": "ReferralStatus",
+      "from": "revIncluded",
+      "resource": "ServiceRequest",
+      "searchParam": "subject"
+    },
+    {
+      "view": "FollowUpStatus",
+      "from": "revIncluded",
+      "resource": "Task",
+      "searchParam": "subject"
+    },
+    {
+      "view": "UnverifiedImmunization",
+      "from": "revIncluded",
+      "resource": "Immunization",
+      "searchParam": "patient"
+    }
+  ]
+}

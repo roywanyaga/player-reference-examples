@@ -4,6 +4,15 @@
       "type": "Patient"
     },
     {
+      "type": "Group"
+    },
+    {
+      "type": "RelatedPerson"
+    },
+    {
+      "type": "Immunization"
+    },
+    {
       "type": "ServiceRequest",
       "params": {
         "code": "http://snomed.info/sct|3457005",
@@ -12,23 +21,27 @@
       }
     },
     {
+      "type": "Task"
+    },
+    {
+      "type": "CarePlan"
+    },
+    {
+      "type": "Condition"
+    },
+    {
+      "type": "MedicationStatement"
+    },
+    {
+      "type": "AllergyIntolerance"
+    },
+    {
+      "type": "Observation"
+    },
+    {
       "type": "Encounter",
       "params": {
         "location": "Location/{location}"
-      }
-    },
-    {
-      "type": "Observation",
-      "params": {
-        "encounter.location": "Location/{location}",
-        "code": "http://loinc.org|59408-5,http://loinc.org|8310-5,http://loinc.org|9279-1"
-      }
-    },
-    {
-      "type": "Task",
-      "params": {
-        "owner": "Organization/{organization}",
-        "code": "http://ohs.dev/fhir/CodeSystem/task-type|opd-consult"
       }
     },
     {

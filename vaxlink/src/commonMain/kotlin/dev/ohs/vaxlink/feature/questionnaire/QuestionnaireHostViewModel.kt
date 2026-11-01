@@ -53,7 +53,7 @@ class QuestionnaireHostViewModel(
     _uiState.value = QuestionnaireHostUiState.Loading
     viewModelScope.launch {
       runCatching {
-          val questionnaire = questionnaireService.getQuestionnaire(questionnaireId)
+          val questionnaire = questionnaireService.getQuestionnaire(questionnaireId, launchContext)
           loadedQuestionnaire = questionnaire
           questionnaireService.toJson(questionnaire) to questionnaire.title?.value
         }

@@ -25,6 +25,9 @@ import dev.ohs.vaxlink.hcert.UnverifiedHcert
 import dev.ohs.vaxlink.hcert.VerificationFailure
 import dev.ohs.vaxlink.hcert.VerificationResult
 import dev.ohs.vaxlink.hcert.VerifiedHcert
+import dev.ohs.vaxlink.workflow.CertificateRecorder
+import dev.ohs.vaxlink.workflow.RecordOutcome
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -57,6 +60,9 @@ sealed interface ScanStage {
   /** A typed failure; no certificate content is shown. */
   data class Failed(val failure: VerificationFailure, val trustList: TrustListSnapshot?) :
     ScanStage
+
+  /** The decoded card was written to the child's record, or refused as already recorded. */
+  data class Recorded(val hcert: UnverifiedHcert, val outcome: RecordOutcome) : ScanStage
 }
 
 data class ScanUiState(
@@ -68,8 +74,15 @@ data class ScanUiState(
 class CertificateScanViewModel(
   private val hcert: HcertService,
   private val mode: ScanMode,
+  /** The child whose record a decoded card is written to; null hides the Record action. */
+  private val patientId: String? = null,
+  private val recorder: CertificateRecorder? = null,
   private val now: () -> Long = HcertClock::nowEpochSeconds,
 ) : ViewModel() {
+  /** True when a decoded card can be recorded from this screen. */
+  val canRecord: Boolean
+    get() = patientId != null && recorder != null
+
   private val _uiState = MutableStateFlow(ScanUiState())
   val uiState: StateFlow<ScanUiState> = _uiState.asStateFlow()
 
@@ -105,6 +118,24 @@ class CertificateScanViewModel(
     val decoded = _uiState.value.stage as? ScanStage.Decoded ?: return
     _uiState.update { it.copy(stage = ScanStage.Working) }
     viewModelScope.launch { verify(decoded.hc1) }
+  }
+
+  /** From [ScanStage.Decoded], J2's record step: store the card as an Immunization. */
+  fun recordDecoded() {
+    val decoded = _uiState.value.stage as? ScanStage.Decoded ?: return
+    val recorder = recorder ?: return
+    val patientId = patientId ?: return
+    _uiState.update { it.copy(stage = ScanStage.Working) }
+    viewModelScope.launch {
+      try {
+        val outcome = recorder.record(patientId, decoded.hc1, decoded.hcert)
+        _uiState.update { it.copy(stage = ScanStage.Recorded(decoded.hcert, outcome)) }
+      } catch (e: CancellationException) {
+        throw e
+      } catch (e: Exception) {
+        _uiState.update { it.copy(stage = decoded, scanError = e.message) }
+      }
+    }
   }
 
   fun reset() {

@@ -44,7 +44,10 @@ class RoleDownloadWorkManagerTest {
       urls += request.url
     }
 
-    assertTrue(urls.any { it.startsWith("Task?owner=Practitioner/p1&code=") }, "$urls")
+    // Schedule Tasks belong to the child, not a practitioner, so the CHW pulls every Task.
+    assertTrue(urls.any { it.startsWith("Task?_sort=") }, "$urls")
+    assertTrue(urls.any { it.startsWith("Immunization?") }, "$urls")
+    assertTrue(urls.any { it.startsWith("Group?managing-entity=Organization/o1") }, "$urls")
     assertTrue(urls.any { it.startsWith("Practitioner?_id=p1") }, "$urls")
   }
 

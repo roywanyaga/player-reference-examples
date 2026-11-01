@@ -15,8 +15,13 @@
  */
 package dev.ohs.vaxlink.data.repository
 
+import dev.ohs.fhir.model.r4.Resource
+import dev.ohs.player.client.model.SearchResult
+import dev.ohs.player.generated.state.HouseholdListState
+import dev.ohs.player.generated.state.PatientCareTaskState
 import dev.ohs.player.generated.state.PatientSummaryState
 import dev.ohs.vaxlink.data.Extraction.extractor
+import dev.ohs.vaxlink.data.datasource.householdOf
 import dev.ohs.vaxlink.data.datasource.patientProfileSearchResult
 import dev.ohs.vaxlink.data.datasource.patientSummarySearchResult
 import dev.ohs.vaxlink.data.datasource.patientSummarySearchResults
@@ -51,8 +56,20 @@ class PatientRepository(private val fhirRepository: FhirRepository) {
       val summary =
         patientSummarySearchResult(patientId, fhirRepository) ?: return@withContext ProfileUiState()
       val record = patientProfileSearchResult(patientId, fhirRepository)!!
+      val household =
+        householdOf(patientId, fhirRepository)?.let {
+          extractor.extract<HouseholdListState>(SearchResult<Resource>(resource = it)).firstOrNull()
+        }
       ProfileUiState(
         patient = extractor.extract<PatientSummaryState>(summary).firstOrNull(),
+        household = household,
+        relationships = extractor.extract(record),
+        immunizations = extractor.extract(record),
+        conditions = extractor.extract(record),
+        allergies = extractor.extract(record),
+        medicationStatements = extractor.extract(record),
+        careTasks =
+          extractor.extract<PatientCareTaskState>(record).sortedBy { it.dueBy?.toString() },
         referrals = extractor.extract(record),
         outcomes = extractor.extract(record),
         treatments = extractor.extract(record),
