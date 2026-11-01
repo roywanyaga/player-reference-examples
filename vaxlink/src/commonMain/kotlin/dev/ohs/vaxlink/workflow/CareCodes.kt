@@ -53,3 +53,39 @@ const val GROUP_CODE_SYSTEM = "http://hl7.org/fhir/group-code"
 const val V3_ROLE_CODE = "http://terminology.hl7.org/CodeSystem/v3-RoleCode"
 const val HCERT_FINGERPRINT_SYSTEM = "http://ohs.dev/vaxlink/identifier/hcert-sha256"
 const val REFERRAL_REASON_FOREIGN_RECORD = "Foreign immunization record to verify"
+
+// The eCHIS plan-level extensions the PlanScheduler honours.
+const val ENROLLMENT_EXTENSION = "http://smartregister.org/fhir/StructureDefinition/enrollment"
+const val ROLLING_ANCHOR_EXTENSION =
+  "http://smartregister.org/fhir/StructureDefinition/rolling-anchor"
+const val DISCHARGE_CONDITION_EXTENSION =
+  "http://smartregister.org/fhir/StructureDefinition/discharge-condition"
+const val ON_COMPLETE_EXTENSION = "http://smartregister.org/fhir/StructureDefinition/on-complete"
+
+// The eCHIS programmes ported for the parents and the household (files/protocols).
+const val ANC_PLAN = "http://smartregister.org/fhir/PlanDefinition/anc"
+const val PNC_PLAN = "http://smartregister.org/fhir/PlanDefinition/pnc"
+const val FP_INJECTABLE_PLAN = "http://smartregister.org/fhir/PlanDefinition/fp-injectable"
+const val FP_ORAL_PLAN = "http://smartregister.org/fhir/PlanDefinition/fp-oral"
+const val FP_LONGTERM_PLAN = "http://smartregister.org/fhir/PlanDefinition/fp-longterm"
+const val WASH_PLAN = "http://smartregister.org/fhir/PlanDefinition/household-wash-check"
+const val FP_PLANS_ALL = "$FP_INJECTABLE_PLAN,$FP_ORAL_PLAN,$FP_LONGTERM_PLAN"
+
+// Observation codes the programmes record and the plans count.
+const val SNOMED = "http://snomed.info/sct"
+const val LOINC = "http://loinc.org"
+const val ANC_CONTACT_CODE = "424619006"
+const val ANC_SCREENING_SYSTEM = "http://smartregister.org/fhir/CodeSystem/anc"
+const val PNC_CONTACT_CODE = "169762003"
+const val PNC_SYSTEM = "http://smartregister.org/fhir/CodeSystem/pnc"
+const val DELIVERY_CODE = "236973005"
+const val PREGNANCY_CONDITION_CODE = "77386006"
+const val LMP_LOINC = "8665-2"
+const val FP_ASSESSMENT_CODE = "408967003"
+const val FP_VISIT_CODE = "702636002"
+const val FP_INJECTION_CODE = "709534006"
+const val FP_METHOD_LOINC = "8659-5"
+const val FP_SYSTEM = "http://smartregister.org/fhir/CodeSystem/fp"
+const val WASH_SYSTEM = "http://smartregister.org/fhir/CodeSystem/wash"
+const val WASH_CHECK_CODE = "wash-check"
+const val V2_YES_NO_SYSTEM = "http://terminology.hl7.org/CodeSystem/v2-0136"

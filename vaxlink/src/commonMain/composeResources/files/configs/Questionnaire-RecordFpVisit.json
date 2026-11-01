@@ -1,0 +1,3429 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "record-fp-visit",
+  "url": "http://smartregister.org/fhir/Questionnaire/record-fp-visit",
+  "title": "Family Planning Visit",
+  "status": "active",
+  "subjectType": [
+    "Patient"
+  ],
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtract",
+      "extension": [
+        {
+          "url": "template",
+          "valueReference": {
+            "reference": "#record-fp-visit-template"
+          }
+        },
+        {
+          "url": "fullUrl",
+          "valueString": "%tpl0FullUrl"
+        }
+      ]
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extractAllocateId",
+      "valueString": "%tpl0FullUrl"
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtract",
+      "extension": [
+        {
+          "url": "template",
+          "valueReference": {
+            "reference": "#servicerequest-fp-referral-template"
+          }
+        },
+        {
+          "url": "fullUrl",
+          "valueString": "%tpl3FullUrl"
+        }
+      ]
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extractAllocateId",
+      "valueString": "%tpl3FullUrl"
+    }
+  ],
+  "contained": [
+    {
+      "resourceType": "Observation",
+      "id": "record-fp-visit-template",
+      "status": "final",
+      "category": [
+        {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+              "code": "survey"
+            }
+          ]
+        }
+      ],
+      "code": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "702636002",
+            "display": "Family planning visit"
+          }
+        ]
+      },
+      "subject": {
+        "_reference": {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+              "valueString": "%resource.subject.reference"
+            }
+          ]
+        }
+      },
+      "_effectiveDateTime": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+            "valueString": "%resource.repeat(item).where(linkId='date').answer.value.first()"
+          }
+        ]
+      },
+      "component": [
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "8659-5",
+                "display": "Family planning method"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='method').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='method').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='method').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/fp",
+                "code": "side-effects-present",
+                "display": "Side effects identified"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='side-effects-present').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='side-effects-present').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='side-effects-present').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/fp",
+                "code": "side-effect",
+                "display": "Side effect"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='side-effect').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='side-effect').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='side-effect').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/fp",
+                "code": "danger-signs-present",
+                "display": "Danger signs identified"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='danger-signs-present').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='danger-signs-present').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='danger-signs-present').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/fp",
+                "code": "danger-sign",
+                "display": "Danger sign"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='danger-sign').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='danger-sign').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='danger-sign').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/fp",
+                "code": "continue-method",
+                "display": "Continuing with current method"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='continue-method').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='continue-method').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='continue-method').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/fp",
+                "code": "refill-required",
+                "display": "Refill required"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='refill-required').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='refill-required').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='refill-required').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/fp",
+                "code": "male-condoms-available",
+                "display": "Are male condoms available"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='male-condoms-available').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='male-condoms-available').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='male-condoms-available').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='male-condoms-given').answer.value.first().exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/fp",
+                "code": "male-condoms-given",
+                "display": "Number of male condoms given"
+              }
+            ]
+          },
+          "valueQuantity": {
+            "unit": "{condom}",
+            "system": "http://unitsofmeasure.org",
+            "code": "{condom}",
+            "_value": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                  "valueString": "%resource.repeat(item).where(linkId='male-condoms-given').answer.value.first()"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/fp",
+                "code": "female-condoms-available",
+                "display": "Are female condoms available"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='female-condoms-available').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='female-condoms-available').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='female-condoms-available').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='female-condoms-given').answer.value.first().exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/fp",
+                "code": "female-condoms-given",
+                "display": "Number of female condoms given"
+              }
+            ]
+          },
+          "valueQuantity": {
+            "unit": "{condom}",
+            "system": "http://unitsofmeasure.org",
+            "code": "{condom}",
+            "_value": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                  "valueString": "%resource.repeat(item).where(linkId='female-condoms-given').answer.value.first()"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/fp",
+                "code": "microlut-available",
+                "display": "Are Microlut pills (progestin-only) available"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='microlut-available').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='microlut-available').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='microlut-available').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='microlut-cycles-given').answer.value.first().exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/fp",
+                "code": "microlut-cycles-given",
+                "display": "Cycles of Microlut given"
+              }
+            ]
+          },
+          "valueQuantity": {
+            "unit": "{cycle}",
+            "system": "http://unitsofmeasure.org",
+            "code": "{cycle}",
+            "_value": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                  "valueString": "%resource.repeat(item).where(linkId='microlut-cycles-given').answer.value.first()"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/fp",
+                "code": "microgynon-available",
+                "display": "Are Microgynon pills (combined oral) available"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='microgynon-available').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='microgynon-available').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='microgynon-available').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='microgynon-cycles-given').answer.value.first().exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/fp",
+                "code": "microgynon-cycles-given",
+                "display": "Cycles of Microgynon given"
+              }
+            ]
+          },
+          "valueQuantity": {
+            "unit": "{cycle}",
+            "system": "http://unitsofmeasure.org",
+            "code": "{cycle}",
+            "_value": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                  "valueString": "%resource.repeat(item).where(linkId='microgynon-cycles-given').answer.value.first()"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/fp",
+                "code": "dmpa-available",
+                "display": "Is injectable DMPA available"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='dmpa-available').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='dmpa-available').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='dmpa-available').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/fp",
+                "code": "dmpa-administered",
+                "display": "Injectable DMPA administered"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='dmpa-administered').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='dmpa-administered').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='dmpa-administered').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/fp",
+                "code": "sayana-press-available",
+                "display": "Is Sayana Press (Depo) available"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='sayana-press-available').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='sayana-press-available').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='sayana-press-available').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/fp",
+                "code": "sayana-press-administered",
+                "display": "Sayana Press (Depo) administered"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='sayana-press-administered').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='sayana-press-administered').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='sayana-press-administered').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/fp",
+                "code": "emergency-contraceptives-available",
+                "display": "Are emergency contraceptives available"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='emergency-contraceptives-available').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='emergency-contraceptives-available').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='emergency-contraceptives-available').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='emergency-contraceptives-given').answer.value.first().exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/fp",
+                "code": "emergency-contraceptives-given",
+                "display": "Number of emergency contraceptive tablets given"
+              }
+            ]
+          },
+          "valueQuantity": {
+            "unit": "{tablet}",
+            "system": "http://unitsofmeasure.org",
+            "code": "{tablet}",
+            "_value": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                  "valueString": "%resource.repeat(item).where(linkId='emergency-contraceptives-given').answer.value.first()"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "resourceType": "ServiceRequest",
+      "id": "servicerequest-fp-referral-template",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+          "valueString": "iif(%resource.repeat(item).where(linkId='referred').answer.value.code.first() = 'yes', %resource)"
+        },
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/record-questionnaire",
+          "valueString": "record-fp-referral-closure"
+        }
+      ],
+      "status": "active",
+      "intent": "order",
+      "priority": "routine",
+      "category": [
+        {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "3457005",
+              "display": "Patient referral"
+            }
+          ]
+        }
+      ],
+      "code": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "389095005",
+            "display": "Contraception care"
+          }
+        ],
+        "text": "FP referral"
+      },
+      "subject": {
+        "_reference": {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+              "valueString": "%resource.subject.reference"
+            }
+          ]
+        }
+      },
+      "_authoredOn": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+            "valueString": "%resource.repeat(item).where(linkId='date').answer.value.first()"
+          }
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "linkId": "date",
+      "text": "Date",
+      "type": "date",
+      "required": true,
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Date"
+              }
+            ]
+          }
+        ]
+      },
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/fhirpath",
+            "expression": "today()"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "method",
+      "text": "Which method is the client currently using?",
+      "type": "choice",
+      "required": true,
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.exists(code = '408967003' or code = '702636002') and component.code.coding.exists(code = '8659-5')).sort(effective).last().component.where(code.coding.exists(code = '8659-5')).value.coding"
+          }
+        }
+      ],
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "275831001",
+            "display": "Uses male barrier contraception method",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Utilise une méthode de contraception barrière masculine"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "228479001",
+            "display": "Uses a female condom",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Utilise un préservatif féminin"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "169467008",
+            "display": "Uses progestogen only oral contraception",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Utilise une contraception orale progestative seule"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "268458002",
+            "display": "Uses combined oral contraception",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Utilise une contraception orale combinée"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "709457002",
+            "display": "Uses progestogen only depot contraception",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Utilise une contraception progestative injectable à effet prolongé"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "169513000",
+            "display": "Uses withdrawal method of contraception",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Utilise la méthode du retrait"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "162171002",
+            "display": "Currently not sexually active",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Actuellement sans activité sexuelle"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA27918-4",
+            "display": "Fertility awareness-based methods",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Méthodes fondées sur la connaissance de la fécondité"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA27919-2",
+            "display": "Lactational amenorrhea method",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Méthode de l'allaitement maternel et de l'aménorrhée"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA27907-7",
+            "display": "Injectables",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Injectables"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "702587005",
+            "display": "Prescription of emergency contraception",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Prescription d'une contraception d'urgence"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "312081001",
+            "display": "Uses IUD (intrauterine device) contraception",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Utilise un DIU (dispositif intra-utérin)"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "428987008",
+            "display": "Subcutaneous contraceptive implant present",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Implant contraceptif sous-cutané en place"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "22523008",
+            "display": "Vasectomy",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Vasectomie"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "74964007",
+            "display": "Other",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Autre"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Quelle méthode le client utilise-t-il actuellement ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "side-effects-present",
+      "text": "Any family planning side effects identified?",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Oui"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Non"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "required": true,
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Des effets secondaires de la planification familiale ont-ils été identifiés ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "side-effect",
+      "text": "Side effect",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "14302001",
+            "display": "Amenorrhea",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Aménorrhée"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "9126005",
+            "display": "Menstrual spotting",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Saignotements"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://smartregister.org/fhir/CodeSystem/fp",
+            "code": "headache-dizziness",
+            "display": "Headaches and dizziness",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Maux de tête et vertiges"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "18963009",
+            "display": "Mood swings",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Sautes d'humeur"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "55222007",
+            "display": "Tenderness of breast",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Sensibilité des seins"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "16932000",
+            "display": "Nausea and vomiting",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Nausées et vomissements"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "44991000119100",
+            "display": "Bleeding changes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Changements des saignements"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "74964007",
+            "display": "Other",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Autre"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "enableWhen": [
+        {
+          "question": "side-effects-present",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "required": true,
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Effet secondaire"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "danger-signs-present",
+      "text": "Any family planning danger signs?",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Oui"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Non"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "required": true,
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Des signes de danger liés à la planification familiale ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "danger-sign",
+      "text": "Select danger sign (pain counts only when severe)",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "21522001",
+            "display": "Abdominal pain",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Douleur abdominale"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "29857009",
+            "display": "Chest pain",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Douleur thoracique"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "267036007",
+            "display": "Dyspnea",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Dyspnée"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "25064002",
+            "display": "Headache",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Céphalée"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "63102001",
+            "display": "Visual disturbance",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Trouble visuel"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "10601006",
+            "display": "Pain in lower limb",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Douleur au membre inférieur"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "enableWhen": [
+        {
+          "question": "danger-signs-present",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "required": true,
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Sélectionnez le signe de danger (la douleur ne compte que si elle est intense)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "continue-method",
+      "text": "Do you want to continue with the current method?",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Oui"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Non"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "required": true,
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Souhaitez-vous poursuivre la méthode actuelle ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "refill-required",
+      "text": "Refill required?",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Oui"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Non"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "enableWhen": [
+        {
+          "question": "continue-method",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "required": true,
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Renouvellement nécessaire ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "male-condoms-available",
+      "text": "Are male condoms available?",
+      "type": "choice",
+      "required": true,
+      "enableWhen": [
+        {
+          "question": "method",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "275831001"
+          }
+        },
+        {
+          "question": "refill-required",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "enableBehavior": "all",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Oui"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Non"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Des préservatifs masculins sont-ils disponibles ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "male-condoms-given",
+      "text": "Number of male condoms given",
+      "type": "integer",
+      "required": true,
+      "enableWhen": [
+        {
+          "question": "male-condoms-available",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Nombre de préservatifs masculins distribués"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "female-condoms-available",
+      "text": "Are female condoms available?",
+      "type": "choice",
+      "required": true,
+      "enableWhen": [
+        {
+          "question": "method",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "228479001"
+          }
+        },
+        {
+          "question": "refill-required",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "enableBehavior": "all",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Oui"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Non"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Des préservatifs féminins sont-ils disponibles ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "female-condoms-given",
+      "text": "Number of female condoms given",
+      "type": "integer",
+      "required": true,
+      "enableWhen": [
+        {
+          "question": "female-condoms-available",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Nombre de préservatifs féminins distribués"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "microlut-available",
+      "text": "Are Microlut pills (progestin-only) available?",
+      "type": "choice",
+      "required": true,
+      "enableWhen": [
+        {
+          "question": "method",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "169467008"
+          }
+        },
+        {
+          "question": "refill-required",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "enableBehavior": "all",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Oui"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Non"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Des pilules Microlut (progestatives seules) sont-elles disponibles ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "microlut-cycles-given",
+      "text": "Cycles of Microlut given",
+      "type": "integer",
+      "required": true,
+      "enableWhen": [
+        {
+          "question": "microlut-available",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Cycles de Microlut distribués"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "microgynon-available",
+      "text": "Are Microgynon pills (combined oral) available?",
+      "type": "choice",
+      "required": true,
+      "enableWhen": [
+        {
+          "question": "method",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "268458002"
+          }
+        },
+        {
+          "question": "refill-required",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "enableBehavior": "all",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Oui"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Non"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Des pilules Microgynon (orales combinées) sont-elles disponibles ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "microgynon-cycles-given",
+      "text": "Cycles of Microgynon given",
+      "type": "integer",
+      "required": true,
+      "enableWhen": [
+        {
+          "question": "microgynon-available",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Cycles de Microgynon distribués"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "dmpa-available",
+      "text": "Is injectable DMPA available?",
+      "type": "choice",
+      "required": true,
+      "enableWhen": [
+        {
+          "question": "method",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://loinc.org",
+            "code": "LA27907-7"
+          }
+        },
+        {
+          "question": "refill-required",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "enableBehavior": "all",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Oui"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Non"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Le DMPA injectable est-il disponible ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "dmpa-administered",
+      "text": "Injectable DMPA administered?",
+      "type": "choice",
+      "required": true,
+      "enableWhen": [
+        {
+          "question": "dmpa-available",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Oui"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Non"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "DMPA injectable administré ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "sayana-press-available",
+      "text": "Is Sayana Press (Depo) available?",
+      "type": "choice",
+      "required": true,
+      "enableWhen": [
+        {
+          "question": "method",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "709457002"
+          }
+        },
+        {
+          "question": "refill-required",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "enableBehavior": "all",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Oui"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Non"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Le Sayana Press (Depo) est-il disponible ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "sayana-press-administered",
+      "text": "Sayana Press (Depo) administered?",
+      "type": "choice",
+      "required": true,
+      "enableWhen": [
+        {
+          "question": "sayana-press-available",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Oui"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Non"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Sayana Press (Depo) administré ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "emergency-contraceptives-available",
+      "text": "Are emergency contraceptives available?",
+      "type": "choice",
+      "required": true,
+      "enableWhen": [
+        {
+          "question": "method",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "702587005"
+          }
+        },
+        {
+          "question": "refill-required",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "enableBehavior": "all",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Oui"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Non"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Des contraceptifs d'urgence sont-ils disponibles ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "emergency-contraceptives-given",
+      "text": "Number of emergency contraceptive tablets given",
+      "type": "integer",
+      "required": true,
+      "enableWhen": [
+        {
+          "question": "emergency-contraceptives-available",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Nombre de comprimés de contraception d'urgence distribués"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "referral-prompt",
+      "text": "Refer the client to a health facility",
+      "type": "display",
+      "enableWhen": [
+        {
+          "question": "male-condoms-available",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no"
+          }
+        },
+        {
+          "question": "female-condoms-available",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no"
+          }
+        },
+        {
+          "question": "microlut-available",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no"
+          }
+        },
+        {
+          "question": "microgynon-available",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no"
+          }
+        },
+        {
+          "question": "dmpa-available",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no"
+          }
+        },
+        {
+          "question": "sayana-press-available",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no"
+          }
+        },
+        {
+          "question": "emergency-contraceptives-available",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no"
+          }
+        },
+        {
+          "question": "side-effects-present",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        },
+        {
+          "question": "danger-signs-present",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        },
+        {
+          "question": "continue-method",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no"
+          }
+        },
+        {
+          "question": "method",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://loinc.org",
+            "code": "LA27919-2"
+          }
+        },
+        {
+          "question": "method",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "312081001"
+          }
+        },
+        {
+          "question": "method",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "428987008"
+          }
+        },
+        {
+          "question": "method",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "22523008"
+          }
+        },
+        {
+          "question": "method",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "74964007"
+          }
+        }
+      ],
+      "enableBehavior": "any",
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Référer le client vers un établissement de santé"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "referred",
+      "text": "Referred the client to a health facility?",
+      "type": "choice",
+      "required": true,
+      "enableWhen": [
+        {
+          "question": "male-condoms-available",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no"
+          }
+        },
+        {
+          "question": "female-condoms-available",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no"
+          }
+        },
+        {
+          "question": "microlut-available",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no"
+          }
+        },
+        {
+          "question": "microgynon-available",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no"
+          }
+        },
+        {
+          "question": "dmpa-available",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no"
+          }
+        },
+        {
+          "question": "sayana-press-available",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no"
+          }
+        },
+        {
+          "question": "emergency-contraceptives-available",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no"
+          }
+        },
+        {
+          "question": "side-effects-present",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        },
+        {
+          "question": "danger-signs-present",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        },
+        {
+          "question": "continue-method",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no"
+          }
+        },
+        {
+          "question": "method",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://loinc.org",
+            "code": "LA27919-2"
+          }
+        },
+        {
+          "question": "method",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "312081001"
+          }
+        },
+        {
+          "question": "method",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "428987008"
+          }
+        },
+        {
+          "question": "method",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "22523008"
+          }
+        },
+        {
+          "question": "method",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "74964007"
+          }
+        }
+      ],
+      "enableBehavior": "any",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Oui"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Non"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Client référé vers un établissement de santé ?"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "_title": {
+    "extension": [
+      {
+        "url": "http://hl7.org/fhir/StructureDefinition/translation",
+        "extension": [
+          {
+            "url": "lang",
+            "valueCode": "fr"
+          },
+          {
+            "url": "content",
+            "valueString": "Visite de planification familiale"
+          }
+        ]
+      }
+    ]
+  },
+  "publisher": "Nawitech Limited",
+  "description": "Ported from Nawi's eCHIS configuration (opensrp-config, data.fi/echis) for VaxLink; the eCHIS form 'record-fp-visit'. Extraction is mapped in Kotlin (workflow/ProgrammeRecords.kt); the contained templates document the original intent."
+}

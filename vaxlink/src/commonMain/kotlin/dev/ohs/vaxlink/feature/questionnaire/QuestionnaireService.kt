@@ -22,6 +22,9 @@ import dev.ohs.fhir.model.r4.Group
 import dev.ohs.fhir.model.r4.Patient
 import dev.ohs.fhir.model.r4.Questionnaire as QuestionnaireR4
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.Reference
+import dev.ohs.fhir.model.r4.Resource
+import dev.ohs.fhir.model.r4.ServiceRequest
 import dev.ohs.fhir.model.r4.String as FhirString
 import dev.ohs.fhir.model.r4.Uri
 import dev.ohs.fhir.model.r4.terminologies.AdministrativeGender
@@ -31,10 +34,17 @@ import dev.ohs.vaxlink.generated.resources.Res
 import dev.ohs.vaxlink.util.FhirJson
 import dev.ohs.vaxlink.util.displayName
 import dev.ohs.vaxlink.workflow.LaoScheduleService
+import dev.ohs.vaxlink.workflow.ProgrammeRecord
 import dev.ohs.vaxlink.workflow.Transactor
 import dev.ohs.vaxlink.workflow.code
+import dev.ohs.vaxlink.workflow.enrolAnc
+import dev.ohs.vaxlink.workflow.enrolFp
 import dev.ohs.vaxlink.workflow.headId
 import dev.ohs.vaxlink.workflow.memberIds
+import dev.ohs.vaxlink.workflow.recordAncContact
+import dev.ohs.vaxlink.workflow.recordFpVisit
+import dev.ohs.vaxlink.workflow.recordPncContact
+import dev.ohs.vaxlink.workflow.recordWashCheck
 import dev.ohs.vaxlink.workflow.registerHousehold
 import dev.ohs.vaxlink.workflow.registerMember
 import dev.ohs.vaxlink.workflow.registerNewborn
@@ -74,6 +84,28 @@ object QuestionnaireIds {
 
   /** The coding system the parent choices on the newborn form use; the code is the Patient id. */
   const val PARENT_CHOICE_SYSTEM = "http://ohs.dev/vaxlink/household-member"
+
+  /** Pregnancy assessment, also used to enter an ANC history with its outcome (eCHIS enrol-anc). */
+  const val ENROL_ANC = "enrol-anc"
+
+  /** An ANC contact (eCHIS record-anc-contact). */
+  const val RECORD_ANC_CONTACT = "record-anc-contact"
+
+  /** A postnatal contact for the mother or newborn (eCHIS record-pnc-contact). */
+  const val RECORD_PNC_CONTACT = "record-pnc-contact"
+
+  /** Family planning assessment that enrols the method's plan (eCHIS enrol-fp). */
+  const val ENROL_FP = "enrol-fp"
+
+  /** A family planning follow-up visit (eCHIS record-fp-visit). */
+  const val RECORD_FP_VISIT = "record-fp-visit"
+
+  /** The household WASH check, on the Group (eCHIS record-wash-check). */
+  const val RECORD_WASH_CHECK = "record-wash-check"
+
+  /** The forms launched from an adult woman's profile. */
+  val PROGRAMME_FORMS =
+    listOf(ENROL_ANC, RECORD_ANC_CONTACT, RECORD_PNC_CONTACT, ENROL_FP, RECORD_FP_VISIT)
 }
 
 /** Bundled Questionnaire JSON, keyed by the id it should be read under. */
@@ -84,6 +116,12 @@ private val BUNDLED_QUESTIONNAIRE_PATHS: Map<String, String> =
     QuestionnaireIds.REGISTER_HOUSEHOLD to "files/configs/Questionnaire-RegisterHousehold.json",
     QuestionnaireIds.REGISTER_MEMBER to "files/configs/Questionnaire-RegisterMember.json",
     QuestionnaireIds.REGISTER_NEWBORN to "files/configs/Questionnaire-RegisterNewborn.json",
+    QuestionnaireIds.ENROL_ANC to "files/configs/Questionnaire-EnrolAnc.json",
+    QuestionnaireIds.RECORD_ANC_CONTACT to "files/configs/Questionnaire-RecordAncContact.json",
+    QuestionnaireIds.RECORD_PNC_CONTACT to "files/configs/Questionnaire-RecordPncContact.json",
+    QuestionnaireIds.ENROL_FP to "files/configs/Questionnaire-EnrolFp.json",
+    QuestionnaireIds.RECORD_FP_VISIT to "files/configs/Questionnaire-RecordFpVisit.json",
+    QuestionnaireIds.RECORD_WASH_CHECK to "files/configs/Questionnaire-RecordWashCheck.json",
   )
 
 /** Reads bundled Questionnaires and persists what their responses produce via [FhirRepository]. */
@@ -145,6 +183,7 @@ class QuestionnaireService(
         val registration = registerHousehold(response, launchContext.user().organizationId)
         repository.upsert(registration.head)
         repository.upsert(registration.household)
+        schedule?.scheduler?.refresh(registration.household)
         QuestionnaireSubmissionResult("Household registered.")
       }
       QuestionnaireIds.REGISTER_MEMBER -> {
@@ -168,6 +207,36 @@ class QuestionnaireService(
         registration.parents.forEach { repository.upsert(it) }
         schedule?.refresh(registration.child)
         QuestionnaireSubmissionResult("Newborn registered.")
+      }
+      QuestionnaireIds.ENROL_ANC -> {
+        val patient = launchContext.patient()
+        store(enrolAnc(response, patient.id!!, today()), patient, launchContext)
+        QuestionnaireSubmissionResult("Antenatal care recorded.")
+      }
+      QuestionnaireIds.RECORD_ANC_CONTACT -> {
+        val patient = launchContext.patient()
+        store(recordAncContact(response, patient.id!!, today()), patient, launchContext)
+        QuestionnaireSubmissionResult("ANC contact recorded.")
+      }
+      QuestionnaireIds.RECORD_PNC_CONTACT -> {
+        val patient = launchContext.patient()
+        store(recordPncContact(response, patient.id!!, today()), patient, launchContext)
+        QuestionnaireSubmissionResult("Postnatal contact recorded.")
+      }
+      QuestionnaireIds.ENROL_FP -> {
+        val patient = launchContext.patient()
+        store(enrolFp(response, patient.id!!, today()), patient, launchContext)
+        QuestionnaireSubmissionResult("Family planning recorded.")
+      }
+      QuestionnaireIds.RECORD_FP_VISIT -> {
+        val patient = launchContext.patient()
+        store(recordFpVisit(response, patient.id!!, today()), patient, launchContext)
+        QuestionnaireSubmissionResult("Family planning visit recorded.")
+      }
+      QuestionnaireIds.RECORD_WASH_CHECK -> {
+        val household = launchContext.household()
+        store(recordWashCheck(response, household.id!!, today()), household, launchContext)
+        QuestionnaireSubmissionResult("WASH check recorded.")
       }
       else -> error("No submission handling is defined for questionnaire '${questionnaire.id}'.")
     }
@@ -214,6 +283,34 @@ class QuestionnaireService(
     val born = (birthDate?.value as? FhirDate.Date)?.date ?: return true
     return born <= today().minus(DatePeriod(years = 10))
   }
+
+  /**
+   * Stores what a programme form produced, then brings the subject's plans up to date. A referral
+   * the form asked for is requested by the signed-in user, which is what the CHW's sync filter
+   * matches on.
+   */
+  private suspend fun store(
+    record: ProgrammeRecord,
+    subject: Resource,
+    launchContext: QuestionnaireLaunchContext,
+  ) {
+    val requester =
+      launchContext.user?.practitionerId?.let {
+        Reference(reference = FhirString(value = "Practitioner/$it"))
+      }
+    record.resources.forEach {
+      val stored =
+        if (it is ServiceRequest && it.requester == null && requester != null)
+          it.copy(requester = requester)
+        else it
+      repository.upsert(stored)
+    }
+    schedule?.scheduler?.refresh(subject)
+  }
+
+  private suspend fun QuestionnaireLaunchContext.patient(): Patient =
+    patientId?.let { repository.get("Patient", it) as? Patient }
+      ?: error("This questionnaire needs a patient to record against.")
 
   private suspend fun QuestionnaireLaunchContext.household(): Group =
     householdId?.let { repository.get("Group", it) as? Group }

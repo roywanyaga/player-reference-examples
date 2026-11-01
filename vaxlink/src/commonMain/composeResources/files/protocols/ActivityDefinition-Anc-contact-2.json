@@ -1,0 +1,25 @@
+{
+  "resourceType": "ActivityDefinition",
+  "id": "anc-contact-2",
+  "url": "http://smartregister.org/fhir/ActivityDefinition/anc-contact-2",
+  "title": "ANC contact 2",
+  "status": "active",
+  "kind": "Task",
+  "description": "Ported from Nawi's eCHIS configuration (opensrp-config, data.fi/echis) for VaxLink; the 'contact-2' action of the eCHIS plan 'anc'.",
+  "extension": [
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/dose-number",
+      "valueString": "2"
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "424619006",
+        "display": "ANC contact"
+      }
+    ],
+    "text": "ANC contact 2"
+  }
+}

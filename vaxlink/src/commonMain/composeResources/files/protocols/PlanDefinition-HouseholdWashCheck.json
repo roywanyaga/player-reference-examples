@@ -1,0 +1,83 @@
+{
+  "resourceType": "PlanDefinition",
+  "id": "household-wash-check",
+  "url": "http://smartregister.org/fhir/PlanDefinition/household-wash-check",
+  "version": "1.0.0",
+  "title": "Household routine WASH check",
+  "status": "active",
+  "publisher": "Nawitech Limited",
+  "subjectCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/resource-types",
+        "code": "Group",
+        "display": "Group"
+      }
+    ]
+  },
+  "extension": [
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/enrollment",
+      "extension": [
+        {
+          "url": "mode",
+          "valueString": "auto"
+        }
+      ]
+    },
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/rolling-anchor",
+      "extension": [
+        {
+          "url": "code",
+          "valueString": "wash-check"
+        }
+      ]
+    },
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/record-questionnaire",
+      "valueString": "record-wash-check"
+    }
+  ],
+  "action": [
+    {
+      "id": "wash-check",
+      "title": "Household WASH check",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "lastWashCheck"
+            },
+            {
+              "url": "offset",
+              "valueString": "P1M"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P1W"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P2W"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "Group.active.empty() or Group.active = true"
+          }
+        }
+      ],
+      "definitionCanonical": "http://smartregister.org/fhir/ActivityDefinition/household-wash-check-wash-check"
+    }
+  ],
+  "description": "Ported from Nawi's eCHIS configuration (opensrp-config, data.fi/echis) for VaxLink; the eCHIS plan 'household-wash-check'. Each action gained an ActivityDefinition so fhir-workflow $apply produces a Task; the eCHIS schedule-offset and enrollment extensions are read by the Player's PlanScheduler."
+}

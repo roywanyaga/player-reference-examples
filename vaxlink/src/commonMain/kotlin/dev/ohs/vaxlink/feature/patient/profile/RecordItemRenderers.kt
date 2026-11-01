@@ -17,10 +17,13 @@ package dev.ohs.vaxlink.feature.patient.profile
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import dev.ohs.player.client.renderer.ComponentRenderer
 import dev.ohs.player.client.renderer.RenderOptions
 import dev.ohs.player.generated.config.CareItemConfig
+import dev.ohs.player.generated.state.HouseholdCareTaskState
 import dev.ohs.player.generated.state.PatientAllergyState
+import dev.ohs.player.generated.state.PatientCarePlanState
 import dev.ohs.player.generated.state.PatientCareTaskState
 import dev.ohs.player.generated.state.PatientConditionState
 import dev.ohs.player.generated.state.PatientImmunizationState
@@ -30,6 +33,9 @@ import dev.ohs.vaxlink.feature.component.common.StatusChipData
 import dev.ohs.vaxlink.feature.component.common.StatusRow
 import dev.ohs.vaxlink.generated.resources.Res
 import dev.ohs.vaxlink.generated.resources.care_given_on
+import dev.ohs.vaxlink.generated.resources.care_plan_active
+import dev.ohs.vaxlink.generated.resources.care_plan_period
+import dev.ohs.vaxlink.generated.resources.care_plan_since
 import dev.ohs.vaxlink.generated.resources.care_status_done
 import dev.ohs.vaxlink.generated.resources.immunization_foreign_dose
 import dev.ohs.vaxlink.generated.resources.immunization_lao_dose
@@ -39,9 +45,12 @@ import dev.ohs.vaxlink.generated.resources.immunization_verified
 import dev.ohs.vaxlink.generated.resources.name_unknown
 import dev.ohs.vaxlink.generated.resources.record_recorded_on
 import dev.ohs.vaxlink.generated.resources.task_due_window
+import dev.ohs.vaxlink.generated.resources.task_missed
 import dev.ohs.vaxlink.generated.resources.task_overdue
+import dev.ohs.vaxlink.generated.resources.task_plan_ended
 import dev.ohs.vaxlink.generated.resources.work_due
 import dev.ohs.vaxlink.util.calendarDate
+import dev.ohs.vaxlink.workflow.PlanScheduler
 import kotlin.time.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -153,24 +162,104 @@ class CareTaskItemRenderer(
 ) : ComponentRenderer<PatientCareTaskState, CareItemConfig> {
   @Composable
   override fun Render(item: PatientCareTaskState, config: CareItemConfig, options: RenderOptions) {
-    val from = item.dueFrom.calendarDate()
-    val by = item.dueBy.calendarDate()
+    TaskRow(
+      title = item.taskTitle ?: item.taskDoseCode,
+      status = item.taskStatus,
+      statusReason = item.taskStatusReason,
+      dueFrom = item.dueFrom.calendarDate(),
+      dueBy = item.dueBy.calendarDate(),
+      showDate = config.showDate != false,
+      today = today(),
+      modifier = options.modifier,
+    )
+  }
+}
+
+/** A household-level task, such as the WASH check, rendered like a patient's. */
+class HouseholdTaskItemRenderer(
+  private val today: () -> LocalDate = { Clock.System.todayIn(TimeZone.currentSystemDefault()) }
+) : ComponentRenderer<HouseholdCareTaskState, CareItemConfig> {
+  @Composable
+  override fun Render(
+    item: HouseholdCareTaskState,
+    config: CareItemConfig,
+    options: RenderOptions,
+  ) {
+    TaskRow(
+      title = item.taskTitle ?: item.taskDoseCode,
+      status = item.taskStatus,
+      statusReason = item.taskStatusReason,
+      dueFrom = item.dueFrom.calendarDate(),
+      dueBy = item.dueBy.calendarDate(),
+      showDate = config.showDate != false,
+      today = today(),
+      modifier = options.modifier,
+    )
+  }
+}
+
+/**
+ * One schedule task: done, due, overdue, or cancelled with the reason the scheduler gave (missed
+ * while the plan ran, or the plan ended before it came due).
+ */
+@Composable
+private fun TaskRow(
+  title: String?,
+  status: String?,
+  statusReason: String?,
+  dueFrom: String?,
+  dueBy: String?,
+  showDate: Boolean,
+  today: LocalDate,
+  modifier: Modifier,
+) {
+  val overdue = dueBy?.let { LocalDate.parse(it) < today } == true
+  StatusRow(
+    title = title ?: stringResource(Res.string.name_unknown),
+    modifier = modifier,
+    subtitle =
+      when {
+        !showDate -> null
+        dueFrom != null && dueBy != null ->
+          stringResource(Res.string.task_due_window, dueFrom, dueBy)
+        dueBy != null -> stringResource(Res.string.work_due, dueBy)
+        else -> null
+      },
+    status =
+      when {
+        status == "completed" -> done(stringResource(Res.string.care_status_done))
+        status == "requested" && overdue -> overdue(stringResource(Res.string.task_overdue))
+        status == "requested" -> pending(stringResource(Res.string.work_due, dueBy ?: ""))
+        status == "cancelled" && statusReason == PlanScheduler.TASK_MISSED ->
+          overdue(stringResource(Res.string.task_missed))
+        status == "cancelled" -> ended(stringResource(Res.string.task_plan_ended))
+        else -> null
+      },
+  )
+}
+
+/** A programme the patient is enrolled in: ANC, PNC or family planning, with its dates. */
+class CarePlanItemRenderer : ComponentRenderer<PatientCarePlanState, CareItemConfig> {
+  @Composable
+  override fun Render(item: PatientCarePlanState, config: CareItemConfig, options: RenderOptions) {
+    val from = item.startedOn.calendarDate()
+    val to = item.endedOn.calendarDate()
     StatusRow(
-      title = item.taskTitle ?: item.taskDoseCode ?: stringResource(Res.string.name_unknown),
+      title =
+        item.carePlanTitle
+          ?: item.carePlanPlan?.substringAfterLast('/')
+          ?: stringResource(Res.string.name_unknown),
       modifier = options.modifier,
       subtitle =
         when {
-          config.showDate == false -> null
-          from != null && by != null -> stringResource(Res.string.task_due_window, from, by)
-          by != null -> stringResource(Res.string.work_due, by)
+          from != null && to != null -> stringResource(Res.string.care_plan_period, from, to)
+          from != null -> stringResource(Res.string.care_plan_since, from)
           else -> null
         },
       status =
-        when {
-          item.taskStatus == "completed" -> done(stringResource(Res.string.care_status_done))
-          item.taskStatus == "requested" && item.isOverdue(today()) ->
-            overdue(stringResource(Res.string.task_overdue))
-          item.taskStatus == "requested" -> pending(stringResource(Res.string.work_due, by ?: ""))
+        when (item.carePlanStatus) {
+          "active" -> pending(stringResource(Res.string.care_plan_active))
+          "completed" -> done(stringResource(Res.string.care_status_done))
           else -> null
         },
     )
@@ -211,6 +300,14 @@ private fun done(label: String) =
     label,
     MaterialTheme.colorScheme.primaryContainer,
     MaterialTheme.colorScheme.onPrimaryContainer,
+  )
+
+@Composable
+private fun ended(label: String) =
+  StatusChipData(
+    label,
+    MaterialTheme.colorScheme.surfaceVariant,
+    MaterialTheme.colorScheme.onSurfaceVariant,
   )
 
 @Composable

@@ -150,7 +150,7 @@ internal val viewModelModule = module {
     CertificateScanViewModel(get(), mode, patientId, recorder = getOrNull())
   }
   viewModel { HouseholdListViewModel(get()) }
-  viewModel { (householdId: String) -> HouseholdViewModel(householdId, get()) }
+  viewModel { (householdId: String) -> HouseholdViewModel(householdId, get(), get(), get()) }
   viewModel { AuthViewModel(get(), get()) }
   viewModel {
     UserContextViewModel(

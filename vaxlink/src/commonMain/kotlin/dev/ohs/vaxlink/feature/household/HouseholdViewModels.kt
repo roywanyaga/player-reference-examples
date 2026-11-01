@@ -17,9 +17,13 @@ package dev.ohs.vaxlink.feature.household
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.ohs.fhir.model.r4.Group
 import dev.ohs.player.generated.state.HouseholdListState
+import dev.ohs.vaxlink.data.repository.FhirRepository
 import dev.ohs.vaxlink.data.repository.HouseholdRepository
 import dev.ohs.vaxlink.data.repository.HouseholdUiState
+import dev.ohs.vaxlink.workflow.LaoScheduleService
+import dev.ohs.vaxlink.workflow.refreshHousehold
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -41,12 +45,24 @@ sealed interface HouseholdScreenState {
   data class Loaded(val state: HouseholdUiState?) : HouseholdScreenState
 }
 
-class HouseholdViewModel(householdId: String, repository: HouseholdRepository) : ViewModel() {
+/**
+ * One household's screen. Opening it also brings the household's own plans up to date, which enrols
+ * a household seen for the first time in the WASH check; null [schedule] skips that.
+ */
+class HouseholdViewModel(
+  householdId: String,
+  repository: HouseholdRepository,
+  fhirRepository: FhirRepository,
+  schedule: LaoScheduleService? = null,
+) : ViewModel() {
   private val _uiState = MutableStateFlow<HouseholdScreenState>(HouseholdScreenState.Loading)
   val uiState: StateFlow<HouseholdScreenState> = _uiState.asStateFlow()
 
   init {
     viewModelScope.launch {
+      (fhirRepository.get("Group", householdId) as? Group)?.let {
+        schedule?.scheduler?.refreshHousehold(it)
+      }
       repository.observeHousehold(householdId).collect {
         _uiState.value = HouseholdScreenState.Loaded(it)
       }

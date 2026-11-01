@@ -1,0 +1,8 @@
+{
+  "resourceType": "http://ohs.dev/StructureDefinition/ViewJoinMap",
+  "name": "householdCareTask",
+  "from": "revIncluded",
+  "resource": "Task",
+  "view": "CareTask",
+  "searchParam": "subject"
+}

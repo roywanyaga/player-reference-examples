@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -48,6 +49,7 @@ import dev.ohs.player.client.registry.LocalViewRegistry
 import dev.ohs.player.client.registry.componentRenderer
 import dev.ohs.player.client.renderer.RenderOptions
 import dev.ohs.player.generated.config.SectionCardConfig
+import dev.ohs.player.generated.state.HouseholdCareTaskState
 import dev.ohs.player.generated.state.HouseholdHeaderState
 import dev.ohs.player.generated.state.HouseholdMemberState
 import dev.ohs.player.generated.viewtype.ViewTypeCS
@@ -57,7 +59,9 @@ import dev.ohs.vaxlink.generated.resources.household_add_member
 import dev.ohs.vaxlink.generated.resources.household_back
 import dev.ohs.vaxlink.generated.resources.household_members
 import dev.ohs.vaxlink.generated.resources.household_not_found
+import dev.ohs.vaxlink.generated.resources.household_record_wash_check
 import dev.ohs.vaxlink.generated.resources.household_register_newborn
+import dev.ohs.vaxlink.generated.resources.household_tasks
 import dev.ohs.vaxlink.generated.resources.name_unknown
 import dev.ohs.vaxlink.generated.resources.profile_none_recorded
 import org.jetbrains.compose.resources.stringResource
@@ -73,6 +77,7 @@ fun HouseholdScreen(
   onMemberClick: (String) -> Unit,
   onAddMember: () -> Unit,
   onRegisterNewborn: () -> Unit,
+  onRecordWashCheck: () -> Unit,
 ) {
   val viewModel = koinViewModel<HouseholdViewModel>(key = householdId) { parametersOf(householdId) }
   val screenState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -91,6 +96,18 @@ fun HouseholdScreen(
         membersTitle,
         Icons.Filled.Person,
         config = SectionCardConfig(collapsible = false),
+        emptyLabel = noneRecorded,
+      )
+    }
+  val taskRenderer =
+    remember(registry) { registry.componentRenderer<HouseholdCareTaskState>(ViewTypeCS.CareItem) }
+  val tasksTitle = stringResource(Res.string.household_tasks)
+  val tasksSection =
+    remember(tasksTitle, noneRecorded) {
+      SectionCardLayoutRenderer<HouseholdCareTaskState>(
+        tasksTitle,
+        Icons.AutoMirrored.Filled.List,
+        config = SectionCardConfig(collapsible = true),
         emptyLabel = noneRecorded,
       )
     }
@@ -157,6 +174,15 @@ fun HouseholdScreen(
               component = memberRenderer,
               onItemClick = { member -> member.memberId?.let(onMemberClick) },
             )
+          }
+          // Household-level care: the WASH check the eCHIS plan schedules monthly on the Group.
+          item(key = "tasks") {
+            tasksSection.Render(items = state.tasks, component = taskRenderer, onItemClick = {})
+          }
+          item(key = "wash") {
+            OutlinedButton(onClick = onRecordWashCheck, modifier = Modifier.fillMaxWidth()) {
+              Text(stringResource(Res.string.household_record_wash_check))
+            }
           }
         }
       }

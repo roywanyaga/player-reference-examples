@@ -21,13 +21,16 @@ import dev.ohs.player.client.layout.VerticalListRenderer
 import dev.ohs.player.client.registry.ViewRegistry
 import dev.ohs.player.client.registry.registerComponent
 import dev.ohs.player.client.registry.registerLayout
+import dev.ohs.player.generated.config.CareItemConfig
 import dev.ohs.player.generated.config.HouseholdCardConfig
 import dev.ohs.player.generated.config.HouseholdHeaderConfig
 import dev.ohs.player.generated.config.MemberItemConfig
+import dev.ohs.player.generated.state.HouseholdCareTaskState
 import dev.ohs.player.generated.state.HouseholdHeaderState
 import dev.ohs.player.generated.state.HouseholdListState
 import dev.ohs.player.generated.state.HouseholdMemberState
 import dev.ohs.player.generated.viewtype.ViewTypeCS
+import dev.ohs.vaxlink.feature.patient.profile.HouseholdTaskItemRenderer
 
 fun ViewRegistry.registerHouseholds() {
   registerComponent<HouseholdListState, HouseholdCardConfig>(
@@ -51,5 +54,10 @@ fun ViewRegistry.registerHouseholds() {
     ViewTypeCS.MemberItem,
     MemberItemRenderer(),
     MemberItemConfig(),
+  )
+  registerComponent<HouseholdCareTaskState, CareItemConfig>(
+    ViewTypeCS.CareItem,
+    HouseholdTaskItemRenderer(),
+    CareItemConfig(),
   )
 }

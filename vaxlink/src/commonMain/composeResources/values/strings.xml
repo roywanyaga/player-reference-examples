@@ -78,6 +78,19 @@
     <string name="task_due_window">Due %1$s to %2$s</string>
     <string name="task_overdue">Overdue</string>
     <string name="task_plan_lao_schedule">Lao immunisation schedule</string>
+    <string name="task_plan_anc">Antenatal care</string>
+    <string name="task_plan_pnc">Postnatal care</string>
+    <string name="task_plan_fp">Family planning</string>
+    <string name="task_missed">Missed</string>
+    <string name="task_plan_ended">Plan ended</string>
+    <string name="care_plan_active">Enrolled</string>
+    <string name="care_plan_period">%1$s to %2$s</string>
+    <string name="care_plan_since">Since %1$s</string>
+    <string name="programme_enrol_anc">Enrol ANC history</string>
+    <string name="programme_record_anc_contact">Record ANC contact</string>
+    <string name="programme_record_pnc_contact">Record PNC contact</string>
+    <string name="programme_enrol_fp">Enrol family planning</string>
+    <string name="programme_record_fp_visit">Record FP visit</string>
     <string name="referral_refer_to_clinic">Refer to clinic</string>
     <string name="referral_referred">Referred to the clinic</string>
 
@@ -93,6 +106,8 @@
     <string name="household_village">Village %1$s</string>
     <string name="household_add_member">Add member</string>
     <string name="household_register_newborn">Register newborn</string>
+    <string name="household_tasks">Household tasks</string>
+    <string name="household_record_wash_check">Record WASH check</string>
 
     <!-- Questionnaire screen -->
     <string name="questionnaire_title">Questionnaire</string>

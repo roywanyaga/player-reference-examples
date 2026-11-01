@@ -1,0 +1,207 @@
+{
+  "resourceType": "PlanDefinition",
+  "id": "pnc",
+  "url": "http://smartregister.org/fhir/PlanDefinition/pnc",
+  "version": "1.0.0",
+  "title": "Postnatal care (WHO)",
+  "status": "active",
+  "publisher": "Nawitech Limited",
+  "extension": [
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/enrollment",
+      "extension": [
+        {
+          "url": "mode",
+          "valueString": "explicit"
+        }
+      ]
+    },
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/record-questionnaire",
+      "valueString": "record-pnc-contact"
+    }
+  ],
+  "action": [
+    {
+      "id": "pnc-1",
+      "title": "PNC contact 1 (24h)",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "delivery"
+            },
+            {
+              "url": "offset",
+              "valueString": "P1D"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P1D"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P2D"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.code='169762003').count() < 1"
+          }
+        },
+        {
+          "kind": "stop",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.code='169762003').count() >= 1"
+          }
+        }
+      ],
+      "definitionCanonical": "http://smartregister.org/fhir/ActivityDefinition/pnc-pnc-1"
+    },
+    {
+      "id": "pnc-2",
+      "title": "PNC contact 2 (3 days)",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "delivery"
+            },
+            {
+              "url": "offset",
+              "valueString": "P3D"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P1D"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P2D"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.code='169762003').count() < 2"
+          }
+        },
+        {
+          "kind": "stop",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.code='169762003').count() >= 2"
+          }
+        }
+      ],
+      "definitionCanonical": "http://smartregister.org/fhir/ActivityDefinition/pnc-pnc-2"
+    },
+    {
+      "id": "pnc-3",
+      "title": "PNC contact 3 (7-14 days)",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "delivery"
+            },
+            {
+              "url": "offset",
+              "valueString": "P7D"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P0D"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P7D"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.code='169762003').count() < 3"
+          }
+        },
+        {
+          "kind": "stop",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.code='169762003').count() >= 3"
+          }
+        }
+      ],
+      "definitionCanonical": "http://smartregister.org/fhir/ActivityDefinition/pnc-pnc-3"
+    },
+    {
+      "id": "pnc-4",
+      "title": "PNC contact 4 (6 weeks)",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "delivery"
+            },
+            {
+              "url": "offset",
+              "valueString": "P42D"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P7D"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P7D"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.code='169762003').count() < 4"
+          }
+        },
+        {
+          "kind": "stop",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.code='169762003').count() >= 4"
+          }
+        }
+      ],
+      "definitionCanonical": "http://smartregister.org/fhir/ActivityDefinition/pnc-pnc-4"
+    }
+  ],
+  "description": "Ported from Nawi's eCHIS configuration (opensrp-config, data.fi/echis) for VaxLink; the eCHIS plan 'pnc'. Each action gained an ActivityDefinition so fhir-workflow $apply produces a Task; the eCHIS schedule-offset and enrollment extensions are read by the Player's PlanScheduler."
+}

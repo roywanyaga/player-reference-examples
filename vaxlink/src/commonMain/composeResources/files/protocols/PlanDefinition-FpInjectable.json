@@ -1,0 +1,65 @@
+{
+  "resourceType": "PlanDefinition",
+  "id": "fp-injectable",
+  "url": "http://smartregister.org/fhir/PlanDefinition/fp-injectable",
+  "version": "1.0.0",
+  "title": "Family planning (injectable)",
+  "status": "active",
+  "publisher": "Nawitech Limited",
+  "extension": [
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/enrollment",
+      "extension": [
+        {
+          "url": "mode",
+          "valueString": "explicit"
+        }
+      ]
+    },
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/rolling-anchor",
+      "extension": [
+        {
+          "url": "code",
+          "valueString": "709534006"
+        }
+      ]
+    },
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/record-questionnaire",
+      "valueString": "record-fp-injection"
+    }
+  ],
+  "action": [
+    {
+      "id": "reinjection",
+      "title": "Reinjection due",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "lastInjection"
+            },
+            {
+              "url": "offset",
+              "valueString": "P3M"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P1W"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P2W"
+            }
+          ]
+        }
+      ],
+      "definitionCanonical": "http://smartregister.org/fhir/ActivityDefinition/fp-injectable-reinjection"
+    }
+  ],
+  "description": "Ported from Nawi's eCHIS configuration (opensrp-config, data.fi/echis) for VaxLink; the eCHIS plan 'fp-injectable'. Each action gained an ActivityDefinition so fhir-workflow $apply produces a Task; the eCHIS schedule-offset and enrollment extensions are read by the Player's PlanScheduler."
+}

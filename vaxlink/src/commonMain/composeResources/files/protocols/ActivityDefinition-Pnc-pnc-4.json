@@ -1,0 +1,25 @@
+{
+  "resourceType": "ActivityDefinition",
+  "id": "pnc-pnc-4",
+  "url": "http://smartregister.org/fhir/ActivityDefinition/pnc-pnc-4",
+  "title": "PNC contact 4 (6 weeks)",
+  "status": "active",
+  "kind": "Task",
+  "description": "Ported from Nawi's eCHIS configuration (opensrp-config, data.fi/echis) for VaxLink; the 'pnc-4' action of the eCHIS plan 'pnc'.",
+  "extension": [
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/dose-number",
+      "valueString": "4"
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "169762003",
+        "display": "Postnatal visit"
+      }
+    ],
+    "text": "PNC contact 4 (6 weeks)"
+  }
+}

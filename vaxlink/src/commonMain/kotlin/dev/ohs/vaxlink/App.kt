@@ -49,6 +49,7 @@ import dev.ohs.vaxlink.feature.home.HomeScreen
 import dev.ohs.vaxlink.feature.household.HouseholdScreen
 import dev.ohs.vaxlink.feature.login.LoginScreen
 import dev.ohs.vaxlink.feature.patient.profile.PatientProfileScreen
+import dev.ohs.vaxlink.feature.patient.profile.ProgrammeActions
 import dev.ohs.vaxlink.feature.patient.profile.ReferToClinicAction
 import dev.ohs.vaxlink.feature.questionnaire.QuestionnaireHostScreen
 import dev.ohs.vaxlink.feature.questionnaire.QuestionnaireIds
@@ -220,6 +221,11 @@ private fun SignedInApp(context: UserContext, userName: String, onSignOut: () ->
                   "questionnaireHost/${QuestionnaireIds.REGISTER_NEWBORN}?householdId=$householdId"
                 )
               },
+              onRecordWashCheck = {
+                navController.navigate(
+                  "questionnaireHost/${QuestionnaireIds.RECORD_WASH_CHECK}?householdId=$householdId"
+                )
+              },
             )
           }
 
@@ -240,6 +246,13 @@ private fun SignedInApp(context: UserContext, userName: String, onSignOut: () ->
                   if (context.role == AppRole.CHW) {
                     ScanCertificateAction(mode = ScanMode.ReadOnly, patientId = patientId)
                     ReferToClinicAction(patientId = patientId, user = context, profile = profile)
+                    // The mother's programmes: ANC, PNC and family planning (eCHIS forms).
+                    ProgrammeActions(
+                      profile = profile,
+                      onLaunch = { id ->
+                        navController.navigate("questionnaireHost/$id?patientId=$patientId")
+                      },
+                    )
                   } else {
                     ScanCertificateAction(mode = ScanMode.VerifyFirst)
                   }

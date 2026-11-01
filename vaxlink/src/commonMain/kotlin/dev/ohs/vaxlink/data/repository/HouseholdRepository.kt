@@ -15,6 +15,7 @@
  */
 package dev.ohs.vaxlink.data.repository
 
+import dev.ohs.player.generated.state.HouseholdCareTaskState
 import dev.ohs.player.generated.state.HouseholdHeaderState
 import dev.ohs.player.generated.state.HouseholdListState
 import dev.ohs.player.generated.state.HouseholdMemberState
@@ -26,10 +27,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
-/** A household as its screen shows it: the header row and one row per member, head first. */
+/**
+ * A household as its screen shows it: the header row, one row per member, head first, and the
+ * household-level tasks such as the WASH check, soonest due first.
+ */
 data class HouseholdUiState(
   val household: HouseholdHeaderState,
   val members: List<HouseholdMemberState>,
+  val tasks: List<HouseholdCareTaskState> = emptyList(),
 )
 
 class HouseholdRepository(private val fhirRepository: FhirRepository) {
@@ -62,6 +67,8 @@ class HouseholdRepository(private val fhirRepository: FhirRepository) {
             compareBy<HouseholdMemberState> { it.isHead != true }
               .thenBy { it.memberBirthDate?.toString() }
           )
-      HouseholdUiState(header, members)
+      val tasks =
+        extractor.extract<HouseholdCareTaskState>(result).sortedBy { it.dueBy?.toString() }
+      HouseholdUiState(header, members, tasks)
     }
 }

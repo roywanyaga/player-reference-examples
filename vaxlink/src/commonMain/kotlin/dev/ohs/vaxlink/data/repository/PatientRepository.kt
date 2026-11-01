@@ -70,6 +70,7 @@ class PatientRepository(private val fhirRepository: FhirRepository) {
         medicationStatements = extractor.extract(record),
         careTasks =
           extractor.extract<PatientCareTaskState>(record).sortedBy { it.dueBy?.toString() },
+        carePlans = extractor.extract(record),
         referrals = extractor.extract(record),
         outcomes = extractor.extract(record),
         treatments = extractor.extract(record),

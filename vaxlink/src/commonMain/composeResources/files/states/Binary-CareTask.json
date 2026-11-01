@@ -41,6 +41,11 @@
           "name": "taskDoseCode",
           "path": "code.coding.where(system = 'https://nawitech.github.io/vaxlink-ig/CodeSystem/lao-epi-schedule-dose').code.first()",
           "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "taskStatusReason",
+          "path": "statusReason.text",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
         }
       ]
     }

@@ -34,6 +34,7 @@ import dev.ohs.player.generated.config.CareItemConfig
 import dev.ohs.player.generated.config.PatientHeaderConfig
 import dev.ohs.player.generated.config.SectionCardConfig
 import dev.ohs.player.generated.state.PatientAllergyState
+import dev.ohs.player.generated.state.PatientCarePlanState
 import dev.ohs.player.generated.state.PatientCareTaskState
 import dev.ohs.player.generated.state.PatientConditionState
 import dev.ohs.player.generated.state.PatientFacilityVisitState
@@ -89,6 +90,7 @@ fun ViewRegistry.registerPatientProfile() {
     CareTaskItemRenderer(),
     CareItemConfig(),
   )
+  careSection<PatientCarePlanState>("Programmes", Icons.Filled.DateRange, CarePlanItemRenderer())
   careSection<PatientReferralState>(
     "Referrals",
     Icons.AutoMirrored.Filled.Send,

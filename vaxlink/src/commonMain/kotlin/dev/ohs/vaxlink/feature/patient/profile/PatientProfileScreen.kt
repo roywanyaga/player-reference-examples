@@ -64,8 +64,16 @@ import dev.ohs.vaxlink.generated.resources.patient_profile_default_name
 import dev.ohs.vaxlink.generated.resources.patient_profile_household
 import dev.ohs.vaxlink.generated.resources.patient_profile_not_found
 import dev.ohs.vaxlink.generated.resources.profile_none_recorded
+import dev.ohs.vaxlink.generated.resources.task_plan_anc
+import dev.ohs.vaxlink.generated.resources.task_plan_fp
 import dev.ohs.vaxlink.generated.resources.task_plan_lao_schedule
+import dev.ohs.vaxlink.generated.resources.task_plan_pnc
+import dev.ohs.vaxlink.workflow.ANC_PLAN
+import dev.ohs.vaxlink.workflow.FP_INJECTABLE_PLAN
+import dev.ohs.vaxlink.workflow.FP_LONGTERM_PLAN
+import dev.ohs.vaxlink.workflow.FP_ORAL_PLAN
 import dev.ohs.vaxlink.workflow.LAO_SCHEDULE_PLAN
+import dev.ohs.vaxlink.workflow.PNC_PLAN
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -155,6 +163,7 @@ fun PatientProfileScreen(
       careSection(s.medicationStatements, "medicationStatements", always = false)
       careSection(s.allergies, "allergies", always = true)
       careSection(s.visits, "encounters", always = true)
+      careSection(s.carePlans, "programmes", always = false)
       taskSections(s.careTasks)
       careSection(s.referrals, "referrals", always = true)
       careSection(s.outcomes, "outcomes", always = false)
@@ -217,8 +226,15 @@ private fun LazyListScope.taskSections(tasks: List<PatientCareTaskState>) {
     item(key = "tasks:$plan") {
       val registry = LocalViewRegistry.current
       val title =
-        if (plan == LAO_SCHEDULE_PLAN) stringResource(Res.string.task_plan_lao_schedule)
-        else plan.substringAfterLast('/').ifBlank { plan }
+        when (plan) {
+          LAO_SCHEDULE_PLAN -> stringResource(Res.string.task_plan_lao_schedule)
+          ANC_PLAN -> stringResource(Res.string.task_plan_anc)
+          PNC_PLAN -> stringResource(Res.string.task_plan_pnc)
+          FP_INJECTABLE_PLAN,
+          FP_ORAL_PLAN,
+          FP_LONGTERM_PLAN -> stringResource(Res.string.task_plan_fp)
+          else -> plan.substringAfterLast('/').ifBlank { plan }
+        }
       val noneRecorded = stringResource(Res.string.profile_none_recorded)
       val section =
         remember(title, noneRecorded) {

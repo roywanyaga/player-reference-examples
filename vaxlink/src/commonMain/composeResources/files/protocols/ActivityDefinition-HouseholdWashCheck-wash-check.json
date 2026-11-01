@@ -1,0 +1,25 @@
+{
+  "resourceType": "ActivityDefinition",
+  "id": "household-wash-check-wash-check",
+  "url": "http://smartregister.org/fhir/ActivityDefinition/household-wash-check-wash-check",
+  "title": "Household WASH check",
+  "status": "active",
+  "kind": "Task",
+  "description": "Ported from Nawi's eCHIS configuration (opensrp-config, data.fi/echis) for VaxLink; the 'wash-check' action of the eCHIS plan 'household-wash-check'.",
+  "extension": [
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/dose-number",
+      "valueString": "1"
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://smartregister.org/fhir/CodeSystem/wash",
+        "code": "wash-check",
+        "display": "Household WASH check"
+      }
+    ],
+    "text": "Household WASH check"
+  }
+}

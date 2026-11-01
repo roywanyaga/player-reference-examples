@@ -1,0 +1,25 @@
+{
+  "resourceType": "ActivityDefinition",
+  "id": "pnc-pnc-1",
+  "url": "http://smartregister.org/fhir/ActivityDefinition/pnc-pnc-1",
+  "title": "PNC contact 1 (24h)",
+  "status": "active",
+  "kind": "Task",
+  "description": "Ported from Nawi's eCHIS configuration (opensrp-config, data.fi/echis) for VaxLink; the 'pnc-1' action of the eCHIS plan 'pnc'.",
+  "extension": [
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/dose-number",
+      "valueString": "1"
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "169762003",
+        "display": "Postnatal visit"
+      }
+    ],
+    "text": "PNC contact 1 (24h)"
+  }
+}

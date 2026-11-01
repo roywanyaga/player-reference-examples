@@ -1,0 +1,672 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "record-wash-check",
+  "url": "http://smartregister.org/fhir/Questionnaire/record-wash-check",
+  "title": "Household WASH check",
+  "status": "active",
+  "subjectType": [
+    "Group"
+  ],
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtract",
+      "extension": [
+        {
+          "url": "template",
+          "valueReference": {
+            "reference": "#wash-check-template"
+          }
+        },
+        {
+          "url": "fullUrl",
+          "valueString": "%washFullUrl"
+        }
+      ]
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extractAllocateId",
+      "valueString": "%washFullUrl"
+    }
+  ],
+  "contained": [
+    {
+      "resourceType": "Observation",
+      "id": "wash-check-template",
+      "status": "final",
+      "category": [
+        {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+              "code": "social-history",
+              "display": "Social History"
+            }
+          ]
+        }
+      ],
+      "code": {
+        "coding": [
+          {
+            "system": "http://smartregister.org/fhir/CodeSystem/wash",
+            "code": "wash-check",
+            "display": "Household WASH check"
+          }
+        ]
+      },
+      "subject": {
+        "_reference": {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+              "valueString": "%resource.subject.reference"
+            }
+          ]
+        }
+      },
+      "_effectiveDateTime": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+            "valueString": "%resource.repeat(item).where(linkId='date').answer.value.first()"
+          }
+        ]
+      },
+      "component": [
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/wash",
+                "code": "safe-water-source",
+                "display": "Access to a safe water source"
+              }
+            ]
+          },
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='safe-water-source').answer.value.exists(), %resource)"
+            }
+          ],
+          "_valueBoolean": {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                "valueString": "%resource.repeat(item).where(linkId='safe-water-source').answer.value.first()"
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/wash",
+                "code": "safe-drinking-water",
+                "display": "Safe drinking water"
+              }
+            ]
+          },
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='safe-drinking-water').answer.value.exists(), %resource)"
+            }
+          ],
+          "_valueBoolean": {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                "valueString": "%resource.repeat(item).where(linkId='safe-drinking-water').answer.value.first()"
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/wash",
+                "code": "kitchen",
+                "display": "Kitchen"
+              }
+            ]
+          },
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='kitchen').answer.value.exists(), %resource)"
+            }
+          ],
+          "_valueBoolean": {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                "valueString": "%resource.repeat(item).where(linkId='kitchen').answer.value.first()"
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/wash",
+                "code": "drying-rack",
+                "display": "Drying rack for dishes"
+              }
+            ]
+          },
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='drying-rack').answer.value.exists(), %resource)"
+            }
+          ],
+          "_valueBoolean": {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                "valueString": "%resource.repeat(item).where(linkId='drying-rack').answer.value.first()"
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/wash",
+                "code": "backyard-garden",
+                "display": "Backyard garden"
+              }
+            ]
+          },
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='backyard-garden').answer.value.exists(), %resource)"
+            }
+          ],
+          "_valueBoolean": {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                "valueString": "%resource.repeat(item).where(linkId='backyard-garden').answer.value.first()"
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/wash",
+                "code": "rubbish-pit",
+                "display": "Rubbish pit"
+              }
+            ]
+          },
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='rubbish-pit').answer.value.exists(), %resource)"
+            }
+          ],
+          "_valueBoolean": {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                "valueString": "%resource.repeat(item).where(linkId='rubbish-pit').answer.value.first()"
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/wash",
+                "code": "open-defecation-free",
+                "display": "Open defecation free"
+              }
+            ]
+          },
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='open-defecation-free').answer.value.exists(), %resource)"
+            }
+          ],
+          "_valueBoolean": {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                "valueString": "%resource.repeat(item).where(linkId='open-defecation-free').answer.value.first()"
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/wash",
+                "code": "latrine",
+                "display": "Latrine"
+              }
+            ]
+          },
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='latrine').answer.value.exists(), %resource)"
+            }
+          ],
+          "_valueBoolean": {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                "valueString": "%resource.repeat(item).where(linkId='latrine').answer.value.first()"
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/wash",
+                "code": "improved-latrine",
+                "display": "Improved latrine"
+              }
+            ]
+          },
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='improved-latrine').answer.value.exists(), %resource)"
+            }
+          ],
+          "_valueBoolean": {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                "valueString": "%resource.repeat(item).where(linkId='improved-latrine').answer.value.first()"
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/wash",
+                "code": "handwashing-with-soap",
+                "display": "Handwashing area with soap near the latrine"
+              }
+            ]
+          },
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='handwashing-with-soap').answer.value.exists(), %resource)"
+            }
+          ],
+          "_valueBoolean": {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                "valueString": "%resource.repeat(item).where(linkId='handwashing-with-soap').answer.value.first()"
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/wash",
+                "code": "shared-latrine",
+                "display": "Shared latrine"
+              }
+            ]
+          },
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='shared-latrine').answer.value.exists(), %resource)"
+            }
+          ],
+          "_valueBoolean": {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                "valueString": "%resource.repeat(item).where(linkId='shared-latrine').answer.value.first()"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "item": [
+    {
+      "linkId": "date",
+      "text": "Date",
+      "type": "date",
+      "required": true,
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Date"
+              }
+            ]
+          }
+        ]
+      },
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/fhirpath",
+            "expression": "today()"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "safe-water-source",
+      "text": "Does the household have access to a safe water source?",
+      "type": "boolean",
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Le ménage a-t-il accès à une source d'eau potable sûre ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "safe-drinking-water",
+      "text": "Does the household have safe drinking water?",
+      "type": "boolean",
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Le ménage dispose-t-il d'eau potable ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "kitchen",
+      "text": "Does the household have a kitchen?",
+      "type": "boolean",
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Le ménage dispose-t-il d'une cuisine ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "drying-rack",
+      "text": "Is there a drying rack for dishes?",
+      "type": "boolean",
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Y a-t-il un égouttoir pour la vaisselle ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "backyard-garden",
+      "text": "Does the household have a backyard garden?",
+      "type": "boolean",
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Le ménage dispose-t-il d'un jardin potager ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "rubbish-pit",
+      "text": "Is there a rubbish pit?",
+      "type": "boolean",
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Y a-t-il une fosse à ordures ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "open-defecation-free",
+      "text": "Is the household open defecation free?",
+      "type": "boolean",
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Le ménage est-il libre de défécation à l'air libre ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "latrine",
+      "text": "Does the household have a latrine?",
+      "type": "boolean",
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Le ménage dispose-t-il de latrines ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "improved-latrine",
+      "text": "Is it an improved latrine?",
+      "type": "boolean",
+      "enableBehavior": "any",
+      "enableWhen": [
+        {
+          "question": "latrine",
+          "operator": "=",
+          "answerBoolean": true
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "S'agit-il de latrines améliorées ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "handwashing-with-soap",
+      "text": "Is there a handwashing area with soap near the latrine?",
+      "type": "boolean",
+      "enableBehavior": "any",
+      "enableWhen": [
+        {
+          "question": "latrine",
+          "operator": "=",
+          "answerBoolean": true
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Y a-t-il un point de lavage des mains avec du savon près des latrines ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "shared-latrine",
+      "text": "Is it a shared latrine?",
+      "type": "boolean",
+      "enableBehavior": "any",
+      "enableWhen": [
+        {
+          "question": "latrine",
+          "operator": "=",
+          "answerBoolean": true
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "S'agit-il de latrines partagées ?"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "_title": {
+    "extension": [
+      {
+        "url": "http://hl7.org/fhir/StructureDefinition/translation",
+        "extension": [
+          {
+            "url": "lang",
+            "valueCode": "fr"
+          },
+          {
+            "url": "content",
+            "valueString": "Contrôle WASH du ménage"
+          }
+        ]
+      }
+    ]
+  },
+  "publisher": "Nawitech Limited",
+  "description": "Ported from Nawi's eCHIS configuration (opensrp-config, data.fi/echis) for VaxLink; the eCHIS form 'record-wash-check'. Extraction is mapped in Kotlin (workflow/ProgrammeRecords.kt); the contained templates document the original intent."
+}

@@ -16,6 +16,7 @@
 package dev.ohs.vaxlink.data.datasource
 
 import dev.ohs.fhir.model.r4.AllergyIntolerance
+import dev.ohs.fhir.model.r4.CarePlan
 import dev.ohs.fhir.model.r4.Condition
 import dev.ohs.fhir.model.r4.Encounter
 import dev.ohs.fhir.model.r4.Immunization
@@ -122,6 +123,7 @@ suspend fun patientProfileSearchResult(
         revIncluded("Procedure") { (it as Procedure).subject },
         revIncluded("MedicationRequest") { (it as MedicationRequest).subject },
         revIncluded("Task") { (it as Task).`for` },
+        revIncluded("CarePlan") { (it as CarePlan).subject },
         revIncluded("Encounter") { (it as Encounter).subject },
         revIncluded("Observation") { (it as Observation).subject },
         revIncluded("Condition") { (it as Condition).subject },

@@ -1,0 +1,8 @@
+{
+  "resourceType": "http://ohs.dev/StructureDefinition/ViewJoinMap",
+  "name": "patientCarePlan",
+  "from": "revIncluded",
+  "resource": "CarePlan",
+  "view": "CarePlan",
+  "searchParam": "subject"
+}

@@ -1,0 +1,25 @@
+{
+  "resourceType": "ActivityDefinition",
+  "id": "fp-longterm-fp-longterm-visit",
+  "url": "http://smartregister.org/fhir/ActivityDefinition/fp-longterm-fp-longterm-visit",
+  "title": "Family planning \u2014 long-acting method review",
+  "status": "active",
+  "kind": "Task",
+  "description": "Ported from Nawi's eCHIS configuration (opensrp-config, data.fi/echis) for VaxLink; the 'fp-longterm-visit' action of the eCHIS plan 'fp-longterm'.",
+  "extension": [
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/dose-number",
+      "valueString": "1"
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "702636002",
+        "display": "Family planning visit"
+      }
+    ],
+    "text": "Family planning \u2014 long-acting method review"
+  }
+}

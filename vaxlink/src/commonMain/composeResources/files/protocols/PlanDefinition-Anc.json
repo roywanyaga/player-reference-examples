@@ -1,0 +1,400 @@
+{
+  "resourceType": "PlanDefinition",
+  "id": "anc",
+  "url": "http://smartregister.org/fhir/PlanDefinition/anc",
+  "version": "1.0.0",
+  "title": "Antenatal care (WHO 2016)",
+  "status": "active",
+  "publisher": "Nawitech Limited",
+  "extension": [
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/enrollment",
+      "extension": [
+        {
+          "url": "mode",
+          "valueString": "explicit"
+        }
+      ]
+    },
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/record-questionnaire",
+      "valueString": "record-anc-contact"
+    },
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/discharge-condition",
+      "valueString": "%observations.entry.resource.where(code.coding.code = '236973005').exists()"
+    },
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/on-complete",
+      "extension": [
+        {
+          "url": "enroll",
+          "valueString": "http://smartregister.org/fhir/PlanDefinition/pnc"
+        }
+      ]
+    }
+  ],
+  "action": [
+    {
+      "id": "contact-1",
+      "title": "ANC contact 1",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "lmp"
+            },
+            {
+              "url": "offset",
+              "valueString": "P12W"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P2W"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P2W"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.where(system='http://snomed.info/sct' and code='424619006').exists()).count() < 1"
+          }
+        },
+        {
+          "kind": "stop",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.where(system='http://snomed.info/sct' and code='424619006').exists()).count() >= 1"
+          }
+        }
+      ],
+      "definitionCanonical": "http://smartregister.org/fhir/ActivityDefinition/anc-contact-1"
+    },
+    {
+      "id": "contact-2",
+      "title": "ANC contact 2",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "lmp"
+            },
+            {
+              "url": "offset",
+              "valueString": "P20W"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P2W"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P2W"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.where(system='http://snomed.info/sct' and code='424619006').exists()).count() < 2"
+          }
+        },
+        {
+          "kind": "stop",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.where(system='http://snomed.info/sct' and code='424619006').exists()).count() >= 2"
+          }
+        }
+      ],
+      "definitionCanonical": "http://smartregister.org/fhir/ActivityDefinition/anc-contact-2"
+    },
+    {
+      "id": "contact-3",
+      "title": "ANC contact 3",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "lmp"
+            },
+            {
+              "url": "offset",
+              "valueString": "P26W"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P2W"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P2W"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.where(system='http://snomed.info/sct' and code='424619006').exists()).count() < 3"
+          }
+        },
+        {
+          "kind": "stop",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.where(system='http://snomed.info/sct' and code='424619006').exists()).count() >= 3"
+          }
+        }
+      ],
+      "definitionCanonical": "http://smartregister.org/fhir/ActivityDefinition/anc-contact-3"
+    },
+    {
+      "id": "contact-4",
+      "title": "ANC contact 4",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "lmp"
+            },
+            {
+              "url": "offset",
+              "valueString": "P30W"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P2W"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P2W"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.where(system='http://snomed.info/sct' and code='424619006').exists()).count() < 4"
+          }
+        },
+        {
+          "kind": "stop",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.where(system='http://snomed.info/sct' and code='424619006').exists()).count() >= 4"
+          }
+        }
+      ],
+      "definitionCanonical": "http://smartregister.org/fhir/ActivityDefinition/anc-contact-4"
+    },
+    {
+      "id": "contact-5",
+      "title": "ANC contact 5",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "lmp"
+            },
+            {
+              "url": "offset",
+              "valueString": "P34W"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P2W"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P2W"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.where(system='http://snomed.info/sct' and code='424619006').exists()).count() < 5"
+          }
+        },
+        {
+          "kind": "stop",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.where(system='http://snomed.info/sct' and code='424619006').exists()).count() >= 5"
+          }
+        }
+      ],
+      "definitionCanonical": "http://smartregister.org/fhir/ActivityDefinition/anc-contact-5"
+    },
+    {
+      "id": "contact-6",
+      "title": "ANC contact 6",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "lmp"
+            },
+            {
+              "url": "offset",
+              "valueString": "P36W"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P2W"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P2W"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.where(system='http://snomed.info/sct' and code='424619006').exists()).count() < 6"
+          }
+        },
+        {
+          "kind": "stop",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.where(system='http://snomed.info/sct' and code='424619006').exists()).count() >= 6"
+          }
+        }
+      ],
+      "definitionCanonical": "http://smartregister.org/fhir/ActivityDefinition/anc-contact-6"
+    },
+    {
+      "id": "contact-7",
+      "title": "ANC contact 7",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "lmp"
+            },
+            {
+              "url": "offset",
+              "valueString": "P38W"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P2W"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P2W"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.where(system='http://snomed.info/sct' and code='424619006').exists()).count() < 7"
+          }
+        },
+        {
+          "kind": "stop",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.where(system='http://snomed.info/sct' and code='424619006').exists()).count() >= 7"
+          }
+        }
+      ],
+      "definitionCanonical": "http://smartregister.org/fhir/ActivityDefinition/anc-contact-7"
+    },
+    {
+      "id": "contact-8",
+      "title": "ANC contact 8",
+      "priority": "routine",
+      "extension": [
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/schedule-offset",
+          "extension": [
+            {
+              "url": "anchor",
+              "valueString": "lmp"
+            },
+            {
+              "url": "offset",
+              "valueString": "P40W"
+            },
+            {
+              "url": "windowBefore",
+              "valueString": "P2W"
+            },
+            {
+              "url": "windowAfter",
+              "valueString": "P2W"
+            }
+          ]
+        }
+      ],
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.where(system='http://snomed.info/sct' and code='424619006').exists()).count() < 8"
+          }
+        },
+        {
+          "kind": "stop",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "%observations.entry.resource.where(code.coding.where(system='http://snomed.info/sct' and code='424619006').exists()).count() >= 8"
+          }
+        }
+      ],
+      "definitionCanonical": "http://smartregister.org/fhir/ActivityDefinition/anc-contact-8"
+    }
+  ],
+  "description": "Ported from Nawi's eCHIS configuration (opensrp-config, data.fi/echis) for VaxLink; the eCHIS plan 'anc'. Each action gained an ActivityDefinition so fhir-workflow $apply produces a Task; the eCHIS schedule-offset and enrollment extensions are read by the Player's PlanScheduler."
+}

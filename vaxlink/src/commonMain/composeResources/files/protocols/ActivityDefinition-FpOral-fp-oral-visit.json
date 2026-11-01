@@ -1,0 +1,25 @@
+{
+  "resourceType": "ActivityDefinition",
+  "id": "fp-oral-fp-oral-visit",
+  "url": "http://smartregister.org/fhir/ActivityDefinition/fp-oral-fp-oral-visit",
+  "title": "Family planning \u2014 oral and barrier resupply",
+  "status": "active",
+  "kind": "Task",
+  "description": "Ported from Nawi's eCHIS configuration (opensrp-config, data.fi/echis) for VaxLink; the 'fp-oral-visit' action of the eCHIS plan 'fp-oral'.",
+  "extension": [
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/dose-number",
+      "valueString": "1"
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "702636002",
+        "display": "Family planning visit"
+      }
+    ],
+    "text": "Family planning \u2014 oral and barrier resupply"
+  }
+}

@@ -17,6 +17,7 @@ package dev.ohs.vaxlink.feature.patient.profile
 
 import dev.ohs.player.generated.state.HouseholdListState
 import dev.ohs.player.generated.state.PatientAllergyState
+import dev.ohs.player.generated.state.PatientCarePlanState
 import dev.ohs.player.generated.state.PatientCareTaskState
 import dev.ohs.player.generated.state.PatientConditionState
 import dev.ohs.player.generated.state.PatientFacilityVisitState
@@ -40,6 +41,7 @@ data class ProfileUiState(
   val allergies: List<PatientAllergyState> = emptyList(),
   val medicationStatements: List<PatientMedicationStatementState> = emptyList(),
   val careTasks: List<PatientCareTaskState> = emptyList(),
+  val carePlans: List<PatientCarePlanState> = emptyList(),
   val referrals: List<PatientReferralState> = emptyList(),
   val outcomes: List<PatientReferralOutcomeState> = emptyList(),
   val treatments: List<PatientTreatmentState> = emptyList(),

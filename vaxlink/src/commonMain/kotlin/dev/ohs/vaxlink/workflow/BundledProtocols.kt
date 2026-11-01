@@ -51,9 +51,34 @@ private val PROTOCOL_FILES: List<String> =
     "ActivityDefinition-LaoEpi-mr-1.json",
     "ActivityDefinition-LaoEpi-je.json",
     "ActivityDefinition-LaoEpi-mr-2.json",
+    // The parents' programmes and the household check, ported from Nawi's eCHIS configuration.
+    "PlanDefinition-Anc.json",
+    "ActivityDefinition-Anc-contact-1.json",
+    "ActivityDefinition-Anc-contact-2.json",
+    "ActivityDefinition-Anc-contact-3.json",
+    "ActivityDefinition-Anc-contact-4.json",
+    "ActivityDefinition-Anc-contact-5.json",
+    "ActivityDefinition-Anc-contact-6.json",
+    "ActivityDefinition-Anc-contact-7.json",
+    "ActivityDefinition-Anc-contact-8.json",
+    "PlanDefinition-Pnc.json",
+    "ActivityDefinition-Pnc-pnc-1.json",
+    "ActivityDefinition-Pnc-pnc-2.json",
+    "ActivityDefinition-Pnc-pnc-3.json",
+    "ActivityDefinition-Pnc-pnc-4.json",
+    "PlanDefinition-FpInjectable.json",
+    "ActivityDefinition-FpInjectable-reinjection.json",
+    "PlanDefinition-FpLongterm.json",
+    "ActivityDefinition-FpLongterm-fp-longterm-visit.json",
+    "PlanDefinition-FpOral.json",
+    "ActivityDefinition-FpOral-fp-oral-visit.json",
+    "PlanDefinition-HouseholdWashCheck.json",
+    "ActivityDefinition-HouseholdWashCheck-wash-check.json",
   )
 
 class BundledProtocols(private val resources: List<Resource>) : CanonicalResolver {
+  /** Every bundled PlanDefinition, in file order. */
+  fun plans(): List<PlanDefinition> = resources.filterIsInstance<PlanDefinition>()
 
   override suspend fun resolve(type: ResourceType, canonical: String): Resource? {
     val url = canonical.substringBefore('|')

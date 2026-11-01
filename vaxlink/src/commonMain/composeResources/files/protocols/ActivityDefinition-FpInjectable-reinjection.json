@@ -1,0 +1,25 @@
+{
+  "resourceType": "ActivityDefinition",
+  "id": "fp-injectable-reinjection",
+  "url": "http://smartregister.org/fhir/ActivityDefinition/fp-injectable-reinjection",
+  "title": "Reinjection due",
+  "status": "active",
+  "kind": "Task",
+  "description": "Ported from Nawi's eCHIS configuration (opensrp-config, data.fi/echis) for VaxLink; the 'reinjection' action of the eCHIS plan 'fp-injectable'.",
+  "extension": [
+    {
+      "url": "http://smartregister.org/fhir/StructureDefinition/dose-number",
+      "valueString": "1"
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "709534006",
+        "display": "Contraceptive injection"
+      }
+    ],
+    "text": "Reinjection due"
+  }
+}

@@ -1,0 +1,1973 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "record-pnc-contact",
+  "url": "http://smartregister.org/fhir/Questionnaire/record-pnc-contact",
+  "title": "Record PNC contact",
+  "status": "active",
+  "subjectType": [
+    "Patient"
+  ],
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtract",
+      "extension": [
+        {
+          "url": "template",
+          "valueReference": {
+            "reference": "#record-pnc-contact-template"
+          }
+        },
+        {
+          "url": "fullUrl",
+          "valueString": "%pncContactFullUrl"
+        }
+      ]
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extractAllocateId",
+      "valueString": "%pncContactFullUrl"
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtract",
+      "extension": [
+        {
+          "url": "template",
+          "valueReference": {
+            "reference": "#pnc-contact-referral-template"
+          }
+        }
+      ]
+    }
+  ],
+  "contained": [
+    {
+      "resourceType": "Observation",
+      "id": "record-pnc-contact-template",
+      "status": "final",
+      "code": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "169762003",
+            "display": "Postnatal visit"
+          }
+        ]
+      },
+      "subject": {
+        "_reference": {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+              "valueString": "%resource.subject.reference"
+            }
+          ]
+        }
+      },
+      "_effectiveDateTime": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+            "valueString": "%resource.repeat(item).where(linkId='date').answer.value.first()"
+          }
+        ]
+      },
+      "component": [
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='child-health-card').answer.value.first().exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/pnc",
+                "code": "child-health-card",
+                "display": "Has a child health card"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='child-health-card').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='child-health-card').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='child-health-card').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='baby-weight').answer.value.first().exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "29463-7",
+                "display": "Newborn weight"
+              }
+            ]
+          },
+          "valueQuantity": {
+            "unit": "kg",
+            "system": "http://unitsofmeasure.org",
+            "code": "kg",
+            "_value": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                  "valueString": "%resource.repeat(item).where(linkId='baby-weight').answer.value.first()"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='mother-danger-signs').answer.value.where(code = '289530006').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/pnc",
+                "code": "mother-danger-sign",
+                "display": "Danger sign - mother"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "289530006",
+                "display": "Vaginal bleeding"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='mother-danger-signs').answer.value.where(code = '91175000').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/pnc",
+                "code": "mother-danger-sign",
+                "display": "Danger sign - mother"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "91175000",
+                "display": "Seizure"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='mother-danger-signs').answer.value.where(code = '25064002').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/pnc",
+                "code": "mother-danger-sign",
+                "display": "Danger sign - mother"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "25064002",
+                "display": "Headache"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='mother-danger-signs').answer.value.where(code = '386661006').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/pnc",
+                "code": "mother-danger-sign",
+                "display": "Danger sign - mother"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "386661006",
+                "display": "Fever"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='mother-danger-signs').answer.value.where(code = '39104002').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/pnc",
+                "code": "mother-danger-sign",
+                "display": "Danger sign - mother"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "39104002",
+                "display": "Illness"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='mother-danger-signs').answer.value.where(code = '21522001').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/pnc",
+                "code": "mother-danger-sign",
+                "display": "Danger sign - mother"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "21522001",
+                "display": "Abdominal pain"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='mother-danger-signs').answer.value.where(code = '267036007').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/pnc",
+                "code": "mother-danger-sign",
+                "display": "Danger sign - mother"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "267036007",
+                "display": "Dyspnea"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='mother-danger-signs').answer.value.where(code = '267038008').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/pnc",
+                "code": "mother-danger-sign",
+                "display": "Danger sign - mother"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "267038008",
+                "display": "Oedema"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='mother-danger-signs').answer.value.where(code = '289561002').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/pnc",
+                "code": "mother-danger-sign",
+                "display": "Danger sign - mother"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "289561002",
+                "display": "Offensive vaginal discharge"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='baby-danger-signs').answer.value.where(code = '276610007').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/pnc",
+                "code": "newborn-danger-sign",
+                "display": "Danger sign - newborn"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "276610007",
+                "display": "Low birth weight infant"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='baby-danger-signs').answer.value.where(code = '271760008').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/pnc",
+                "code": "newborn-danger-sign",
+                "display": "Danger sign - newborn"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "271760008",
+                "display": "Pustule"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='baby-danger-signs').answer.value.where(code = '42052009').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/pnc",
+                "code": "newborn-danger-sign",
+                "display": "Danger sign - newborn"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "42052009",
+                "display": "Omphalitis of newborn"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='baby-danger-signs').answer.value.where(code = '386661006').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/pnc",
+                "code": "newborn-danger-sign",
+                "display": "Danger sign - newborn"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "386661006",
+                "display": "Fever"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='baby-danger-signs').answer.value.where(code = '386689009').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/pnc",
+                "code": "newborn-danger-sign",
+                "display": "Danger sign - newborn"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "386689009",
+                "display": "Hypothermia"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='baby-danger-signs').answer.value.where(code = '91175000').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/pnc",
+                "code": "newborn-danger-sign",
+                "display": "Danger sign - newborn"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "91175000",
+                "display": "Seizure"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='baby-danger-signs').answer.value.where(code = '422400008').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/pnc",
+                "code": "newborn-danger-sign",
+                "display": "Danger sign - newborn"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "422400008",
+                "display": "Vomiting"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='baby-danger-signs').answer.value.where(code = '18165001').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/pnc",
+                "code": "newborn-danger-sign",
+                "display": "Danger sign - newborn"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "18165001",
+                "display": "Jaundice"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='baby-danger-signs').answer.value.where(code = '78164000').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/pnc",
+                "code": "newborn-danger-sign",
+                "display": "Danger sign - newborn"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "78164000",
+                "display": "Feeding problem"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='baby-danger-signs').answer.value.where(code = '214264003').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/pnc",
+                "code": "newborn-danger-sign",
+                "display": "Danger sign - newborn"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "214264003",
+                "display": "Lethargy"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='baby-danger-signs').answer.value.where(code = '267036007').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/pnc",
+                "code": "newborn-danger-sign",
+                "display": "Danger sign - newborn"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "267036007",
+                "display": "Dyspnea"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='condoms-given').answer.value.code.first() != '260413007', %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/pnc",
+                "code": "condoms-given",
+                "display": "Condoms given"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='condoms-given').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='condoms-given').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='condoms-given').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='condoms-given-count').answer.value.first().exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/pnc",
+                "code": "condoms-given-count",
+                "display": "Number of condoms given"
+              }
+            ]
+          },
+          "valueQuantity": {
+            "unit": "{condom}",
+            "system": "http://unitsofmeasure.org",
+            "code": "{condom}",
+            "_value": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                  "valueString": "%resource.repeat(item).where(linkId='condoms-given-count').answer.value.first()"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='referred').answer.value.first().exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "3457005",
+                "display": "Referred to a health facility"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='referred').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='referred').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='referred').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "resourceType": "ServiceRequest",
+      "id": "pnc-contact-referral-template",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+          "valueString": "iif(%resource.repeat(item).where(linkId='referred').answer.value.code.first() = 'yes', %resource)"
+        },
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/record-questionnaire",
+          "valueString": "record-referral-closure"
+        }
+      ],
+      "status": "active",
+      "intent": "order",
+      "priority": "urgent",
+      "category": [
+        {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "3457005",
+              "display": "Patient referral"
+            }
+          ]
+        }
+      ],
+      "code": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "439980006",
+            "display": "Referral placed"
+          }
+        ],
+        "text": "PNC referral"
+      },
+      "subject": {
+        "_reference": {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+              "valueString": "%resource.subject.reference"
+            }
+          ]
+        }
+      },
+      "_authoredOn": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+            "valueString": "%resource.repeat(item).where(linkId='date').answer.value.first()"
+          }
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "linkId": "date",
+      "text": "Contact date",
+      "type": "date",
+      "required": true,
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Date du contact"
+              }
+            ]
+          }
+        ]
+      },
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/fhirpath",
+            "expression": "today()"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "child-health-card",
+      "text": "Does the mother have a child health card?",
+      "type": "choice",
+      "required": true,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Oui"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Non"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "La mère possède-t-elle un carnet de santé de l'enfant ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "baby-weight",
+      "text": "Baby weight (kg)",
+      "type": "decimal",
+      "enableWhen": [
+        {
+          "question": "child-health-card",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+          "valueCoding": {
+            "system": "http://unitsofmeasure.org",
+            "code": "kg",
+            "display": "kg"
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Poids du bébé (kg)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "mother-danger-signs-present",
+      "text": "Does the mother have danger signs?",
+      "type": "choice",
+      "required": true,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Oui"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Non"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "enableWhen": [
+        {
+          "question": "child-health-card",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "La mère présente-t-elle des signes de danger ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "mother-danger-signs",
+      "text": "Danger signs - mother",
+      "type": "choice",
+      "repeats": true,
+      "required": true,
+      "enableWhen": [
+        {
+          "question": "mother-danger-signs-present",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "289530006",
+            "display": "Vaginal bleeding",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Saignement vaginal"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "91175000",
+            "display": "Seizure",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Convulsions"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "25064002",
+            "display": "Headache",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Céphalée"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "386661006",
+            "display": "Fever",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Fièvre"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "39104002",
+            "display": "Illness",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Maladie"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "21522001",
+            "display": "Abdominal pain",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Douleur abdominale"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "267036007",
+            "display": "Dyspnea",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Dyspnée"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "267038008",
+            "display": "Oedema",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Œdème"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "289561002",
+            "display": "Offensive vaginal discharge",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Pertes vaginales malodorantes"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Signes de danger - mère"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "baby-danger-signs-present",
+      "text": "Does the baby have danger signs?",
+      "type": "choice",
+      "required": true,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Oui"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Non"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "enableWhen": [
+        {
+          "question": "child-health-card",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Le bébé présente-t-il des signes de danger ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "baby-danger-signs",
+      "text": "Danger signs - baby",
+      "type": "choice",
+      "repeats": true,
+      "enableWhen": [
+        {
+          "question": "baby-danger-signs-present",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "276610007",
+            "display": "Low birth weight infant",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Nourrisson de faible poids de naissance"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "271760008",
+            "display": "Pustule",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Pustules"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "42052009",
+            "display": "Omphalitis of newborn",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Omphalite du nouveau-né"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "386661006",
+            "display": "Fever",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Fièvre"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "386689009",
+            "display": "Hypothermia",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Hypothermie"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "91175000",
+            "display": "Seizure",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Convulsions"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "422400008",
+            "display": "Vomiting",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Vomissements"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "18165001",
+            "display": "Jaundice",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Ictère"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "78164000",
+            "display": "Feeding problem",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Difficulté d'alimentation"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "214264003",
+            "display": "Lethargy",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Léthargie"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "267036007",
+            "display": "Dyspnea",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Dyspnée"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Signes de danger - bébé"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "condoms-given",
+      "text": "Condoms given",
+      "type": "choice",
+      "required": true,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "442288006",
+            "display": "Female condom, device",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Préservatif féminin"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "442450006",
+            "display": "Male condom, device",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Préservatif masculin"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "260413007",
+            "display": "None",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Aucun"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Préservatifs distribués"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "condoms-given-count",
+      "text": "Number of condoms given (pieces)",
+      "type": "integer",
+      "required": true,
+      "enableWhen": [
+        {
+          "question": "condoms-given",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "442288006"
+          }
+        },
+        {
+          "question": "condoms-given",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "442450006"
+          }
+        }
+      ],
+      "enableBehavior": "any",
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Nombre de préservatifs distribués (unités)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "referred",
+      "text": "Referred to a health facility?",
+      "type": "choice",
+      "required": false,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Oui"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Non"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "enableWhen": [
+        {
+          "question": "mother-danger-signs",
+          "operator": "exists",
+          "answerBoolean": true
+        },
+        {
+          "question": "baby-danger-signs",
+          "operator": "exists",
+          "answerBoolean": true
+        },
+        {
+          "question": "child-health-card",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no"
+          }
+        }
+      ],
+      "enableBehavior": "any",
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Référé vers un établissement de santé ?"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "_title": {
+    "extension": [
+      {
+        "url": "http://hl7.org/fhir/StructureDefinition/translation",
+        "extension": [
+          {
+            "url": "lang",
+            "valueCode": "fr"
+          },
+          {
+            "url": "content",
+            "valueString": "Enregistrer un contact CPoN"
+          }
+        ]
+      }
+    ]
+  },
+  "publisher": "Nawitech Limited",
+  "description": "Ported from Nawi's eCHIS configuration (opensrp-config, data.fi/echis) for VaxLink; the eCHIS form 'record-pnc-contact'. Extraction is mapped in Kotlin (workflow/ProgrammeRecords.kt); the contained templates document the original intent."
+}

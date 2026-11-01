@@ -18,8 +18,10 @@ package dev.ohs.vaxlink.data.datasource
 import dev.ohs.fhir.model.r4.Group
 import dev.ohs.fhir.model.r4.Patient
 import dev.ohs.fhir.model.r4.Resource
+import dev.ohs.fhir.model.r4.Task
 import dev.ohs.player.client.model.SearchResult
 import dev.ohs.vaxlink.data.repository.FhirRepository
+import dev.ohs.vaxlink.util.idOf
 import dev.ohs.vaxlink.workflow.GROUP_CODE_SYSTEM
 import dev.ohs.vaxlink.workflow.memberIds
 
@@ -42,7 +44,12 @@ suspend fun householdSearchResult(
 ): SearchResult<Resource>? {
   val household = (repository.get("Group", householdId) as? Group) ?: return null
   val members = household.memberIds().mapNotNull { repository.get("Patient", it) as? Patient }
-  return SearchResult(resource = household, included = mapOf("member" to members))
+  val tasks = repository.all("Task").filter { (it as Task).`for`.idOf("Group") == householdId }
+  return SearchResult(
+    resource = household,
+    included = mapOf("member" to members),
+    revIncluded = mapOf(("Task" to "subject") to tasks),
+  )
 }
 
 /** The household a patient belongs to, if any. */

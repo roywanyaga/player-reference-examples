@@ -1,0 +1,2245 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "enrol-anc",
+  "url": "http://smartregister.org/fhir/Questionnaire/enrol-anc",
+  "title": "Pregnancy assessment",
+  "status": "active",
+  "subjectType": [
+    "Patient"
+  ],
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extractAllocateId",
+      "valueString": "%pregnancyFullUrl"
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtract",
+      "extension": [
+        {
+          "url": "template",
+          "valueReference": {
+            "reference": "#pregnancy-template"
+          }
+        },
+        {
+          "url": "fullUrl",
+          "valueString": "%pregnancyFullUrl"
+        }
+      ]
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtract",
+      "extension": [
+        {
+          "url": "template",
+          "valueReference": {
+            "reference": "#anc-careplan-template"
+          }
+        },
+        {
+          "url": "fullUrl",
+          "valueString": "%ancFullUrl"
+        }
+      ]
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extractAllocateId",
+      "valueString": "%ancFullUrl"
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtract",
+      "extension": [
+        {
+          "url": "template",
+          "valueReference": {
+            "reference": "#anc-screening-template"
+          }
+        }
+      ]
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtract",
+      "extension": [
+        {
+          "url": "template",
+          "valueReference": {
+            "reference": "#anc-referral-template"
+          }
+        }
+      ]
+    }
+  ],
+  "contained": [
+    {
+      "resourceType": "CarePlan",
+      "id": "anc-careplan-template",
+      "status": "active",
+      "intent": "plan",
+      "instantiatesCanonical": [
+        "http://smartregister.org/fhir/PlanDefinition/anc"
+      ],
+      "subject": {
+        "_reference": {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+              "valueString": "%resource.subject.reference"
+            }
+          ]
+        }
+      },
+      "period": {
+        "_start": {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+              "valueString": "iif(%resource.repeat(item).where(linkId='lmp').answer.value.first().exists(), %resource.repeat(item).where(linkId='lmp').answer.value.first(), iif(%resource.repeat(item).where(linkId='weeks-since-lmp').answer.value.first().exists(), (today() - (%resource.repeat(item).where(linkId='weeks-since-lmp').answer.value.first().toString() + ' weeks').toQuantity()), iif(%resource.repeat(item).where(linkId='approximate-lmp').answer.value.code.first() = 'up-to-2-months', today() - 8 weeks, iif(%resource.repeat(item).where(linkId='approximate-lmp').answer.value.code.first() = 'up-to-3-months', today() - 12 weeks, iif(%resource.repeat(item).where(linkId='approximate-lmp').answer.value.code.first() = 'up-to-4-months', today() - 16 weeks, iif(%resource.repeat(item).where(linkId='approximate-lmp').answer.value.code.first() = '5-to-6-months', today() - 20 weeks, iif(%resource.repeat(item).where(linkId='approximate-lmp').answer.value.code.first() = '7-to-8-months', today() - 28 weeks, {})))))))"
+            }
+          ]
+        }
+      },
+      "addresses": [
+        {
+          "_reference": {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                "valueString": "%pregnancyFullUrl"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "resourceType": "Observation",
+      "id": "anc-screening-template",
+      "status": "final",
+      "category": [
+        {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+              "code": "survey"
+            }
+          ]
+        }
+      ],
+      "code": {
+        "coding": [
+          {
+            "system": "http://smartregister.org/fhir/CodeSystem/anc",
+            "code": "anc-screening",
+            "display": "Pregnancy screening"
+          }
+        ]
+      },
+      "subject": {
+        "_reference": {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+              "valueString": "%resource.subject.reference"
+            }
+          ]
+        }
+      },
+      "_effectiveDateTime": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+            "valueString": "today()"
+          }
+        ]
+      },
+      "component": [
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "8665-2",
+                "display": "Last menstrual period start date"
+              }
+            ]
+          },
+          "_valueDateTime": {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                "valueString": "iif(%resource.repeat(item).where(linkId='lmp').answer.value.first().exists(), %resource.repeat(item).where(linkId='lmp').answer.value.first(), iif(%resource.repeat(item).where(linkId='weeks-since-lmp').answer.value.first().exists(), (today() - (%resource.repeat(item).where(linkId='weeks-since-lmp').answer.value.first().toString() + ' weeks').toQuantity()), iif(%resource.repeat(item).where(linkId='approximate-lmp').answer.value.code.first() = 'up-to-2-months', today() - 8 weeks, iif(%resource.repeat(item).where(linkId='approximate-lmp').answer.value.code.first() = 'up-to-3-months', today() - 12 weeks, iif(%resource.repeat(item).where(linkId='approximate-lmp').answer.value.code.first() = 'up-to-4-months', today() - 16 weeks, iif(%resource.repeat(item).where(linkId='approximate-lmp').answer.value.code.first() = '5-to-6-months', today() - 20 weeks, iif(%resource.repeat(item).where(linkId='approximate-lmp').answer.value.code.first() = '7-to-8-months', today() - 28 weeks, {})))))))"
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "161714006",
+                "display": "Estimated date of delivery"
+              }
+            ]
+          },
+          "_valueDateTime": {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                "valueString": "(iif(%resource.repeat(item).where(linkId='lmp').answer.value.first().exists(), %resource.repeat(item).where(linkId='lmp').answer.value.first(), iif(%resource.repeat(item).where(linkId='weeks-since-lmp').answer.value.first().exists(), (today() - (%resource.repeat(item).where(linkId='weeks-since-lmp').answer.value.first().toString() + ' weeks').toQuantity()), iif(%resource.repeat(item).where(linkId='approximate-lmp').answer.value.code.first() = 'up-to-2-months', today() - 8 weeks, iif(%resource.repeat(item).where(linkId='approximate-lmp').answer.value.code.first() = 'up-to-3-months', today() - 12 weeks, iif(%resource.repeat(item).where(linkId='approximate-lmp').answer.value.code.first() = 'up-to-4-months', today() - 16 weeks, iif(%resource.repeat(item).where(linkId='approximate-lmp').answer.value.code.first() = '5-to-6-months', today() - 20 weeks, iif(%resource.repeat(item).where(linkId='approximate-lmp').answer.value.code.first() = '7-to-8-months', today() - 28 weeks, {})))))))) + 280 days"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='confirmed-at-facility').answer.value.first().exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/anc",
+                "code": "confirmed-at-facility",
+                "display": "Pregnancy confirmed at a health facility"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='confirmed-at-facility').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='confirmed-at-facility').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='confirmed-at-facility').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='facility-name').answer.value.first().exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "76696-4",
+                "display": "Facility that confirmed the pregnancy"
+              }
+            ]
+          },
+          "_valueString": {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                "valueString": "%resource.repeat(item).where(linkId='facility-name').answer.value.first()"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='anc-card').answer.value.first().exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/anc",
+                "code": "anc-card",
+                "display": "Has an ANC card"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='anc-card').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='anc-card').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='anc-card').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='referred-for-card').answer.value.first().exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/anc",
+                "code": "referred-for-card",
+                "display": "Referred to collect an ANC card"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='referred-for-card').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='referred-for-card').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='referred-for-card').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='anc-visits').answer.value.first().exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "68493-6",
+                "display": "ANC visits before enrolment"
+              }
+            ]
+          },
+          "_valueInteger": {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                "valueString": "%resource.repeat(item).where(linkId='anc-visits').answer.value.first()"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='last-anc-visit').answer.value.first().exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "68492-8",
+                "display": "Most recent ANC visit"
+              }
+            ]
+          },
+          "_valueDateTime": {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                "valueString": "%resource.repeat(item).where(linkId='last-anc-visit').answer.value.first()"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='danger-signs').answer.value.where(code = '289530006').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "75325-1",
+                "display": "Danger sign"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "289530006",
+                "display": "Vaginal bleeding"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='danger-signs').answer.value.where(code = '91175000').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "75325-1",
+                "display": "Danger sign"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "91175000",
+                "display": "Seizure"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='danger-signs').answer.value.where(code = '25064002').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "75325-1",
+                "display": "Danger sign"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "25064002",
+                "display": "Headache"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='danger-signs').answer.value.where(code = '386661006').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "75325-1",
+                "display": "Danger sign"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "386661006",
+                "display": "Fever"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='danger-signs').answer.value.where(code = '39104002').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "75325-1",
+                "display": "Danger sign"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "39104002",
+                "display": "Illness"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='danger-signs').answer.value.where(code = '21522001').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "75325-1",
+                "display": "Danger sign"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "21522001",
+                "display": "Abdominal pain"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='danger-signs').answer.value.where(code = '267036007').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "75325-1",
+                "display": "Danger sign"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "267036007",
+                "display": "Dyspnea"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='danger-signs').answer.value.where(code = '267038008').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "75325-1",
+                "display": "Danger sign"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "267038008",
+                "display": "Oedema"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='danger-signs').answer.value.where(code = '44223004').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "75325-1",
+                "display": "Danger sign"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "44223004",
+                "display": "Premature rupture of membranes"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='danger-signs').answer.value.where(code = '276369006').exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "75325-1",
+                "display": "Danger sign"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "276369006",
+                "display": "Reduced fetal movement"
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='referred-danger-signs').answer.value.first().exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/anc",
+                "code": "referred-danger-signs",
+                "display": "Referred for danger signs"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='referred-danger-signs').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='referred-danger-signs').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='referred-danger-signs').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='hiv-status-known').answer.value.first().exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/anc",
+                "code": "hiv-status-known",
+                "display": "Knows HIV status"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='hiv-status-known').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='hiv-status-known').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='hiv-status-known').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='hiv-tested-recently').answer.value.first().exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/anc",
+                "code": "hiv-tested-recently",
+                "display": "HIV tested in the last 3 months"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='hiv-tested-recently').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='hiv-tested-recently').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='hiv-tested-recently').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='encouraged-hiv-test').answer.value.first().exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "313077009",
+                "display": "Encouraged to test for HIV"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='encouraged-hiv-test').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='encouraged-hiv-test').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='encouraged-hiv-test').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+              "valueString": "iif(%resource.repeat(item).where(linkId='reinforced-regular-testing').answer.value.first().exists(), %resource)"
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://smartregister.org/fhir/CodeSystem/anc",
+                "code": "reinforced-regular-testing",
+                "display": "Regular HIV testing reinforced"
+              }
+            ]
+          },
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "_system": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='reinforced-regular-testing').answer.value.system.first()"
+                    }
+                  ]
+                },
+                "_code": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='reinforced-regular-testing').answer.value.code.first()"
+                    }
+                  ]
+                },
+                "_display": {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                      "valueString": "%resource.repeat(item).where(linkId='reinforced-regular-testing').answer.value.display.first()"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "resourceType": "ServiceRequest",
+      "id": "anc-referral-template",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+          "valueString": "iif(%resource.repeat(item).where(linkId='referred-for-card').answer.value.code.first() = 'yes' or %resource.repeat(item).where(linkId='referred-danger-signs').answer.value.code.first() = 'yes', %resource)"
+        },
+        {
+          "url": "http://smartregister.org/fhir/StructureDefinition/record-questionnaire",
+          "valueString": "record-referral-closure"
+        }
+      ],
+      "status": "active",
+      "intent": "order",
+      "priority": "urgent",
+      "category": [
+        {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "3457005",
+              "display": "Patient referral"
+            }
+          ]
+        }
+      ],
+      "code": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "439980006",
+            "display": "Referral placed"
+          }
+        ],
+        "text": "ANC referral"
+      },
+      "subject": {
+        "_reference": {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+              "valueString": "%resource.subject.reference"
+            }
+          ]
+        }
+      },
+      "_authoredOn": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+            "valueString": "today()"
+          }
+        ]
+      }
+    },
+    {
+      "resourceType": "Condition",
+      "id": "pregnancy-template",
+      "clinicalStatus": {
+        "coding": [
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+            "code": "active"
+          }
+        ]
+      },
+      "verificationStatus": {
+        "coding": [
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+            "code": "confirmed"
+          }
+        ]
+      },
+      "category": [
+        {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-category",
+              "code": "problem-list-item"
+            }
+          ]
+        }
+      ],
+      "code": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "77386006"
+          }
+        ],
+        "text": "Pregnant"
+      },
+      "subject": {
+        "_reference": {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+              "valueString": "%resource.subject.reference"
+            }
+          ]
+        }
+      },
+      "_recordedDate": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+            "valueString": "today()"
+          }
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "linkId": "confirmed-at-facility",
+      "text": "Was the pregnancy confirmed at a health facility?",
+      "type": "choice",
+      "required": true,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Oui"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Non"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "La grossesse a-t-elle été confirmée dans un établissement de santé ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "facility-name",
+      "text": "Name of the facility visited",
+      "type": "string",
+      "required": true,
+      "enableWhen": [
+        {
+          "question": "confirmed-at-facility",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Nom de l'établissement visité"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "anc-card",
+      "text": "Does the woman have an ANC card?",
+      "type": "choice",
+      "required": true,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Oui"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Non"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "La femme possède-t-elle un carnet de CPN ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "referred-for-card",
+      "text": "Have you referred the woman to a health facility to collect an ANC card?",
+      "type": "choice",
+      "required": true,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Oui"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Non"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "enableWhen": [
+        {
+          "question": "anc-card",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no"
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Avez-vous référé la femme vers un établissement de santé pour obtenir un carnet de CPN ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "lmp-known",
+      "text": "Does she know the start date of her last menstrual period?",
+      "type": "choice",
+      "required": true,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Oui"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Non"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Connaît-elle la date de début de ses dernières règles ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "lmp",
+      "text": "Start date of the last normal menstrual period (LNMP)",
+      "type": "date",
+      "required": true,
+      "enableWhen": [
+        {
+          "question": "lmp-known",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Date de début des dernières règles normales (DDR)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "weeks-known",
+      "text": "Does she know the weeks since her last menstrual period?",
+      "type": "choice",
+      "required": true,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Oui"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Non"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "enableWhen": [
+        {
+          "question": "lmp-known",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no"
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Connaît-elle le nombre de semaines depuis ses dernières règles ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "weeks-since-lmp",
+      "text": "Weeks since her last menstrual period",
+      "type": "integer",
+      "required": true,
+      "enableWhen": [
+        {
+          "question": "weeks-known",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Semaines depuis ses dernières règles"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "approximate-lmp",
+      "text": "Approximate start of her last menstrual period",
+      "type": "choice",
+      "required": true,
+      "enableWhen": [
+        {
+          "question": "lmp-known",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no"
+          }
+        },
+        {
+          "question": "weeks-known",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no"
+          }
+        }
+      ],
+      "enableBehavior": "all",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://smartregister.org/fhir/CodeSystem/anc",
+            "code": "up-to-2-months",
+            "display": "Up to 2 months ago",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Jusqu'à 2 mois"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://smartregister.org/fhir/CodeSystem/anc",
+            "code": "up-to-3-months",
+            "display": "Up to 3 months ago",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Jusqu'à 3 mois"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://smartregister.org/fhir/CodeSystem/anc",
+            "code": "up-to-4-months",
+            "display": "Up to 4 months ago",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Jusqu'à 4 mois"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://smartregister.org/fhir/CodeSystem/anc",
+            "code": "5-to-6-months",
+            "display": "Between 5 and 6 months ago",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Entre 5 et 6 mois"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://smartregister.org/fhir/CodeSystem/anc",
+            "code": "7-to-8-months",
+            "display": "Between 7 and 8 months ago",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Entre 7 et 8 mois"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Début approximatif de ses dernières règles"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "edd",
+      "text": "Expected date of delivery",
+      "type": "date",
+      "readOnly": true,
+      "enableWhen": [
+        {
+          "question": "lmp",
+          "operator": "exists",
+          "answerBoolean": true
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
+          "valueExpression": {
+            "language": "text/fhirpath",
+            "expression": "%resource.repeat(item).where(linkId='lmp').answer.value.first() + 280 days"
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Date prévue d'accouchement"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "anc-visits",
+      "text": "How many ANC visits has she had so far in this pregnancy?",
+      "type": "integer",
+      "required": true,
+      "enableWhen": [
+        {
+          "question": "anc-card",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Combien de visites de CPN a-t-elle eues jusqu'à présent pendant cette grossesse ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "last-anc-visit",
+      "text": "Date of the most recent ANC visit",
+      "type": "date",
+      "required": true,
+      "enableWhen": [
+        {
+          "question": "anc-visits",
+          "operator": ">",
+          "answerInteger": 0
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Date de la visite de CPN la plus récente"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "danger-signs",
+      "text": "Is the woman showing any of these danger signs? Select all that apply",
+      "type": "choice",
+      "repeats": true,
+      "enableWhen": [
+        {
+          "question": "anc-card",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes"
+          }
+        }
+      ],
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "289530006",
+            "display": "Vaginal bleeding",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Saignement vaginal"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "91175000",
+            "display": "Seizure",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Convulsions"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "25064002",
+            "display": "Headache",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Céphalée"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "386661006",
+            "display": "Fever",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Fièvre"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "39104002",
+            "display": "Illness",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Maladie"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "21522001",
+            "display": "Abdominal pain",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Douleur abdominale"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "267036007",
+            "display": "Dyspnea",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Dyspnée"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "267038008",
+            "display": "Oedema",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Œdème"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "44223004",
+            "display": "Premature rupture of membranes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Rupture prématurée des membranes"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "276369006",
+            "display": "Reduced fetal movement",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Diminution des mouvements fœtaux"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "La femme présente-t-elle l'un de ces signes de danger ? Sélectionnez toutes les réponses applicables"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "referred-danger-signs",
+      "text": "Have you referred the woman to a health facility for the danger signs?",
+      "type": "choice",
+      "required": true,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Oui"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No",
+            "_display": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                  "extension": [
+                    {
+                      "url": "lang",
+                      "valueCode": "fr"
+                    },
+                    {
+                      "url": "content",
+                      "valueString": "Non"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "enableWhen": [
+        {
+          "question": "danger-signs",
+          "operator": "exists",
+          "answerBoolean": true
+        }
+      ],
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+            "extension": [
+              {
+                "url": "lang",
+                "valueCode": "fr"
+              },
+              {
+                "url": "content",
+                "valueString": "Avez-vous référé la femme vers un établissement de santé pour les signes de danger ?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "linkId": "pregnancy-outcome",
+      "type": "group",
+      "text": "Pregnancy outcome (VaxLink addition: enrolment as history)",
+      "item": [
+        {
+          "linkId": "delivered",
+          "type": "choice",
+          "text": "Has the pregnancy ended in a delivery?",
+          "required": true,
+          "answerOption": [
+            {
+              "valueCoding": {
+                "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+                "code": "yes",
+                "display": "Yes"
+              }
+            },
+            {
+              "valueCoding": {
+                "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+                "code": "no",
+                "display": "No"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "delivery-date",
+          "type": "date",
+          "text": "Date of delivery",
+          "required": true,
+          "enableWhen": [
+            {
+              "question": "delivered",
+              "operator": "=",
+              "answerCoding": {
+                "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+                "code": "yes"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "delivery-place",
+          "type": "choice",
+          "text": "Where was the baby delivered?",
+          "enableWhen": [
+            {
+              "question": "delivered",
+              "operator": "=",
+              "answerCoding": {
+                "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+                "code": "yes"
+              }
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "system": "http://snomed.info/sct",
+                "code": "22232009",
+                "display": "Hospital"
+              }
+            },
+            {
+              "valueCoding": {
+                "system": "http://snomed.info/sct",
+                "code": "264362003",
+                "display": "Home"
+              }
+            },
+            {
+              "valueCoding": {
+                "system": "http://snomed.info/sct",
+                "code": "74964007",
+                "display": "Other"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "delivery-abroad",
+          "type": "string",
+          "text": "Country of delivery, if abroad (ISO 3166 alpha-3)",
+          "enableWhen": [
+            {
+              "question": "delivered",
+              "operator": "=",
+              "answerCoding": {
+                "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+                "code": "yes"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_title": {
+    "extension": [
+      {
+        "url": "http://hl7.org/fhir/StructureDefinition/translation",
+        "extension": [
+          {
+            "url": "lang",
+            "valueCode": "fr"
+          },
+          {
+            "url": "content",
+            "valueString": "Évaluation de la grossesse"
+          }
+        ]
+      }
+    ]
+  },
+  "publisher": "Nawitech Limited",
+  "description": "Ported from Nawi's eCHIS configuration (opensrp-config, data.fi/echis) for VaxLink; the eCHIS form 'enrol-anc'. Extraction is mapped in Kotlin (workflow/ProgrammeRecords.kt); the contained templates document the original intent."
+}
