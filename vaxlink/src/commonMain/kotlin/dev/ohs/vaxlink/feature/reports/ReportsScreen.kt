@@ -46,7 +46,6 @@ import dev.ohs.vaxlink.generated.resources.Res
 import dev.ohs.vaxlink.generated.resources.reports_next_month
 import dev.ohs.vaxlink.generated.resources.reports_now_note
 import dev.ohs.vaxlink.generated.resources.reports_previous_month
-import dev.ohs.vaxlink.generated.resources.reports_title
 import dev.ohs.vaxlink.workflow.ScheduleCatalogue
 import dev.ohs.vaxlink.workflow.TaskPlacement
 import kotlin.time.Clock
@@ -110,11 +109,6 @@ fun ReportsScreen() {
   val state by viewModel.state.collectAsStateWithLifecycle()
   val counts = state.counts
   Column {
-    Text(
-      stringResource(Res.string.reports_title),
-      style = MaterialTheme.typography.titleLarge,
-      modifier = Modifier.padding(16.dp),
-    )
     Row(
       modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
       verticalAlignment = Alignment.CenterVertically,

@@ -134,8 +134,13 @@ data class ProfileUiState(
             PastEntry(
               it.referredOn.calendarDate(),
               PastKind.Referral,
-              it.referralPriority.orEmpty(),
-              listOfNotNull(it.referralState, it.referralNote).joinToString(" · "),
+              "",
+              listOfNotNull(
+                  it.referralPriority?.replaceFirstChar { c -> c.uppercaseChar() },
+                  it.referralState,
+                  it.referralNote,
+                )
+                .joinToString(" · "),
             )
           )
         }
