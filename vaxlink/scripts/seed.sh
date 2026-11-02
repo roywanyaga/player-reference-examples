@@ -10,8 +10,13 @@ fi
 : "${KEYCLOAK_URL:?}" "${KEYCLOAK_REALM:?}" "${SEED_CLIENT_ID:?}" "${SEED_CLIENT_SECRET:?}"
 : "${FHIR_URL:?}"
 
-types=(Patient Encounter Observation QuestionnaireResponse ServiceRequest MedicationRequest
-  Task Procedure Practitioner PractitionerRole Location Organization Questionnaire Patient Group RelatedPerson)
+# One realm role per verb and resource type: the gateway's OhsPlayerAccessChecker requires
+# <VERB>_<TYPE> for every request, and for every entry of a Bundle. Every type the three roles read
+# or write must be listed, or sync is refused with 403. Keep in step with files/sync/*.json.
+types=(Patient Group RelatedPerson Practitioner PractitionerRole Location Organization
+  Encounter Observation Condition Procedure Immunization MedicationRequest MedicationStatement
+  AllergyIntolerance CarePlan Task ServiceRequest Provenance AuditEvent
+  Questionnaire QuestionnaireResponse)
 verbs=(GET POST PUT PATCH DELETE)
 api="$KEYCLOAK_URL/admin/realms/$KEYCLOAK_REALM"
 fhir_base="${FHIR_URL%/}"

@@ -33,7 +33,7 @@ also explains how to build the library from source. Recording a scan as an Immun
 1. **JDK 21.** Gradle rejects JDK 25.
 2. **The HCERT library**: publish it to your local Maven cache once, as [`hcert/README.md`](./hcert/README.md#building-the-library) describes; it is not on Maven Central yet.
 3. **`local.properties`**: copy `local.properties.sample` and set `OAUTH_ISSUER`, `OAUTH_CLIENT_ID` and `FHIR_BASE_URL`.
-4. **Gateway**: it must accept `PATCH`, because the engine sends every update that way.
+4. **Gateway**: it must accept `PATCH`, because the engine sends every update that way. The gateway has no resource-type list to edit: its access checker requires a realm role `<VERB>_<TYPE>` (for example `PATCH_GROUP`, `PUT_AUDITEVENT`) for every request and every Bundle entry. `scripts/seed.sh` creates those roles for every type in `files/sync/*.json` and gives them to the demo users; on a realm you manage another way, create the same roles and add them to your practitioners' group. The reference infrastructure realm template does not define roles for Immunization, MedicationStatement, MedicationRequest, AllergyIntolerance, Provenance, ServiceRequest or Procedure.
 5. **Demo users**: create the seed service account, fill in `scripts/seed.env` from `scripts/seed.env.sample`, and run `./scripts/seed.sh`.
 
 ### Seed service account
