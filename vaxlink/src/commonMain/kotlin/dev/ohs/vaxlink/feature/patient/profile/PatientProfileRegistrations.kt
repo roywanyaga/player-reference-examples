@@ -53,71 +53,70 @@ import dev.ohs.vaxlink.feature.component.common.SectionCardLayoutRenderer
 /** Shown in a section that has nothing to list. */
 const val NONE_RECORDED = "None recorded"
 
+/** A profile section's heading and icon, shared by the registry and the summary page. */
+class SectionSpec(val title: String, val icon: ImageVector)
+
+object ProfileSections {
+  val Family = SectionSpec("Family", Icons.Filled.Person)
+  val Immunisations = SectionSpec("Immunisations", Icons.Filled.CheckCircle)
+  val Conditions = SectionSpec("Conditions", Icons.Filled.Warning)
+  val Observations = SectionSpec("Observations", Icons.Filled.Info)
+  val MedicationsPrescribed = SectionSpec("Medications prescribed", Icons.Filled.Favorite)
+  val MedicationsTaken = SectionSpec("Medications taken", Icons.Filled.Favorite)
+  val Allergies = SectionSpec("Allergies", Icons.Filled.Warning)
+  val Encounters = SectionSpec("Encounters", Icons.Filled.Home)
+  val Programmes = SectionSpec("Programmes", Icons.Filled.DateRange)
+  val Referrals = SectionSpec("Referrals", Icons.AutoMirrored.Filled.Send)
+  val FacilityOutcome = SectionSpec("Facility outcome", Icons.Filled.CheckCircle)
+  val FollowUps = SectionSpec("Follow-ups", Icons.Filled.DateRange)
+}
+
 fun ViewRegistry.registerPatientProfile() {
   registerComponent<PatientSummaryState, PatientHeaderConfig>(
     ViewTypeCS.PatientHeader,
     PatientHeaderRenderer(),
     PatientHeaderConfig(),
   )
-  careSection<PatientRelationshipState>("Family", Icons.Filled.Person, RelationshipItemRenderer())
-  careSection<PatientImmunizationState>(
-    "Immunisations",
-    Icons.Filled.CheckCircle,
-    ImmunizationItemRenderer(),
-  )
-  careSection<PatientConditionState>("Conditions", Icons.Filled.Warning, ConditionItemRenderer())
-  careSection<PatientVitalState>("Observations", Icons.Filled.Info, VitalItemRenderer())
-  careSection<PatientTreatmentState>(
-    "Medications prescribed",
-    Icons.Filled.Favorite,
-    TreatmentItemRenderer(),
-  )
+  careSection<PatientRelationshipState>(ProfileSections.Family, RelationshipItemRenderer())
+  careSection<PatientImmunizationState>(ProfileSections.Immunisations, ImmunizationItemRenderer())
+  careSection<PatientConditionState>(ProfileSections.Conditions, ConditionItemRenderer())
+  careSection<PatientVitalState>(ProfileSections.Observations, VitalItemRenderer())
+  careSection<PatientTreatmentState>(ProfileSections.MedicationsPrescribed, TreatmentItemRenderer())
   careSection<PatientMedicationStatementState>(
-    "Medications taken",
-    Icons.Filled.Favorite,
+    ProfileSections.MedicationsTaken,
     MedicationStatementItemRenderer(),
   )
-  careSection<PatientAllergyState>("Allergies", Icons.Filled.Warning, AllergyItemRenderer())
-  careSection<PatientFacilityVisitState>(
-    "Encounters",
-    Icons.Filled.Home,
-    FacilityVisitItemRenderer(),
-  )
-  // Schedule tasks are grouped by plan on the screen, which builds a section per plan; only the
-  // row renderer is registered here.
+  careSection<PatientAllergyState>(ProfileSections.Allergies, AllergyItemRenderer())
+  careSection<PatientFacilityVisitState>(ProfileSections.Encounters, FacilityVisitItemRenderer())
+  // Schedule tasks are grouped by plan and contact on the schedule screen, which builds the
+  // sections itself; only the row renderer is registered here.
   registerComponent<PatientCareTaskState, CareItemConfig>(
     ViewTypeCS.CareItem,
     CareTaskItemRenderer(),
     CareItemConfig(),
   )
-  careSection<PatientCarePlanState>("Programmes", Icons.Filled.DateRange, CarePlanItemRenderer())
-  careSection<PatientReferralState>(
-    "Referrals",
-    Icons.AutoMirrored.Filled.Send,
-    ReferralItemRenderer(),
-  )
+  careSection<PatientCarePlanState>(ProfileSections.Programmes, CarePlanItemRenderer())
+  careSection<PatientReferralState>(ProfileSections.Referrals, ReferralItemRenderer())
   careSection<PatientReferralOutcomeState>(
-    "Facility outcome",
-    Icons.Filled.CheckCircle,
+    ProfileSections.FacilityOutcome,
     ReferralOutcomeItemRenderer(),
   )
-  careSection<PatientFollowUpState>("Follow-ups", Icons.Filled.DateRange, FollowUpItemRenderer())
+  careSection<PatientFollowUpState>(ProfileSections.FollowUps, FollowUpItemRenderer())
 }
 
 /** The icon a plan's task section carries; one per plan, the schedule's by default. */
 val PLAN_SECTION_ICON: ImageVector = Icons.AutoMirrored.Filled.List
 
 private inline fun <reified T : Any> ViewRegistry.careSection(
-  title: String,
-  icon: ImageVector,
+  spec: SectionSpec,
   renderer: ComponentRenderer<T, CareItemConfig>,
 ) {
   registerComponent<T, CareItemConfig>(ViewTypeCS.CareItem, renderer, CareItemConfig())
   registerLayout<T>(
     ViewTypeCS.SectionCard,
     SectionCardLayoutRenderer(
-      title,
-      icon,
+      spec.title,
+      spec.icon,
       config = SectionCardConfig(collapsible = true),
       emptyLabel = NONE_RECORDED,
     ),

@@ -94,6 +94,35 @@
     <string name="referral_refer_to_clinic">Refer to clinic</string>
     <string name="referral_referred">Referred to the clinic</string>
 
+    <!-- Profile views: overview, schedule, past, summary -->
+    <string name="profile_due_next">Due next</string>
+    <string name="profile_nothing_due">Nothing due</string>
+    <string name="profile_link_schedule">Schedule</string>
+    <string name="profile_link_schedule_detail">%1$s overdue · %2$s coming up</string>
+    <string name="profile_link_schedule_none">No doses or visits scheduled</string>
+    <string name="profile_link_past">Past activity</string>
+    <string name="profile_link_past_detail">%1$s events, newest first</string>
+    <string name="profile_link_summary">Patient summary</string>
+    <string name="profile_link_summary_detail">Conditions, observations, medications, allergies, programmes</string>
+    <string name="schedule_title">Schedule</string>
+    <string name="schedule_contact_birth">Birth</string>
+    <string name="schedule_contact_weeks">%1$s weeks</string>
+    <string name="schedule_contact_months">%1$s months</string>
+    <string name="schedule_given_count">%1$s of %2$s given</string>
+    <string name="schedule_done_count">%1$s of %2$s done</string>
+    <string name="past_title">Past activity</string>
+    <string name="past_empty">Nothing recorded yet</string>
+    <string name="past_filter_all">All</string>
+    <string name="past_kind_immunisation">Immunisation</string>
+    <string name="past_kind_visit">Visit</string>
+    <string name="past_kind_observation">Observation</string>
+    <string name="past_kind_medication">Medication</string>
+    <string name="past_kind_referral">Referral</string>
+    <string name="past_kind_follow_up">Follow-up</string>
+    <string name="past_kind_programme">Programme</string>
+    <string name="past_kind_task">Task</string>
+    <string name="summary_title">Patient summary</string>
+
     <!-- Households (NE-2) -->
     <string name="household_list_empty">No households</string>
     <string name="household_list_register">Register household</string>

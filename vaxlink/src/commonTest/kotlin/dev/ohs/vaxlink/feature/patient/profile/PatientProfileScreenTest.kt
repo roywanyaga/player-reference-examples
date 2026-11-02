@@ -69,25 +69,52 @@ class PatientProfileScreenTest {
   }
 
   @Test
-  fun profileShowsCareActivitySections() = runComposeUiTest {
+  fun overviewShowsTheShortList() = runComposeUiTest {
     val registry = buildAppViewRegistry()
     setContent {
       CompositionLocalProvider(LocalViewRegistry provides registry) {
-        MaterialTheme { PatientProfileScreen(patientId = "p1", onBack = {}) }
+        MaterialTheme {
+          PatientProfileScreen(
+            patientId = "p1",
+            onBack = {},
+            onOpenSchedule = {},
+            onOpenPast = {},
+            onOpenSummary = {},
+          )
+        }
       }
     }
 
     waitUntil(timeoutMillis = 5_000L) {
       onAllNodesWithText("Amina Diallo").fetchSemanticsNodes().isNotEmpty()
     }
-    // The summary profile lists many sections; scroll each one into view before looking.
+    // The open referral and the immunisations section, and no clinical sections: those moved to
+    // the summary page.
+    onNodeWithTag(PROFILE_LIST_TAG).performScrollToNode(hasText("Waiting at facility"))
+    assertTrue(onAllNodesWithText("Waiting at facility").fetchSemanticsNodes().isNotEmpty())
+    onNodeWithTag(PROFILE_LIST_TAG).performScrollToNode(hasText("Patient summary"))
+    assertTrue(onAllNodesWithText("Patient summary").fetchSemanticsNodes().isNotEmpty())
+    assertTrue(onAllNodesWithText("Amoxicillin 250 mg dispersible").fetchSemanticsNodes().isEmpty())
+    assertTrue(onAllNodesWithText("CONDITIONS").fetchSemanticsNodes().isEmpty())
+  }
+
+  @Test
+  fun summaryPageHoldsTheFullRecord() = runComposeUiTest {
+    val registry = buildAppViewRegistry()
+    setContent {
+      CompositionLocalProvider(LocalViewRegistry provides registry) {
+        MaterialTheme { PatientSummaryScreen(patientId = "p1", onBack = {}) }
+      }
+    }
+
+    waitUntil(timeoutMillis = 5_000L) {
+      onAllNodesWithText("Amina Diallo").fetchSemanticsNodes().isNotEmpty()
+    }
     onNodeWithTag(PROFILE_LIST_TAG).performScrollToNode(hasText("Amoxicillin 250 mg dispersible"))
     assertTrue(
       onAllNodesWithText("Amoxicillin 250 mg dispersible").fetchSemanticsNodes().isNotEmpty()
     )
-    onNodeWithTag(PROFILE_LIST_TAG).performScrollToNode(hasText("Waiting at facility"))
-    assertTrue(onAllNodesWithText("Waiting at facility").fetchSemanticsNodes().isNotEmpty())
-    onNodeWithTag(PROFILE_LIST_TAG).performScrollToNode(hasText("Immunisations".uppercase()))
-    assertTrue(onAllNodesWithText("None recorded").fetchSemanticsNodes().isNotEmpty())
+    onNodeWithTag(PROFILE_LIST_TAG).performScrollToNode(hasText("CONDITIONS"))
+    assertTrue(onAllNodesWithText("CONDITIONS").fetchSemanticsNodes().isNotEmpty())
   }
 }

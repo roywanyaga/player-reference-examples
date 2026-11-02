@@ -72,6 +72,10 @@ class SectionCardLayoutRenderer<T>(
   private val config: SectionCardConfig = SectionCardConfig(),
   /** Shown in place of the rows when there are none; null hides the body instead. */
   private val emptyLabel: String? = null,
+  /** Whether a collapsible section opens expanded; the user's own toggle wins afterwards. */
+  private val initiallyExpanded: Boolean = true,
+  /** Shown in place of the item count, such as "3 of 3 given". */
+  private val countLabel: String? = null,
 ) : LayoutRenderer<T> {
 
   @Composable
@@ -82,7 +86,7 @@ class SectionCardLayoutRenderer<T>(
     onItemClick: (T) -> Unit,
     modifier: Modifier,
   ) {
-    var expanded by rememberSaveable { mutableStateOf(true) }
+    var expanded by rememberSaveable { mutableStateOf(initiallyExpanded) }
     val tint = iconTint ?: MaterialTheme.colorScheme.primary
     val collapsible = config.collapsible == true
 
@@ -109,9 +113,9 @@ class SectionCardLayoutRenderer<T>(
           color = MaterialTheme.colorScheme.onSurfaceVariant,
           modifier = Modifier.weight(1f),
         )
-        if (config.showItemCount != false) {
+        if (config.showItemCount != false || countLabel != null) {
           Text(
-            text = items.size.toString(),
+            text = countLabel ?: items.size.toString(),
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
           )

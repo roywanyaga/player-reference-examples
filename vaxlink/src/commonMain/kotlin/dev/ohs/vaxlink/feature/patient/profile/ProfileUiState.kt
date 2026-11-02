@@ -30,6 +30,9 @@ import dev.ohs.player.generated.state.PatientRelationshipState
 import dev.ohs.player.generated.state.PatientSummaryState
 import dev.ohs.player.generated.state.PatientTreatmentState
 import dev.ohs.player.generated.state.PatientVitalState
+import dev.ohs.vaxlink.util.calendarDate
+import dev.ohs.vaxlink.workflow.TaskPlacement
+import kotlinx.datetime.LocalDate
 
 /** Everything the summary profile shows, one list per section, each extracted by a ViewJoinMap. */
 data class ProfileUiState(
@@ -48,6 +51,11 @@ data class ProfileUiState(
   val followUps: List<PatientFollowUpState> = emptyList(),
   val visits: List<PatientFacilityVisitState> = emptyList(),
   val vitals: List<PatientVitalState> = emptyList(),
+  /**
+   * Where each scheduled activity sits in its plan, from
+   * [dev.ohs.vaxlink.workflow.ScheduleCatalogue].
+   */
+  val placements: Map<String, TaskPlacement> = emptyMap(),
 ) {
   /** True while an Immunization on the record has not been verified by the clinic. */
   val needsVerification: Boolean
@@ -56,4 +64,124 @@ data class ProfileUiState(
   /** True while a referral to the clinic is open. */
   val referred: Boolean
     get() = referrals.any { it.referralState == "active" }
+
+  /** The plan a Task belongs to, falling back to its activity when the plan is unknown. */
+  fun planOf(task: PatientCareTaskState): String =
+    placements[task.taskPlan]?.planUrl ?: task.taskPlan.orEmpty()
+
+  /** Tasks still to do: not completed, cancelled or otherwise closed. */
+  val openTasks: List<PatientCareTaskState>
+    get() = careTasks.filter { it.isOpen }
+
+  /** Open Tasks whose window has closed. */
+  fun overdue(today: LocalDate): List<PatientCareTaskState> =
+    openTasks.filter { it.dueBy.calendarDate()?.let { end -> end < today.toString() } == true }
+
+  /**
+   * What the health worker acts on next: everything overdue, then the earliest contact of each plan
+   * still ahead. A contact is the set of doses that fall due together.
+   */
+  fun dueNext(today: LocalDate): List<PatientCareTaskState> {
+    val overdue = overdue(today)
+    val ahead = openTasks - overdue.toSet()
+    val next =
+      ahead
+        .groupBy { planOf(it) }
+        .values
+        .flatMap { plan ->
+          val first = plan.minOf { offsetOf(it) }
+          plan.filter { offsetOf(it) == first }
+        }
+    return (overdue + next).sortedBy { it.dueBy.calendarDate() }
+  }
+
+  /**
+   * Days after the plan's anchor that [task] falls due; 0 when its plan is not in the catalogue.
+   */
+  fun offsetOf(task: PatientCareTaskState): Int = placements[task.taskPlan]?.offsetDays ?: 0
+
+  /** Everything that has already happened, newest first, for the Past view. */
+  fun past(): List<PastEntry> =
+    buildList {
+        immunizations.forEach {
+          add(
+            PastEntry(
+              it.givenOn.calendarDate(),
+              PastKind.Immunisation,
+              it.vaccineName.orEmpty(),
+              listOfNotNull(it.laoDoseDisplay, it.lotNumber?.let { lot -> "Lot $lot" })
+                .joinToString(" · "),
+            )
+          )
+        }
+        visits.forEach {
+          add(PastEntry(it.arrivedOn.calendarDate(), PastKind.Visit, it.visitReason.orEmpty()))
+        }
+        vitals.forEach {
+          add(
+            PastEntry(
+              it.measuredOn.calendarDate(),
+              PastKind.Observation,
+              listOfNotNull(it.vitalName, it.vitalValue, it.vitalUnit).joinToString(" "),
+            )
+          )
+        }
+        treatments.forEach {
+          add(PastEntry(it.prescribedOn.calendarDate(), PastKind.Medication, it.medicine.orEmpty()))
+        }
+        referrals.forEach {
+          add(
+            PastEntry(
+              it.referredOn.calendarDate(),
+              PastKind.Referral,
+              it.referralPriority.orEmpty(),
+              it.referralState.orEmpty(),
+            )
+          )
+        }
+        outcomes.forEach {
+          add(PastEntry(it.outcomeOn.calendarDate(), PastKind.Referral, it.outcomeText.orEmpty()))
+        }
+        followUps
+          .filter { it.followUpState == "completed" }
+          .forEach {
+            add(PastEntry(it.dueOn.calendarDate(), PastKind.FollowUp, it.followUpReason.orEmpty()))
+          }
+        carePlans.forEach {
+          add(
+            PastEntry(it.startedOn.calendarDate(), PastKind.Programme, it.carePlanTitle.orEmpty())
+          )
+        }
+        careTasks
+          .filter { it.taskStatus == "completed" }
+          .forEach {
+            add(PastEntry(it.dueBy.calendarDate(), PastKind.Task, it.taskTitle.orEmpty()))
+          }
+      }
+      .filter { it.date != null }
+      .sortedByDescending { it.date }
 }
+
+/** The kinds of event the Past view lists and filters by. */
+enum class PastKind {
+  Immunisation,
+  Visit,
+  Observation,
+  Medication,
+  Referral,
+  FollowUp,
+  Programme,
+  Task,
+}
+
+/** One dated line of the Past view. */
+data class PastEntry(
+  val date: String?,
+  val kind: PastKind,
+  val title: String,
+  val detail: String = "",
+)
+
+/** A Task is open until it reaches a terminal state. */
+val PatientCareTaskState.isOpen: Boolean
+  get() = taskStatus !in setOf("completed", "cancelled", "rejected", "failed", "entered-in-error")

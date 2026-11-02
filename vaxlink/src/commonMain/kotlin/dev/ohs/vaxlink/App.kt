@@ -49,7 +49,10 @@ import dev.ohs.vaxlink.feature.home.HomeScreen
 import dev.ohs.vaxlink.feature.household.HouseholdScreen
 import dev.ohs.vaxlink.feature.login.LoginScreen
 import dev.ohs.vaxlink.feature.patient.profile.BookFollowUpAction
+import dev.ohs.vaxlink.feature.patient.profile.PatientPastScreen
 import dev.ohs.vaxlink.feature.patient.profile.PatientProfileScreen
+import dev.ohs.vaxlink.feature.patient.profile.PatientScheduleScreen
+import dev.ohs.vaxlink.feature.patient.profile.PatientSummaryScreen
 import dev.ohs.vaxlink.feature.patient.profile.ProgrammeActions
 import dev.ohs.vaxlink.feature.patient.profile.ReferToClinicAction
 import dev.ohs.vaxlink.feature.questionnaire.QuestionnaireHostScreen
@@ -239,6 +242,9 @@ private fun SignedInApp(context: UserContext, userName: String, onSignOut: () ->
               patientId = patientId,
               onBack = { navController.popBackStack() },
               onHouseholdClick = { id -> navController.navigate("household/$id") },
+              onOpenSchedule = { navController.navigate("patientSchedule/$patientId") },
+              onOpenPast = { navController.navigate("patientPast/$patientId") },
+              onOpenSummary = { navController.navigate("patientSummary/$patientId") },
               // Scan a WHO certificate. The CHW reads it offline without trusting it and records
               // it on the child's record, then refers the child for verification (J2); the clinic
               // roles verify it against the cached GDHCN trust list first (J3).
@@ -265,6 +271,28 @@ private fun SignedInApp(context: UserContext, userName: String, onSignOut: () ->
                 }
               },
             )
+          }
+
+          composable(
+            route = "patientSchedule/{patientId}",
+            arguments = listOf(navArgument("patientId") { type = NavType.StringType }),
+          ) { back ->
+            val id = back.arguments?.read { getStringOrNull("patientId") }.orEmpty()
+            PatientScheduleScreen(patientId = id, onBack = { navController.popBackStack() })
+          }
+          composable(
+            route = "patientPast/{patientId}",
+            arguments = listOf(navArgument("patientId") { type = NavType.StringType }),
+          ) { back ->
+            val id = back.arguments?.read { getStringOrNull("patientId") }.orEmpty()
+            PatientPastScreen(patientId = id, onBack = { navController.popBackStack() })
+          }
+          composable(
+            route = "patientSummary/{patientId}",
+            arguments = listOf(navArgument("patientId") { type = NavType.StringType }),
+          ) { back ->
+            val id = back.arguments?.read { getStringOrNull("patientId") }.orEmpty()
+            PatientSummaryScreen(patientId = id, onBack = { navController.popBackStack() })
           }
         }
         SnackbarHost(
