@@ -67,7 +67,7 @@ data class ProfileUiState(
 
   /** The plan a Task belongs to, falling back to its activity when the plan is unknown. */
   fun planOf(task: PatientCareTaskState): String =
-    placements[task.taskPlan]?.planUrl ?: task.taskPlan.orEmpty()
+    placements[task.activityUrl()]?.planUrl ?: task.activityUrl()
 
   /** Tasks still to do: not completed, cancelled or otherwise closed. */
   val openTasks: List<PatientCareTaskState>
@@ -98,7 +98,7 @@ data class ProfileUiState(
   /**
    * Days after the plan's anchor that [task] falls due; 0 when its plan is not in the catalogue.
    */
-  fun offsetOf(task: PatientCareTaskState): Int = placements[task.taskPlan]?.offsetDays ?: 0
+  fun offsetOf(task: PatientCareTaskState): Int = placements[task.activityUrl()]?.offsetDays ?: 0
 
   /** Everything that has already happened, newest first, for the Past view. */
   fun past(): List<PastEntry> =
@@ -185,3 +185,12 @@ data class PastEntry(
 /** A Task is open until it reaches a terminal state. */
 val PatientCareTaskState.isOpen: Boolean
   get() = taskStatus !in setOf("completed", "cancelled", "rejected", "failed", "entered-in-error")
+
+private val URL = Regex("""https?://[^\s)|]+""")
+
+/**
+ * The ActivityDefinition URL a Task was made from. The extracted column can come back wrapped, as
+ * `Canonical(value=https://…)`, so the bare URL is picked out of it.
+ */
+fun PatientCareTaskState.activityUrl(): String =
+  taskPlan?.let { URL.find(it)?.value ?: it }.orEmpty()

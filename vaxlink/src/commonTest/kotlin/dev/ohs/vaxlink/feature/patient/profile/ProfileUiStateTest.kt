@@ -38,7 +38,7 @@ class ProfileUiStateTest {
     PatientCareTaskState(
       careTaskId = activity,
       taskTitle = title,
-      taskPlan = "act/$activity",
+      taskPlan = "https://example.org/act/$activity",
       taskStatus = status,
       dueFrom = day(from),
       dueBy = day(by),
@@ -46,11 +46,11 @@ class ProfileUiStateTest {
 
   private val placements =
     mapOf(
-      "act/hb0" to TaskPlacement(LAO_SCHEDULE_PLAN, "Lao", 0),
-      "act/penta-1" to TaskPlacement(LAO_SCHEDULE_PLAN, "Lao", 42),
-      "act/opv-1" to TaskPlacement(LAO_SCHEDULE_PLAN, "Lao", 42),
-      "act/penta-2" to TaskPlacement(LAO_SCHEDULE_PLAN, "Lao", 70),
-      "act/mr-1" to TaskPlacement(LAO_SCHEDULE_PLAN, "Lao", 270),
+      "https://example.org/act/hb0" to TaskPlacement(LAO_SCHEDULE_PLAN, "Lao", 0),
+      "https://example.org/act/penta-1" to TaskPlacement(LAO_SCHEDULE_PLAN, "Lao", 42),
+      "https://example.org/act/opv-1" to TaskPlacement(LAO_SCHEDULE_PLAN, "Lao", 42),
+      "https://example.org/act/penta-2" to TaskPlacement(LAO_SCHEDULE_PLAN, "Lao", 70),
+      "https://example.org/act/mr-1" to TaskPlacement(LAO_SCHEDULE_PLAN, "Lao", 270),
     )
 
   private val state =
@@ -69,6 +69,19 @@ class ProfileUiStateTest {
   @Test
   fun everyDoseBelongsToTheLaoPlan() {
     assertEquals(setOf(LAO_SCHEDULE_PLAN), state.careTasks.map { state.planOf(it) }.toSet())
+  }
+
+  @Test
+  fun aWrappedCanonicalStillFindsItsPlan() {
+    val wrapped =
+      state.copy(
+        careTasks = state.careTasks.map { it.copy(taskPlan = "Canonical(value=${it.taskPlan})") }
+      )
+    assertEquals(setOf(LAO_SCHEDULE_PLAN), wrapped.careTasks.map { wrapped.planOf(it) }.toSet())
+    assertEquals(
+      listOf("OPV 1", "Penta 1"),
+      wrapped.dueNext(today).mapNotNull { it.taskTitle }.sorted(),
+    )
   }
 
   @Test
