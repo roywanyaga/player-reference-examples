@@ -33,7 +33,7 @@ fhir() { curl -fsS -H "Authorization: Bearer $token" -H 'Content-Type: applicati
 
 for type in "${types[@]}"; do
   for verb in "${verbs[@]}"; do
-    role="${verb}_${type^^}"
+    role="${verb}_$(printf %s "$type" | tr a-z A-Z)"
     admin -o /dev/null "$api/roles/$role" 2>/dev/null || admin -X POST "$api/roles" -d "{\"name\":\"$role\"}"
   done
 done
@@ -43,9 +43,15 @@ roles=$(admin "$api/roles?max=1000" | jq '[.[] | select(.name | test("^(GET|POST
 
 # The gateway checks this script's own token, and only an exempt caller may write Organization
 # and Location.
-service_account=$(admin "$api/users?username=service-account-${SEED_CLIENT_ID,,}&exact=true" | jq -r '.[0].id')
+service_account=$(admin "$api/users?username=service-account-$(printf %s "$SEED_CLIENT_ID" | tr A-Z a-z)&exact=true" | jq -r '.[0].id')
 admin -X POST "$api/users/$service_account/role-mappings/realm" \
   -d "$(admin "$api/roles?max=1000" | jq '[.[] | select(.name | test("^(GET|PUT)_|^ORG_SCOPE_EXEMPT$"))]')"
+
+# The demo users get their FHIR roles through the Practitioner group, the realm's existing group for
+# clinical staff, so any later user added to it inherits the same access.
+group=$(admin "$api/groups?search=Practitioner&exact=true" | jq -r '[.[] | select(.name == "Practitioner")][0].id // empty')
+[[ -n $group ]] || { echo "Practitioner group not found in realm $KEYCLOAK_REALM" >&2; exit 1; }
+admin -X POST "$api/groups/$group/role-mappings/realm" -d "$roles"
 
 ensure_user() {
   local username=$1 password=$2 first=$3 last=$4 id
@@ -57,7 +63,7 @@ ensure_user() {
   fi
   admin -X PUT "$api/users/$id/reset-password" \
     -d "$(jq -n --arg p "$password" '{type: "password", value: $p, temporary: false}')"
-  admin -X POST "$api/users/$id/role-mappings/realm" -d "$roles"
+  admin -X PUT "$api/users/$id/groups/$group"
   echo "$id"
 }
 
