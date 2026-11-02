@@ -70,7 +70,7 @@ class HomeScreenTest {
   @AfterTest fun tearDown() = stopKoin()
 
   @Test
-  fun homeScreen_defaultsToPatientsContentWithDrawerSectionsVisible() = runComposeUiTest {
+  fun homeScreen_nurseDefaultsToTheReferralInboxWithDrawerSectionsVisible() = runComposeUiTest {
     startTestKoin(FakeSyncManager { SyncJobStatus.Succeeded() })
     val registry = buildAppViewRegistry()
     setContent {
@@ -87,10 +87,12 @@ class HomeScreenTest {
       }
     }
 
+    // The clinic roles open on the referral inbox (NE-3); Patients stays a destination.
     waitUntil(timeoutMillis = 5_000L) {
-      onAllNodesWithText("No patients").fetchSemanticsNodes().isNotEmpty()
+      onAllNodesWithText("No open referrals for this facility.").fetchSemanticsNodes().isNotEmpty()
     }
     assertTrue(onAllNodesWithText("Registers").fetchSemanticsNodes().isNotEmpty())
+    assertTrue(onAllNodesWithText("Referrals").fetchSemanticsNodes().isNotEmpty())
     assertTrue(onAllNodesWithText("Patients").fetchSemanticsNodes().isNotEmpty())
     assertTrue(onAllNodesWithText("Sync now").fetchSemanticsNodes().isNotEmpty())
     assertTrue(onAllNodesWithText("Nurse").fetchSemanticsNodes().isNotEmpty())

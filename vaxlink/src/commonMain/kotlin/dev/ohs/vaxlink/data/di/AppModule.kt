@@ -24,8 +24,10 @@ import dev.ohs.vaxlink.auth.OidcAuthApi
 import dev.ohs.vaxlink.auth.PractitionerDetailsApi
 import dev.ohs.vaxlink.auth.SessionRepository
 import dev.ohs.vaxlink.auth.SessionStore
+import dev.ohs.vaxlink.auth.UserContext
 import dev.ohs.vaxlink.data.hcert.BundledTrustList
 import dev.ohs.vaxlink.data.hcert.DataStoreTrustListStorage
+import dev.ohs.vaxlink.data.hcert.DeviceIdentity
 import dev.ohs.vaxlink.data.hcert.HcertService
 import dev.ohs.vaxlink.data.hcert.createTrustListDataStore
 import dev.ohs.vaxlink.data.repository.FhirEngineRepository
@@ -44,13 +46,16 @@ import dev.ohs.vaxlink.feature.patient.profile.PatientProfileViewModel
 import dev.ohs.vaxlink.feature.questionnaire.QuestionnaireHostViewModel
 import dev.ohs.vaxlink.feature.questionnaire.QuestionnaireLaunchContext
 import dev.ohs.vaxlink.feature.questionnaire.QuestionnaireService
+import dev.ohs.vaxlink.feature.referral.ReferralInboxViewModel
 import dev.ohs.vaxlink.feature.role.UserContextViewModel
 import dev.ohs.vaxlink.feature.scan.CertificateScanViewModel
 import dev.ohs.vaxlink.feature.scan.ScanMode
 import dev.ohs.vaxlink.feature.sync.InitialSyncViewModel
 import dev.ohs.vaxlink.hcert.TrustListCache
+import dev.ohs.vaxlink.workflow.AuditService
 import dev.ohs.vaxlink.workflow.BundledProtocols
 import dev.ohs.vaxlink.workflow.CertificateRecorder
+import dev.ohs.vaxlink.workflow.ClinicImportService
 import dev.ohs.vaxlink.workflow.EngineTransactor
 import dev.ohs.vaxlink.workflow.EngineWorkflowRepository
 import dev.ohs.vaxlink.workflow.LaoScheduleService
@@ -96,6 +101,9 @@ internal val serviceModule = module {
   single { BundledTerminology() }
   single { CertificateRecorder(get(), get(), get(), get()) }
   single { ReferralService(get()) }
+  single { ClinicImportService(get(), get(), get(), get(), get()) }
+  single { DeviceIdentity(createTrustListDataStore()) }
+  single { AuditService(get(), deviceId = { get<DeviceIdentity>().id() }) }
   factory { QuestionnaireService(get(), get(), get()) }
   // The GDHCN DEV trust list: bundled until the first sync fetches a fresh copy.
   single {
@@ -146,9 +154,18 @@ internal val viewModelModule = module {
       afterSync = { getOrNull<HcertService>()?.refreshTrustListQuietly() },
     )
   }
-  viewModel { (mode: ScanMode, patientId: String?) ->
-    CertificateScanViewModel(get(), mode, patientId, recorder = getOrNull())
+  viewModel { (mode: ScanMode, patientId: String?, user: UserContext?) ->
+    CertificateScanViewModel(
+      get(),
+      mode,
+      patientId,
+      recorder = getOrNull(),
+      user = user,
+      importer = getOrNull(),
+      audit = getOrNull(),
+    )
   }
+  viewModel { (user: UserContext) -> ReferralInboxViewModel(get(), user) }
   viewModel { HouseholdListViewModel(get()) }
   viewModel { (householdId: String) -> HouseholdViewModel(householdId, get(), get(), get()) }
   viewModel { AuthViewModel(get(), get()) }

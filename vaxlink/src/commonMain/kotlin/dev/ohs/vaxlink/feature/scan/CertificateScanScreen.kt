@@ -46,9 +46,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.ohs.vaxlink.auth.UserContext
 import dev.ohs.vaxlink.generated.resources.Res
 import dev.ohs.vaxlink.generated.resources.scan_action
 import dev.ohs.vaxlink.generated.resources.scan_close
+import dev.ohs.vaxlink.generated.resources.scan_confirm_hint
+import dev.ohs.vaxlink.generated.resources.scan_confirm_not_counted
+import dev.ohs.vaxlink.generated.resources.scan_confirm_not_counted_done
+import dev.ohs.vaxlink.generated.resources.scan_confirm_prompt
+import dev.ohs.vaxlink.generated.resources.scan_confirmed
 import dev.ohs.vaxlink.generated.resources.scan_done
 import dev.ohs.vaxlink.generated.resources.scan_failed
 import dev.ohs.vaxlink.generated.resources.scan_field_clinician
@@ -59,6 +65,9 @@ import dev.ohs.vaxlink.generated.resources.scan_field_issuer
 import dev.ohs.vaxlink.generated.resources.scan_field_lot
 import dev.ohs.vaxlink.generated.resources.scan_field_name
 import dev.ohs.vaxlink.generated.resources.scan_field_vaccine
+import dev.ohs.vaxlink.generated.resources.scan_imported
+import dev.ohs.vaxlink.generated.resources.scan_imported_already
+import dev.ohs.vaxlink.generated.resources.scan_imported_walk_in
 import dev.ohs.vaxlink.generated.resources.scan_not_verified
 import dev.ohs.vaxlink.generated.resources.scan_paste_label
 import dev.ohs.vaxlink.generated.resources.scan_record
@@ -76,11 +85,16 @@ import dev.ohs.vaxlink.generated.resources.scan_use_text
 import dev.ohs.vaxlink.generated.resources.scan_verified
 import dev.ohs.vaxlink.generated.resources.scan_verify
 import dev.ohs.vaxlink.generated.resources.scan_working
+import dev.ohs.vaxlink.generated.resources.scan_wrong_child
+import dev.ohs.vaxlink.generated.resources.scan_wrong_child_detail
 import dev.ohs.vaxlink.hcert.DoseProposal
 import dev.ohs.vaxlink.hcert.DvcMin
 import dev.ohs.vaxlink.hcert.HcertClock
 import dev.ohs.vaxlink.hcert.PreQualProducts
 import dev.ohs.vaxlink.hcert.TrustListSnapshot
+import dev.ohs.vaxlink.workflow.DoseChoice
+import dev.ohs.vaxlink.workflow.ImportOutcome
+import dev.ohs.vaxlink.workflow.LAO_DOSE_SYSTEM
 import dev.ohs.vaxlink.workflow.RecordOutcome
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -95,6 +109,7 @@ import org.koin.core.parameter.parametersOf
 fun ScanCertificateAction(
   mode: ScanMode,
   patientId: String? = null,
+  user: UserContext? = null,
   modifier: Modifier = Modifier,
 ) {
   var open by remember { mutableStateOf(false) }
@@ -102,15 +117,25 @@ fun ScanCertificateAction(
     Text(stringResource(Res.string.scan_action))
   }
   if (open) {
-    CertificateScanDialog(mode = mode, patientId = patientId, onDismiss = { open = false })
+    CertificateScanDialog(
+      mode = mode,
+      patientId = patientId,
+      user = user,
+      onDismiss = { open = false },
+    )
   }
 }
 
 @Composable
-fun CertificateScanDialog(mode: ScanMode, patientId: String? = null, onDismiss: () -> Unit) {
+fun CertificateScanDialog(
+  mode: ScanMode,
+  patientId: String? = null,
+  user: UserContext? = null,
+  onDismiss: () -> Unit,
+) {
   val viewModel =
     koinViewModel<CertificateScanViewModel>(key = "${mode.name}:$patientId") {
-      parametersOf(mode, patientId)
+      parametersOf(mode, patientId, user)
     }
   val state by viewModel.uiState.collectAsStateWithLifecycle()
   Dialog(
@@ -210,6 +235,105 @@ fun CertificateScanDialog(mode: ScanMode, patientId: String? = null, onDismiss: 
               )
               Field(stringResource(Res.string.scan_field_dsc), stage.hcert.dsc.kid)
               TrustListLine(stage.trustList)
+              Spacer(Modifier.height(16.dp))
+              Button(onClick = onDismiss, Modifier.fillMaxWidth()) {
+                Text(stringResource(Res.string.scan_done))
+              }
+              OutlinedButton(onClick = viewModel::reset, Modifier.fillMaxWidth()) {
+                Text(stringResource(Res.string.scan_scan_again))
+              }
+            }
+          is ScanStage.Imported ->
+            Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
+              when (val outcome = stage.outcome) {
+                is ImportOutcome.Imported -> {
+                  Badge(
+                    stringResource(
+                      if (outcome.walkIn) Res.string.scan_imported_walk_in
+                      else Res.string.scan_imported
+                    ),
+                    MaterialTheme.colorScheme.primary,
+                  )
+                  stage.hcert.dvc?.let { CertificateFields(it, viewModel.products) }
+                  Field(stringResource(Res.string.scan_field_dsc), stage.hcert.dsc.kid)
+                  if (outcome.needsConfirmation) {
+                    Spacer(Modifier.height(12.dp))
+                    Text(
+                      stringResource(
+                        Res.string.scan_confirm_prompt,
+                        stage.hcert.dvc?.let { viewModel.products.display(it.vx.vp) } ?: "",
+                      ),
+                      style = MaterialTheme.typography.titleMedium,
+                    )
+                    Text(stringResource(Res.string.scan_confirm_hint))
+                    Spacer(Modifier.height(8.dp))
+                    stage.doses.forEach { dose ->
+                      OutlinedButton(
+                        onClick = { viewModel.confirmDose(DoseChoice.Dose(dose)) },
+                        Modifier.fillMaxWidth(),
+                      ) {
+                        Text(dose.display)
+                      }
+                    }
+                    Button(
+                      onClick = { viewModel.confirmDose(DoseChoice.NotCounted) },
+                      Modifier.fillMaxWidth().padding(top = 8.dp),
+                    ) {
+                      Text(stringResource(Res.string.scan_confirm_not_counted))
+                    }
+                  } else {
+                    val lao =
+                      outcome.immunization.vaccineCode.coding.firstOrNull {
+                        it.system?.value == LAO_DOSE_SYSTEM
+                      }
+                    Text(
+                      lao?.display?.value?.let { stringResource(Res.string.scan_recorded_lao, it) }
+                        ?: stringResource(Res.string.scan_recorded_foreign)
+                    )
+                    Spacer(Modifier.height(16.dp))
+                    Button(onClick = onDismiss, Modifier.fillMaxWidth()) {
+                      Text(stringResource(Res.string.scan_done))
+                    }
+                  }
+                }
+                is ImportOutcome.AlreadyImported -> {
+                  Badge(
+                    stringResource(Res.string.scan_imported_already),
+                    MaterialTheme.colorScheme.tertiary,
+                  )
+                  Button(onClick = onDismiss, Modifier.fillMaxWidth()) {
+                    Text(stringResource(Res.string.scan_done))
+                  }
+                }
+                is ImportOutcome.WrongChild -> {
+                  Badge(
+                    stringResource(Res.string.scan_wrong_child),
+                    MaterialTheme.colorScheme.error,
+                  )
+                  Text(
+                    stringResource(
+                      Res.string.scan_wrong_child_detail,
+                      outcome.certificateName,
+                      outcome.certificateBirthDate,
+                    )
+                  )
+                }
+                ImportOutcome.NoVaccination -> Text(stringResource(Res.string.scan_recorded_none))
+              }
+              OutlinedButton(onClick = viewModel::reset, Modifier.fillMaxWidth()) {
+                Text(stringResource(Res.string.scan_scan_again))
+              }
+            }
+          is ScanStage.Confirmed ->
+            Column(Modifier.weight(1f)) {
+              Badge(stringResource(Res.string.scan_confirmed), MaterialTheme.colorScheme.primary)
+              Text(
+                when (val choice = stage.choice) {
+                  is DoseChoice.Dose ->
+                    stringResource(Res.string.scan_recorded_lao, choice.dose.display)
+                  DoseChoice.NotCounted -> stringResource(Res.string.scan_confirm_not_counted_done)
+                }
+              )
               Spacer(Modifier.height(16.dp))
               Button(onClick = onDismiss, Modifier.fillMaxWidth()) {
                 Text(stringResource(Res.string.scan_done))

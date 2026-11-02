@@ -49,6 +49,12 @@
       "ids": [
         "{practitioner}"
       ]
+    },
+    {
+      "type": "Provenance"
+    },
+    {
+      "type": "AuditEvent"
     }
   ]
 }

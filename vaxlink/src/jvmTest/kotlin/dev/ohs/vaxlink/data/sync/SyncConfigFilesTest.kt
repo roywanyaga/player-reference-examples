@@ -43,6 +43,9 @@ private val GATEWAY_ALLOWED_TYPES =
     "MedicationStatement",
     "Task",
     "CarePlan",
+    // The clinic uploads its verification audit and the provenance of imported certificates.
+    "Provenance",
+    "AuditEvent",
     "Procedure",
     "PractitionerRole",
     "Location",

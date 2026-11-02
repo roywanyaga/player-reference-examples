@@ -1,1 +1,41 @@
-{"resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition", "url": "http://ohs.dev/ViewDefinition/FollowUp", "fhirVersion": ["4.0.1"], "select": [{"column": [{"name": "followUpId", "path": "id", "type": "http://hl7.org/fhir/StructureDefinition/string"}, {"name": "followUpReason", "path": "description", "type": "http://hl7.org/fhir/StructureDefinition/string"}, {"name": "followUpState", "path": "status", "type": "http://hl7.org/fhir/StructureDefinition/string"}, {"name": "dueOn", "path": "restriction.period.end", "type": "http://hl7.org/fhir/StructureDefinition/dateTime"}]}], "name": "FollowUp", "status": "active", "resource": "Task", "where": [{"path": "code.coding.code = 'iccm-follow-up'"}]}
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "url": "http://ohs.dev/ViewDefinition/FollowUp",
+  "fhirVersion": [
+    "4.0.1"
+  ],
+  "select": [
+    {
+      "column": [
+        {
+          "name": "followUpId",
+          "path": "id",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "followUpReason",
+          "path": "description",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "followUpState",
+          "path": "status",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "dueOn",
+          "path": "restriction.period.end",
+          "type": "http://hl7.org/fhir/StructureDefinition/dateTime"
+        }
+      ]
+    }
+  ],
+  "name": "FollowUp",
+  "status": "active",
+  "resource": "Task",
+  "where": [
+    {
+      "path": "code.coding.code = 'iccm-follow-up' or code.coding.code = 'clinic-follow-up'"
+    }
+  ]
+}

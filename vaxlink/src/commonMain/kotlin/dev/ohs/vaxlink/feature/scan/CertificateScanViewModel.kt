@@ -17,6 +17,7 @@ package dev.ohs.vaxlink.feature.scan
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.ohs.vaxlink.auth.UserContext
 import dev.ohs.vaxlink.data.hcert.HcertService
 import dev.ohs.vaxlink.hcert.HcertClock
 import dev.ohs.vaxlink.hcert.ReadResult
@@ -25,7 +26,12 @@ import dev.ohs.vaxlink.hcert.UnverifiedHcert
 import dev.ohs.vaxlink.hcert.VerificationFailure
 import dev.ohs.vaxlink.hcert.VerificationResult
 import dev.ohs.vaxlink.hcert.VerifiedHcert
+import dev.ohs.vaxlink.workflow.AuditService
 import dev.ohs.vaxlink.workflow.CertificateRecorder
+import dev.ohs.vaxlink.workflow.ClinicImportService
+import dev.ohs.vaxlink.workflow.DoseChoice
+import dev.ohs.vaxlink.workflow.ImportOutcome
+import dev.ohs.vaxlink.workflow.LaoDose
 import dev.ohs.vaxlink.workflow.RecordOutcome
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -63,6 +69,16 @@ sealed interface ScanStage {
 
   /** The decoded card was written to the child's record, or refused as already recorded. */
   data class Recorded(val hcert: UnverifiedHcert, val outcome: RecordOutcome) : ScanStage
+
+  /** The clinic: verified and imported; [outcome] says whether the nurse still has to decide. */
+  data class Imported(
+    val hcert: VerifiedHcert,
+    val outcome: ImportOutcome,
+    val doses: List<LaoDose> = emptyList(),
+  ) : ScanStage
+
+  /** The nurse's decision on an unmatched dose was recorded. */
+  data class Confirmed(val hcert: VerifiedHcert, val choice: DoseChoice) : ScanStage
 }
 
 data class ScanUiState(
@@ -77,8 +93,16 @@ class CertificateScanViewModel(
   /** The child whose record a decoded card is written to; null hides the Record action. */
   private val patientId: String? = null,
   private val recorder: CertificateRecorder? = null,
+  /** The signed-in user; with [importer] and [audit], the clinic path verifies and imports. */
+  private val user: UserContext? = null,
+  private val importer: ClinicImportService? = null,
+  private val audit: AuditService? = null,
   private val now: () -> Long = HcertClock::nowEpochSeconds,
 ) : ViewModel() {
+  /** The clinic path: verify first, then import onto the open child's record. */
+  val canImport: Boolean
+    get() = mode == ScanMode.VerifyFirst && patientId != null && importer != null && user != null
+
   /** True when a decoded card can be recorded from this screen. */
   val canRecord: Boolean
     get() = patientId != null && recorder != null
@@ -138,6 +162,25 @@ class CertificateScanViewModel(
     }
   }
 
+  /** From [ScanStage.Imported] with an unmatched dose: the nurse's choice. */
+  fun confirmDose(choice: DoseChoice) {
+    val imported = _uiState.value.stage as? ScanStage.Imported ?: return
+    val outcome = imported.outcome as? ImportOutcome.Imported ?: return
+    val importer = importer ?: return
+    val user = user ?: return
+    _uiState.update { it.copy(stage = ScanStage.Working) }
+    viewModelScope.launch {
+      try {
+        importer.confirmDose(outcome.immunization.id!!, choice, user)
+        _uiState.update { it.copy(stage = ScanStage.Confirmed(imported.hcert, choice)) }
+      } catch (e: CancellationException) {
+        throw e
+      } catch (e: Exception) {
+        _uiState.update { it.copy(stage = imported, scanError = e.message) }
+      }
+    }
+  }
+
   fun reset() {
     _uiState.update { it.copy(stage = ScanStage.Scanning, scanError = null) }
   }
@@ -153,11 +196,35 @@ class CertificateScanViewModel(
 
   private suspend fun verify(hc1: String) {
     val verification = hcert.verify(hc1, now())
+    // Every attempt is audited, success or failure, before anything else happens (CLN-10).
+    user?.let { u ->
+      audit?.let { a ->
+        runCatching { a.recordVerification(verification.result, hc1, u, patientId) }
+      }
+    }
     val stage =
       when (val r = verification.result) {
-        is VerificationResult.Verified -> ScanStage.Verified(hc1, r.hcert, verification.trustList)
+        is VerificationResult.Verified ->
+          if (canImport) importStage(hc1, r.hcert)
+          else ScanStage.Verified(hc1, r.hcert, verification.trustList)
         is VerificationResult.Failed -> ScanStage.Failed(r.failure, verification.trustList)
       }
     _uiState.update { it.copy(stage = stage, trustList = verification.trustList) }
+  }
+
+  private suspend fun importStage(hc1: String, verified: VerifiedHcert): ScanStage {
+    val importer = importer!!
+    return try {
+      val outcome = importer.import(patientId!!, hc1, verified, user!!)
+      val doses =
+        if ((outcome as? ImportOutcome.Imported)?.needsConfirmation == true) importer.laoDoses()
+        else emptyList()
+      ScanStage.Imported(verified, outcome, doses)
+    } catch (e: CancellationException) {
+      throw e
+    } catch (e: Exception) {
+      _uiState.update { it.copy(scanError = e.message) }
+      ScanStage.Verified(hc1, verified, _uiState.value.trustList)
+    }
   }
 }

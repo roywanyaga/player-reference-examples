@@ -78,6 +78,7 @@ import androidx.window.core.layout.WindowSizeClass
 import dev.ohs.vaxlink.auth.UserContext
 import dev.ohs.vaxlink.feature.household.HouseholdListScreen
 import dev.ohs.vaxlink.feature.patient.list.PatientListScreen
+import dev.ohs.vaxlink.feature.referral.ReferralInboxScreen
 import dev.ohs.vaxlink.generated.resources.Res
 import dev.ohs.vaxlink.generated.resources.home_cancel_sync
 import dev.ohs.vaxlink.generated.resources.home_last_synced
@@ -266,6 +267,8 @@ fun HomeScreen(
           HouseholdListScreen(onHouseholdClick = onHouseholdClick, onRegister = onRegisterHousehold)
         HomeDestination.Patients ->
           PatientListScreen(onPatientClick = onPatientClick, onRegister = onRegisterPatient)
+        HomeDestination.Referrals ->
+          ReferralInboxScreen(user = context, onPatientClick = onPatientClick)
       }
     }
 

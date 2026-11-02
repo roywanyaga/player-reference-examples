@@ -48,6 +48,7 @@ import dev.ohs.vaxlink.auth.rememberAuthorizationLauncher
 import dev.ohs.vaxlink.feature.home.HomeScreen
 import dev.ohs.vaxlink.feature.household.HouseholdScreen
 import dev.ohs.vaxlink.feature.login.LoginScreen
+import dev.ohs.vaxlink.feature.patient.profile.BookFollowUpAction
 import dev.ohs.vaxlink.feature.patient.profile.PatientProfileScreen
 import dev.ohs.vaxlink.feature.patient.profile.ProgrammeActions
 import dev.ohs.vaxlink.feature.patient.profile.ReferToClinicAction
@@ -254,7 +255,12 @@ private fun SignedInApp(context: UserContext, userName: String, onSignOut: () ->
                       },
                     )
                   } else {
-                    ScanCertificateAction(mode = ScanMode.VerifyFirst)
+                    ScanCertificateAction(
+                      mode = ScanMode.VerifyFirst,
+                      patientId = patientId,
+                      user = context,
+                    )
+                    BookFollowUpAction(patientId = patientId, user = context, profile = profile)
                   }
                 }
               },

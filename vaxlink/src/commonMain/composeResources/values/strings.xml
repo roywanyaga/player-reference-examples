@@ -155,4 +155,26 @@
     <string name="scan_recorded_none">This certificate carries no vaccination entry</string>
     <string name="scan_camera_unavailable">Camera scanning is not available on this platform. Paste the certificate text below.</string>
     <string name="scan_camera_permission">Camera permission is needed to scan a certificate.</string>
+
+    <!-- Clinic role (NE-3) -->
+    <string name="home_destination_referrals">Referrals</string>
+    <string name="referral_inbox_title">Referrals</string>
+    <string name="referral_inbox_empty">No open referrals for this facility.</string>
+    <string name="referral_inbox_from">Referred by %1$s</string>
+    <string name="scan_imported">Verified and imported</string>
+    <string name="scan_imported_walk_in">Verified and recorded</string>
+    <string name="scan_imported_already">Already verified and imported</string>
+    <string name="scan_wrong_child">Not this child's certificate</string>
+    <string name="scan_wrong_child_detail">This card belongs to %1$s, born %2$s. Nothing was imported.</string>
+    <string name="scan_confirm_prompt">%1$s has no dose on the Lao schedule</string>
+    <string name="scan_confirm_hint">Choose which Lao schedule dose this foreign dose counts as, or record it as not counted. Your decision is recorded.</string>
+    <string name="scan_confirm_not_counted">Not counted on the Lao schedule</string>
+    <string name="scan_confirm_not_counted_done">Recorded as not counted on the Lao schedule</string>
+    <string name="scan_confirmed">Decision recorded</string>
+    <string name="follow_up_book">Book follow-up</string>
+    <string name="follow_up_booked">Follow-up booked</string>
+    <string name="follow_up_title">Book the next visit</string>
+    <string name="follow_up_date_label">Due by (YYYY-MM-DD)</string>
+    <string name="follow_up_invalid_date">Enter a date as YYYY-MM-DD</string>
+    <string name="follow_up_cancel">Cancel</string>
 </resources>

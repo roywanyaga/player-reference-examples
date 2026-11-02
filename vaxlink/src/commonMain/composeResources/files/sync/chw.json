@@ -59,6 +59,9 @@
       "ids": [
         "{practitioner}"
       ]
+    },
+    {
+      "type": "Provenance"
     }
   ]
 }

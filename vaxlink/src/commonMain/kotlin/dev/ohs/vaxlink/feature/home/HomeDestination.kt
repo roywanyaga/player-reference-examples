@@ -17,12 +17,14 @@ package dev.ohs.vaxlink.feature.home
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.ui.graphics.vector.ImageVector
 import dev.ohs.vaxlink.auth.AppRole
 import dev.ohs.vaxlink.generated.resources.Res
 import dev.ohs.vaxlink.generated.resources.home_destination_households
 import dev.ohs.vaxlink.generated.resources.home_destination_patients
+import dev.ohs.vaxlink.generated.resources.home_destination_referrals
 import dev.ohs.vaxlink.generated.resources.role_chw
 import dev.ohs.vaxlink.generated.resources.role_clinician
 import dev.ohs.vaxlink.generated.resources.role_nurse
@@ -32,6 +34,7 @@ import org.jetbrains.compose.resources.StringResource
 enum class HomeDestination(val label: StringResource, val icon: ImageVector) {
   Households(label = Res.string.home_destination_households, icon = Icons.Filled.Home),
   Patients(label = Res.string.home_destination_patients, icon = Icons.Filled.Person),
+  Referrals(label = Res.string.home_destination_referrals, icon = Icons.Filled.Notifications),
 }
 
 /**
@@ -43,7 +46,8 @@ fun AppRole.destinations(): List<HomeDestination> =
   when (this) {
     AppRole.CHW -> listOf(HomeDestination.Households, HomeDestination.Patients)
     AppRole.NURSE,
-    AppRole.CLINICIAN -> listOf(HomeDestination.Patients, HomeDestination.Households)
+    AppRole.CLINICIAN ->
+      listOf(HomeDestination.Referrals, HomeDestination.Patients, HomeDestination.Households)
   }
 
 val AppRole.label: StringResource
