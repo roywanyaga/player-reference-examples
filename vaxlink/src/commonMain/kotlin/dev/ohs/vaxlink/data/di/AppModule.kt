@@ -49,6 +49,7 @@ import dev.ohs.vaxlink.feature.questionnaire.QuestionnaireService
 import dev.ohs.vaxlink.feature.referral.ReferralInboxViewModel
 import dev.ohs.vaxlink.feature.register.Programme
 import dev.ohs.vaxlink.feature.register.ProgrammeRegisterViewModel
+import dev.ohs.vaxlink.feature.reports.ReportsViewModel
 import dev.ohs.vaxlink.feature.role.UserContextViewModel
 import dev.ohs.vaxlink.feature.scan.CertificateScanViewModel
 import dev.ohs.vaxlink.feature.scan.ScanMode
@@ -146,6 +147,7 @@ internal val viewModelModule = module {
   viewModel { PatientListViewModel(get()) }
   viewModel { (patientId: String) -> PatientProfileViewModel(patientId, get()) }
   viewModel { (programme: Programme) -> ProgrammeRegisterViewModel(get(), programme) }
+  viewModel { ReportsViewModel(get()) }
   viewModel { (questionnaireId: String, launchContext: QuestionnaireLaunchContext) ->
     QuestionnaireHostViewModel(questionnaireId, launchContext, get(), get(), get())
   }

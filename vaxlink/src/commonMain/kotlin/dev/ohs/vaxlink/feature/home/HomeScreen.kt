@@ -81,6 +81,7 @@ import dev.ohs.vaxlink.feature.patient.list.PatientListScreen
 import dev.ohs.vaxlink.feature.referral.ReferralInboxScreen
 import dev.ohs.vaxlink.feature.register.Programme
 import dev.ohs.vaxlink.feature.register.ProgrammeRegisterScreen
+import dev.ohs.vaxlink.feature.reports.ReportsScreen
 import dev.ohs.vaxlink.generated.resources.Res
 import dev.ohs.vaxlink.generated.resources.home_cancel_sync
 import dev.ohs.vaxlink.generated.resources.home_last_synced
@@ -277,6 +278,7 @@ fun HomeScreen(
           ProgrammeRegisterScreen(Programme.Pnc, onPatientClick = onPatientClick)
         HomeDestination.FpRegister ->
           ProgrammeRegisterScreen(Programme.Fp, onPatientClick = onPatientClick)
+        HomeDestination.Reports -> ReportsScreen()
       }
     }
 

@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -31,6 +32,7 @@ import dev.ohs.vaxlink.generated.resources.home_destination_households
 import dev.ohs.vaxlink.generated.resources.home_destination_patients
 import dev.ohs.vaxlink.generated.resources.home_destination_pnc
 import dev.ohs.vaxlink.generated.resources.home_destination_referrals
+import dev.ohs.vaxlink.generated.resources.home_destination_reports
 import dev.ohs.vaxlink.generated.resources.role_chw
 import dev.ohs.vaxlink.generated.resources.role_clinician
 import dev.ohs.vaxlink.generated.resources.role_nurse
@@ -44,6 +46,7 @@ enum class HomeDestination(val label: StringResource, val icon: ImageVector) {
   AncRegister(label = Res.string.home_destination_anc, icon = Icons.Filled.Favorite),
   PncRegister(label = Res.string.home_destination_pnc, icon = Icons.Filled.Face),
   FpRegister(label = Res.string.home_destination_fp, icon = Icons.Filled.DateRange),
+  Reports(label = Res.string.home_destination_reports, icon = Icons.Filled.Info),
 }
 
 /**
@@ -60,6 +63,7 @@ fun AppRole.destinations(): List<HomeDestination> =
         HomeDestination.AncRegister,
         HomeDestination.PncRegister,
         HomeDestination.FpRegister,
+        HomeDestination.Reports,
       )
     AppRole.NURSE,
     AppRole.CLINICIAN ->
@@ -70,6 +74,7 @@ fun AppRole.destinations(): List<HomeDestination> =
         HomeDestination.AncRegister,
         HomeDestination.PncRegister,
         HomeDestination.FpRegister,
+        HomeDestination.Reports,
       )
   }
 

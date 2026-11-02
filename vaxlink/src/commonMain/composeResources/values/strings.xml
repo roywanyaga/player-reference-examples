@@ -136,6 +136,40 @@
     <string name="past_kind_task">Task</string>
     <string name="summary_title">Patient summary</string>
 
+    <!-- Reports -->
+    <string name="home_destination_reports">Reports</string>
+    <string name="reports_title">Reports</string>
+    <string name="reports_previous_month">Previous month</string>
+    <string name="reports_next_month">Next month</string>
+    <string name="reports_now_note">Counts marked "in the month" follow the month above; the rest are the position today.</string>
+    <string name="report_group_people">People</string>
+    <string name="report_group_programmes">Programmes</string>
+    <string name="report_group_immunisation">Immunisation</string>
+    <string name="report_group_verification">Certificates</string>
+    <string name="report_group_referrals">Referrals</string>
+    <string name="report_households">Households</string>
+    <string name="report_patients">Patients</string>
+    <string name="report_children_under_five">Children under five</string>
+    <string name="report_zero_dose">Zero-dose children (over 14 weeks, no Penta)</string>
+    <string name="report_anc_clients">ANC clients</string>
+    <string name="report_anc_new">New ANC enrolments in the month</string>
+    <string name="report_pnc_clients">PNC clients</string>
+    <string name="report_pnc_new">New PNC enrolments in the month</string>
+    <string name="report_fp_clients">Family planning clients</string>
+    <string name="report_fp_new">New family planning enrolments in the month</string>
+    <string name="report_doses_given">Doses given in the month</string>
+    <string name="report_doses_due">Doses due in the month</string>
+    <string name="report_doses_overdue">Doses overdue today</string>
+    <string name="report_certificates_scanned">Certificates scanned in the month</string>
+    <string name="report_certificates_verified">Verifications passed in the month</string>
+    <string name="report_verification_failed">Verifications failed in the month</string>
+    <string name="report_foreign_doses">Foreign doses verified and imported in the month</string>
+    <string name="report_bcg_pending">Doses waiting for a clinician's decision</string>
+    <string name="report_referrals_open">Referrals open now</string>
+    <string name="report_referrals_sent">Referrals sent in the month</string>
+    <string name="report_referrals_completed">Of those, completed</string>
+    <string name="report_referrals_withdrawn">Of those, withdrawn</string>
+
     <!-- Programme registers -->
     <string name="register_empty">No one is enrolled</string>
     <string name="register_enrolled">Enrolled %1$s</string>

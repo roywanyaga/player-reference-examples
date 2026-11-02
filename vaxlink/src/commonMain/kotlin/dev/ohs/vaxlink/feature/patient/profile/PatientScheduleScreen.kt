@@ -95,8 +95,8 @@ private fun androidx.compose.foundation.lazy.LazyListScope.laoContacts(
       fontWeight = FontWeight.SemiBold,
     )
   }
-  val byContact = tasks.groupBy { state.offsetOf(it) }.toSortedMap()
-  val next = byContact.entries.firstOrNull { (_, group) -> group.any { it.isOpen } }?.key
+  val byContact = tasks.groupBy { state.offsetOf(it) }.toList().sortedBy { it.first }
+  val next = byContact.firstOrNull { (_, group) -> group.any { it.isOpen } }?.first
   byContact.forEach { (days, group) ->
     item(key = "contact:$days") {
       val registry = LocalViewRegistry.current
