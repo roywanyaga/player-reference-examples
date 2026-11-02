@@ -135,7 +135,7 @@ data class ProfileUiState(
               it.referredOn.calendarDate(),
               PastKind.Referral,
               it.referralPriority.orEmpty(),
-              it.referralState.orEmpty(),
+              listOfNotNull(it.referralState, it.referralNote).joinToString(" · "),
             )
           )
         }

@@ -42,6 +42,7 @@ import dev.ohs.vaxlink.generated.resources.care_status_waiting
 import dev.ohs.vaxlink.generated.resources.work_due
 import dev.ohs.vaxlink.generated.resources.work_seen_at_facility
 import dev.ohs.vaxlink.generated.resources.work_waiting_at_facility
+import dev.ohs.vaxlink.generated.resources.work_withdrawn
 import dev.ohs.vaxlink.util.calendarDate
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
@@ -56,12 +57,14 @@ class ReferralItemRenderer : ComponentRenderer<PatientReferralState, CareItemCon
         listOfNotNull(
             dated(config, Res.string.care_referred_on, item.referredOn.calendarDate()),
             item.referralPriority?.replaceFirstChar { it.uppercaseChar() },
+            item.referralNote,
           )
           .joinToString(" · "),
       status =
         when (item.referralState) {
           "active" -> pending(stringResource(Res.string.work_waiting_at_facility))
           "completed" -> done(stringResource(Res.string.work_seen_at_facility))
+          "revoked" -> ended(stringResource(Res.string.work_withdrawn))
           else -> null
         },
     )
@@ -162,4 +165,12 @@ private fun done(label: String) =
     label,
     MaterialTheme.colorScheme.primaryContainer,
     MaterialTheme.colorScheme.onPrimaryContainer,
+  )
+
+@Composable
+private fun ended(label: String) =
+  StatusChipData(
+    label,
+    MaterialTheme.colorScheme.surfaceVariant,
+    MaterialTheme.colorScheme.onSurfaceVariant,
   )

@@ -93,6 +93,16 @@
     <string name="programme_record_fp_visit">Record FP visit</string>
     <string name="referral_refer_to_clinic">Refer to clinic</string>
     <string name="referral_referred">Referred to the clinic</string>
+    <string name="referral_withdraw">Withdraw referral</string>
+    <string name="referral_withdraw_title">Withdraw the referral?</string>
+    <string name="referral_withdraw_hint">Reason: the family went elsewhere, the child was already seen…</string>
+    <string name="referral_withdraw_confirm">Withdraw</string>
+    <string name="referral_close">Close referral</string>
+    <string name="referral_close_title">Close the referral without a follow-up?</string>
+    <string name="referral_close_hint">Outcome: seen, no follow-up needed…</string>
+    <string name="referral_close_confirm">Close</string>
+    <string name="referral_cancel">Cancel</string>
+    <string name="work_withdrawn">Withdrawn</string>
 
     <!-- Profile views: overview, schedule, past, summary -->
     <string name="profile_due_next">Due next</string>

@@ -273,4 +273,40 @@ class ClinicImportServiceTest {
     assertEquals("ServiceRequest/${referral.id}", followUp.focus?.reference?.value)
     assertTrue(repository.referralInbox("facility").isEmpty())
   }
+
+  @Test
+  fun theChwCanWithdrawAnOpenReferralWithAReason() = runTest {
+    baby()
+    val referrals = ReferralService(repository)
+    referrals.refer("baby", chw)
+
+    assertTrue(referrals.withdraw("baby", "Family went to another clinic", chw))
+
+    val referral = repository.all("ServiceRequest").filterIsInstance<ServiceRequest>().single()
+    assertEquals(ServiceRequest.RequestStatus.Revoked, referral.status.value)
+    assertEquals("Withdrawn: Family went to another clinic", referral.note.single().text.value)
+    assertEquals(
+      "Practitioner/chw-1",
+      referral.note.single().author?.asReference()?.value?.reference?.value,
+    )
+    assertTrue(repository.referralInbox("facility").isEmpty())
+    assertEquals(null, referrals.openReferral("baby"))
+    // Nothing left to withdraw.
+    assertEquals(false, referrals.withdraw("baby", "again", chw))
+  }
+
+  @Test
+  fun theClinicCanCloseAReferralWithoutBookingAFollowUp() = runTest {
+    baby()
+    val referrals = ReferralService(repository)
+    referrals.refer("baby", chw)
+
+    assertTrue(referrals.close("baby", "Seen, no follow-up needed", nurse))
+
+    val referral = repository.all("ServiceRequest").filterIsInstance<ServiceRequest>().single()
+    assertEquals(ServiceRequest.RequestStatus.Completed, referral.status.value)
+    assertEquals("Closed: Seen, no follow-up needed", referral.note.single().text.value)
+    assertTrue(repository.all("Task").none { it.id?.startsWith("clinic") == true })
+    assertTrue(repository.referralInbox("facility").isEmpty())
+  }
 }

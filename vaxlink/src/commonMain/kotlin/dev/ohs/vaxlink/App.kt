@@ -49,12 +49,14 @@ import dev.ohs.vaxlink.feature.home.HomeScreen
 import dev.ohs.vaxlink.feature.household.HouseholdScreen
 import dev.ohs.vaxlink.feature.login.LoginScreen
 import dev.ohs.vaxlink.feature.patient.profile.BookFollowUpAction
+import dev.ohs.vaxlink.feature.patient.profile.CloseReferralAction
 import dev.ohs.vaxlink.feature.patient.profile.PatientPastScreen
 import dev.ohs.vaxlink.feature.patient.profile.PatientProfileScreen
 import dev.ohs.vaxlink.feature.patient.profile.PatientScheduleScreen
 import dev.ohs.vaxlink.feature.patient.profile.PatientSummaryScreen
 import dev.ohs.vaxlink.feature.patient.profile.ProgrammeActions
 import dev.ohs.vaxlink.feature.patient.profile.ReferToClinicAction
+import dev.ohs.vaxlink.feature.patient.profile.WithdrawReferralAction
 import dev.ohs.vaxlink.feature.questionnaire.QuestionnaireHostScreen
 import dev.ohs.vaxlink.feature.questionnaire.QuestionnaireIds
 import dev.ohs.vaxlink.feature.role.NoRoleScreen
@@ -253,6 +255,7 @@ private fun SignedInApp(context: UserContext, userName: String, onSignOut: () ->
                   if (context.role == AppRole.CHW) {
                     ScanCertificateAction(mode = ScanMode.ReadOnly, patientId = patientId)
                     ReferToClinicAction(patientId = patientId, user = context, profile = profile)
+                    WithdrawReferralAction(patientId = patientId, user = context, profile = profile)
                     // The mother's programmes: ANC, PNC and family planning (eCHIS forms).
                     ProgrammeActions(
                       profile = profile,
@@ -267,6 +270,7 @@ private fun SignedInApp(context: UserContext, userName: String, onSignOut: () ->
                       user = context,
                     )
                     BookFollowUpAction(patientId = patientId, user = context, profile = profile)
+                    CloseReferralAction(patientId = patientId, user = context, profile = profile)
                   }
                 }
               },

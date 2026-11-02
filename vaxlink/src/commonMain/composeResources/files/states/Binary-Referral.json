@@ -1,1 +1,46 @@
-{"resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition", "url": "http://ohs.dev/ViewDefinition/Referral", "fhirVersion": ["4.0.1"], "select": [{"column": [{"name": "referralItemId", "path": "id", "type": "http://hl7.org/fhir/StructureDefinition/string"}, {"name": "referralState", "path": "status", "type": "http://hl7.org/fhir/StructureDefinition/string"}, {"name": "referralPriority", "path": "priority", "type": "http://hl7.org/fhir/StructureDefinition/string"}, {"name": "referredOn", "path": "authoredOn", "type": "http://hl7.org/fhir/StructureDefinition/dateTime"}]}], "name": "Referral", "status": "active", "resource": "ServiceRequest", "where": [{"path": "intent = 'order' and code.coding.code = '3457005'"}]}
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "url": "http://ohs.dev/ViewDefinition/Referral",
+  "fhirVersion": [
+    "4.0.1"
+  ],
+  "select": [
+    {
+      "column": [
+        {
+          "name": "referralItemId",
+          "path": "id",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "referralState",
+          "path": "status",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "referralPriority",
+          "path": "priority",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        },
+        {
+          "name": "referredOn",
+          "path": "authoredOn",
+          "type": "http://hl7.org/fhir/StructureDefinition/dateTime"
+        },
+        {
+          "name": "referralNote",
+          "path": "note.text.first()",
+          "type": "http://hl7.org/fhir/StructureDefinition/string"
+        }
+      ]
+    }
+  ],
+  "name": "Referral",
+  "status": "active",
+  "resource": "ServiceRequest",
+  "where": [
+    {
+      "path": "intent = 'order' and code.coding.code = '3457005'"
+    }
+  ]
+}

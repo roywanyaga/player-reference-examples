@@ -15,6 +15,7 @@
  */
 package dev.ohs.vaxlink.workflow
 
+import dev.ohs.fhir.model.r4.Annotation
 import dev.ohs.fhir.model.r4.Code
 import dev.ohs.fhir.model.r4.CodeableConcept
 import dev.ohs.fhir.model.r4.Coding
@@ -22,6 +23,7 @@ import dev.ohs.fhir.model.r4.DateTime
 import dev.ohs.fhir.model.r4.Enumeration
 import dev.ohs.fhir.model.r4.FhirDateTime
 import dev.ohs.fhir.model.r4.Immunization
+import dev.ohs.fhir.model.r4.Markdown
 import dev.ohs.fhir.model.r4.Reference
 import dev.ohs.fhir.model.r4.ServiceRequest
 import dev.ohs.fhir.model.r4.String as FhirString
@@ -84,6 +86,43 @@ class ReferralService(
       )
     repository.upsert(referral)
     return referral
+  }
+
+  /**
+   * The CHW takes the referral back (the family went elsewhere, or the child was already seen): it
+   * is revoked, with the reason on the record. Returns false when there was no open referral.
+   */
+  suspend fun withdraw(patientId: String, reason: String, user: UserContext): Boolean =
+    finish(patientId, ServiceRequest.RequestStatus.Revoked, "Withdrawn: $reason", user)
+
+  /**
+   * The clinic closes the referral without booking a follow-up: it is completed, with the outcome
+   * on the record. Returns false when there was no open referral.
+   */
+  suspend fun close(patientId: String, outcome: String, user: UserContext): Boolean =
+    finish(patientId, ServiceRequest.RequestStatus.Completed, "Closed: $outcome", user)
+
+  private suspend fun finish(
+    patientId: String,
+    status: ServiceRequest.RequestStatus,
+    text: String,
+    user: UserContext,
+  ): Boolean {
+    val referral = openReferral(patientId) ?: return false
+    repository.upsert(
+      referral.copy(
+        status = Enumeration(value = status),
+        note =
+          referral.note +
+            Annotation(
+              author =
+                Annotation.Author.Reference(reference("Practitioner/${user.practitionerId}")),
+              time = DateTime(value = FhirDateTime.fromString(wholeSeconds())),
+              text = Markdown(value = text),
+            ),
+      )
+    )
+    return true
   }
 
   // A fractional second breaks fhir-model's date-time parsing, so stamp whole seconds.
