@@ -16,14 +16,20 @@
 package dev.ohs.vaxlink.feature.home
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.ui.graphics.vector.ImageVector
 import dev.ohs.vaxlink.auth.AppRole
 import dev.ohs.vaxlink.generated.resources.Res
+import dev.ohs.vaxlink.generated.resources.home_destination_anc
+import dev.ohs.vaxlink.generated.resources.home_destination_fp
 import dev.ohs.vaxlink.generated.resources.home_destination_households
 import dev.ohs.vaxlink.generated.resources.home_destination_patients
+import dev.ohs.vaxlink.generated.resources.home_destination_pnc
 import dev.ohs.vaxlink.generated.resources.home_destination_referrals
 import dev.ohs.vaxlink.generated.resources.role_chw
 import dev.ohs.vaxlink.generated.resources.role_clinician
@@ -35,6 +41,9 @@ enum class HomeDestination(val label: StringResource, val icon: ImageVector) {
   Households(label = Res.string.home_destination_households, icon = Icons.Filled.Home),
   Patients(label = Res.string.home_destination_patients, icon = Icons.Filled.Person),
   Referrals(label = Res.string.home_destination_referrals, icon = Icons.Filled.Notifications),
+  AncRegister(label = Res.string.home_destination_anc, icon = Icons.Filled.Favorite),
+  PncRegister(label = Res.string.home_destination_pnc, icon = Icons.Filled.Face),
+  FpRegister(label = Res.string.home_destination_fp, icon = Icons.Filled.DateRange),
 }
 
 /**
@@ -44,10 +53,24 @@ enum class HomeDestination(val label: StringResource, val icon: ImageVector) {
  */
 fun AppRole.destinations(): List<HomeDestination> =
   when (this) {
-    AppRole.CHW -> listOf(HomeDestination.Households, HomeDestination.Patients)
+    AppRole.CHW ->
+      listOf(
+        HomeDestination.Households,
+        HomeDestination.Patients,
+        HomeDestination.AncRegister,
+        HomeDestination.PncRegister,
+        HomeDestination.FpRegister,
+      )
     AppRole.NURSE,
     AppRole.CLINICIAN ->
-      listOf(HomeDestination.Referrals, HomeDestination.Patients, HomeDestination.Households)
+      listOf(
+        HomeDestination.Referrals,
+        HomeDestination.Patients,
+        HomeDestination.Households,
+        HomeDestination.AncRegister,
+        HomeDestination.PncRegister,
+        HomeDestination.FpRegister,
+      )
   }
 
 val AppRole.label: StringResource

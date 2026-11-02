@@ -12,6 +12,9 @@
     <!-- Home screen -->
     <string name="home_destination_households">Households</string>
     <string name="home_destination_patients">Patients</string>
+    <string name="home_destination_anc">ANC</string>
+    <string name="home_destination_pnc">PNC</string>
+    <string name="home_destination_fp">Family planning</string>
     <string name="home_registers">Registers</string>
     <string name="home_signed_in">Signed in</string>
     <string name="home_last_synced">Last synced: %1$s</string>
@@ -132,6 +135,12 @@
     <string name="past_kind_programme">Programme</string>
     <string name="past_kind_task">Task</string>
     <string name="summary_title">Patient summary</string>
+
+    <!-- Programme registers -->
+    <string name="register_empty">No one is enrolled</string>
+    <string name="register_enrolled">Enrolled %1$s</string>
+    <string name="register_next">Next: %1$s</string>
+    <string name="register_nothing_scheduled">Nothing scheduled</string>
 
     <!-- Households (NE-2) -->
     <string name="household_list_empty">No households</string>
