@@ -167,43 +167,7 @@ fun enrolAnc(
   val delivery =
     deliveryDate
       ?.takeIf { ended }
-      ?.let { date ->
-        Observation(
-          id = generateId(),
-          status = Enumeration(value = Observation.ObservationStatus.Final),
-          code = concept(SNOMED, DELIVERY_CODE, "Delivery"),
-          subject = subject,
-          effective = Observation.Effective.DateTime(dateTime(date)),
-          component =
-            listOfNotNull(
-              Observation.Component(
-                code = concept(LOINC, "63893-2", "Outcome of pregnancy"),
-                value =
-                  Observation.Component.Value.CodeableConcept(
-                    concept(SNOMED, "281050002", "Livebirth")
-                  ),
-              ),
-              response.code("delivery-place")?.let {
-                Observation.Component(
-                  code = concept(ANC_SCREENING_SYSTEM, "delivery-place", "Place of delivery"),
-                  value =
-                    Observation.Component.Value.CodeableConcept(
-                      concept(SNOMED, it, response.display("delivery-place") ?: it)
-                    ),
-                )
-              },
-              response
-                .string("delivery-abroad")
-                ?.takeIf { it.isNotBlank() }
-                ?.let {
-                  Observation.Component(
-                    code = concept(ANC_SCREENING_SYSTEM, "delivery-abroad", "Country of delivery"),
-                    value = Observation.Component.Value.String(FhirString(value = it)),
-                  )
-                },
-            ),
-        )
-      }
+      ?.let { date -> deliveryObservation(subject, date, LIVE_BIRTH, "Livebirth", response) }
   val referral =
     if (
       response.code("referred-for-card") == "yes" || response.code("referred-danger-signs") == "yes"
@@ -530,3 +494,84 @@ private fun reference(value: String) = Reference(reference = FhirString(value = 
 private fun dateTime(date: LocalDate) = DateTime(value = FhirDateTime.Date(date))
 
 private fun FhirDate.toLocalDate(): LocalDate? = (this as? FhirDate.Date)?.date
+
+private const val LIVE_BIRTH = "281050002"
+private const val STILLBIRTH = "237364002"
+
+/**
+ * The Delivery observation that discharges the ANC plan, with where and (if abroad) which country.
+ */
+private fun deliveryObservation(
+  subject: Reference,
+  date: LocalDate,
+  outcomeCode: String,
+  outcomeDisplay: String,
+  response: QuestionnaireResponse,
+) =
+  Observation(
+    id = generateId(),
+    status = Enumeration(value = Observation.ObservationStatus.Final),
+    code = concept(SNOMED, DELIVERY_CODE, "Delivery"),
+    subject = subject,
+    effective = Observation.Effective.DateTime(dateTime(date)),
+    component =
+      listOfNotNull(
+        Observation.Component(
+          code = concept(LOINC, "63893-2", "Outcome of pregnancy"),
+          value =
+            Observation.Component.Value.CodeableConcept(
+              concept(SNOMED, outcomeCode, outcomeDisplay)
+            ),
+        ),
+        response.code("delivery-place")?.let {
+          Observation.Component(
+            code = concept(ANC_SCREENING_SYSTEM, "delivery-place", "Place of delivery"),
+            value =
+              Observation.Component.Value.CodeableConcept(
+                concept(SNOMED, it, response.display("delivery-place") ?: it)
+              ),
+          )
+        },
+        response
+          .string("delivery-abroad")
+          ?.takeIf { it.isNotBlank() }
+          ?.let {
+            Observation.Component(
+              code = concept(ANC_SCREENING_SYSTEM, "delivery-abroad", "Country of delivery"),
+              value = Observation.Component.Value.String(FhirString(value = it)),
+            )
+          },
+      ),
+  )
+
+/** The date the pregnancy outcome form gives, or [today]. */
+fun pregnancyOutcomeDate(response: QuestionnaireResponse, today: LocalDate): LocalDate =
+  response.date("date")?.value?.toLocalDate() ?: today
+
+/**
+ * Pregnancy outcome (VaxLink): ends a pregnancy enrolled in antenatal care. The Delivery
+ * observation it records is what discharges the ANC plan and enrols postnatal care; a referral is
+ * requested when the form asks for one. The pregnancy Condition and the ANC CarePlan, which already
+ * exist, are closed by [endPregnancy].
+ */
+fun recordPregnancyOutcome(
+  response: QuestionnaireResponse,
+  patientId: String,
+  today: LocalDate,
+): ProgrammeRecord {
+  val subject = reference("Patient/$patientId")
+  val date = pregnancyOutcomeDate(response, today)
+  val stillborn = response.code("outcome") == STILLBIRTH
+  val delivery =
+    deliveryObservation(
+      subject,
+      date,
+      if (stillborn) STILLBIRTH else LIVE_BIRTH,
+      if (stillborn) "Stillbirth" else "Livebirth",
+      response,
+    )
+  val referral =
+    if (response.code("referred") == "yes") referral(subject, date, "Postpartum care referral")
+    else null
+  return ProgrammeRecord(listOfNotNull(delivery, referral))
+}

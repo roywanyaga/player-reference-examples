@@ -91,6 +91,7 @@
     <string name="care_plan_since">Since %1$s</string>
     <string name="programme_enrol_anc">Enrol ANC history</string>
     <string name="programme_record_anc_contact">Record ANC contact</string>
+    <string name="programme_record_pregnancy_outcome">Record pregnancy outcome</string>
     <string name="programme_record_pnc_contact">Record PNC contact</string>
     <string name="programme_enrol_fp">Enrol family planning</string>
     <string name="programme_record_fp_visit">Record FP visit</string>

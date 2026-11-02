@@ -31,6 +31,7 @@ import dev.ohs.vaxlink.generated.resources.programme_enrol_fp
 import dev.ohs.vaxlink.generated.resources.programme_record_anc_contact
 import dev.ohs.vaxlink.generated.resources.programme_record_fp_visit
 import dev.ohs.vaxlink.generated.resources.programme_record_pnc_contact
+import dev.ohs.vaxlink.generated.resources.programme_record_pregnancy_outcome
 import dev.ohs.vaxlink.workflow.ANC_PLAN
 import dev.ohs.vaxlink.workflow.FP_INJECTABLE_PLAN
 import dev.ohs.vaxlink.workflow.FP_LONGTERM_PLAN
@@ -64,6 +65,9 @@ fun ProgrammeActions(
       ProgrammeButton(Res.string.programme_record_anc_contact) {
         onLaunch(QuestionnaireIds.RECORD_ANC_CONTACT)
       }
+      ProgrammeButton(Res.string.programme_record_pregnancy_outcome) {
+        onLaunch(QuestionnaireIds.RECORD_PREGNANCY_OUTCOME)
+      }
     }
     if (PNC_PLAN in active) {
       ProgrammeButton(Res.string.programme_record_pnc_contact) {
@@ -83,7 +87,10 @@ private val FP_PLANS = setOf(FP_INJECTABLE_PLAN, FP_ORAL_PLAN, FP_LONGTERM_PLAN)
 
 /** The plans the patient is actively enrolled in, by canonical url. */
 fun ProfileUiState.activePlans(): Set<String> =
-  carePlans.filter { it.carePlanStatus == "active" }.mapNotNull { it.carePlanPlan }.toSet()
+  carePlans
+    .filter { it.carePlanStatus == "active" }
+    .mapNotNull { it.carePlanPlan?.let(::bareUrl) }
+    .toSet()
 
 /** Female and between 10 and 49, the eCHIS band for the ANC and FP forms. */
 fun ProfileUiState.isWomanOfReproductiveAge(today: LocalDate): Boolean {

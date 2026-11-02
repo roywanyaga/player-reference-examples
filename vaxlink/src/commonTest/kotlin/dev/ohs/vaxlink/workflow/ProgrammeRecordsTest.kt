@@ -90,6 +90,62 @@ class ProgrammeRecordsTest {
   }
 
   @Test
+  fun aStillbirthIsADeliveryWithItsOwnOutcomeAndCanAskForReferral() {
+    val record =
+      recordPregnancyOutcome(
+        response(
+          "date" to date("2026-10-29"),
+          "outcome" to coding("http://snomed.info/sct", "237364002", "Stillbirth"),
+          "delivery-place" to coding("http://snomed.info/sct", "264362003", "Home"),
+          "referred" to coding(V2_YES_NO_SYSTEM, "yes"),
+        ),
+        "mother",
+        today,
+      )
+
+    val delivery = record.observations.single()
+    assertEquals(DELIVERY_CODE, delivery.code())
+    assertEquals("2026-10-29", delivery.effective?.asDateTime()?.value?.value.calendarDate())
+    val outcome = delivery.component.first().value as Observation.Component.Value.CodeableConcept
+    assertEquals("237364002", outcome.value.coding.single().code?.value)
+    assertEquals(
+      "264362003",
+      (delivery.component("delivery-place") as Observation.Component.Value.CodeableConcept)
+        .value
+        .coding
+        .single()
+        .code
+        ?.value,
+    )
+    assertEquals(
+      REFERRAL_CODE,
+      record.resources
+        .filterIsInstance<ServiceRequest>()
+        .single()
+        .code
+        ?.coding
+        ?.single()
+        ?.code
+        ?.value,
+    )
+  }
+
+  @Test
+  fun aLiveBirthWithoutAReferralWritesOnlyTheDelivery() {
+    val record =
+      recordPregnancyOutcome(
+        response("outcome" to coding("http://snomed.info/sct", "281050002", "Live birth")),
+        "mother",
+        today,
+      )
+    assertEquals(1, record.resources.size)
+    assertEquals(
+      today.toString(),
+      record.observations.single().effective?.asDateTime()?.value?.value.calendarDate(),
+    )
+  }
+
+  @Test
   fun anOngoingPregnancyKeepsThePlanActiveWithTheLmpFromTheWeeksGiven() {
     val record =
       enrolAnc(

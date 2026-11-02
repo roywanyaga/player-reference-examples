@@ -18,6 +18,7 @@ package dev.ohs.vaxlink.workflow
 import dev.ohs.fhir.model.r4.CarePlan
 import dev.ohs.fhir.model.r4.Code
 import dev.ohs.fhir.model.r4.Coding
+import dev.ohs.fhir.model.r4.Condition
 import dev.ohs.fhir.model.r4.Date
 import dev.ohs.fhir.model.r4.Enumeration
 import dev.ohs.fhir.model.r4.FhirDate
@@ -115,6 +116,57 @@ class PlanSchedulerTest {
     val sixWeeks = tasks.byAction("pnc-pnc-4")
     assertEquals("2026-11-29", sixWeeks.restriction?.period?.start?.value.calendarDate())
     assertEquals("2026-12-13", sixWeeks.restriction?.period?.end?.value.calendarDate())
+  }
+
+  @Test
+  fun theOutcomeOfAnOngoingPregnancyEndsAncAndEnrolsPostnatalCare() = runTest {
+    val mother = SampleFamily.mother
+    repository.upsert(mother)
+    enrolAnc(
+        response(
+          "lmp-known" to coding(V2_YES_NO_SYSTEM, "no"),
+          "weeks-since-lmp" to int(30),
+          "anc-visits" to int(0),
+        ),
+        SampleFamily.MOTHER_ID,
+        today,
+      )
+      .resources
+      .forEach { repository.upsert(it) }
+    scheduler.refresh(mother)
+    val ancRef = "Patient/${SampleFamily.MOTHER_ID}"
+    assertEquals(CarePlan.RequestStatus.Active, carePlans(ANC_PLAN).single().status.value)
+    assertTrue(
+      scheduler.tasksFor(ancRef, ANC_PLAN).any { it.status.value == Task.TaskStatus.Requested }
+    )
+    assertTrue(carePlans(PNC_PLAN).isEmpty())
+
+    val outcome =
+      response(
+        "date" to date("2026-10-30"),
+        "outcome" to coding("http://snomed.info/sct", "281050002", "Live birth"),
+        "delivery-place" to coding("http://snomed.info/sct", "22232009", "Hospital"),
+      )
+    assertTrue(repository.endPregnancy(SampleFamily.MOTHER_ID, LocalDate(2026, 10, 30)))
+    recordPregnancyOutcome(outcome, SampleFamily.MOTHER_ID, today).resources.forEach {
+      repository.upsert(it)
+    }
+    scheduler.refresh(mother)
+
+    val anc = carePlans(ANC_PLAN).single()
+    assertEquals(CarePlan.RequestStatus.Completed, anc.status.value)
+    assertEquals("2026-10-30", anc.period?.end?.value.calendarDate())
+    // No ANC visit is left open: the ones still ahead are cancelled with the plan.
+    assertTrue(
+      scheduler.tasksFor(ancRef, ANC_PLAN).none { it.status.value == Task.TaskStatus.Requested }
+    )
+    val pregnancy = repository.all("Condition").filterIsInstance<Condition>().single()
+    assertEquals("resolved", pregnancy.clinicalStatus?.coding?.single()?.code?.value)
+    // Postnatal care starts from the delivery date with its four contacts.
+    val pnc = carePlans(PNC_PLAN).single()
+    assertEquals(CarePlan.RequestStatus.Active, pnc.status.value)
+    assertEquals("2026-10-30", pnc.period?.start?.value.calendarDate())
+    assertEquals(4, scheduler.tasksFor(ancRef, PNC_PLAN).size)
   }
 
   @Test

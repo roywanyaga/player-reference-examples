@@ -197,5 +197,7 @@ private val URL = Regex("""https?://[^\s)|]+""")
  * The ActivityDefinition URL a Task was made from. The extracted column can come back wrapped, as
  * `Canonical(value=https://…)`, so the bare URL is picked out of it.
  */
-fun PatientCareTaskState.activityUrl(): String =
-  taskPlan?.let { URL.find(it)?.value ?: it }.orEmpty()
+fun PatientCareTaskState.activityUrl(): String = taskPlan?.let(::bareUrl).orEmpty()
+
+/** A canonical URL as extracted, with any `Canonical(value=…)` wrapper removed. */
+fun bareUrl(raw: String): String = URL.find(raw)?.value ?: raw

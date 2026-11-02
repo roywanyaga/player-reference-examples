@@ -37,13 +37,16 @@ import dev.ohs.vaxlink.workflow.LaoScheduleService
 import dev.ohs.vaxlink.workflow.ProgrammeRecord
 import dev.ohs.vaxlink.workflow.Transactor
 import dev.ohs.vaxlink.workflow.code
+import dev.ohs.vaxlink.workflow.endPregnancy
 import dev.ohs.vaxlink.workflow.enrolAnc
 import dev.ohs.vaxlink.workflow.enrolFp
 import dev.ohs.vaxlink.workflow.headId
 import dev.ohs.vaxlink.workflow.memberIds
+import dev.ohs.vaxlink.workflow.pregnancyOutcomeDate
 import dev.ohs.vaxlink.workflow.recordAncContact
 import dev.ohs.vaxlink.workflow.recordFpVisit
 import dev.ohs.vaxlink.workflow.recordPncContact
+import dev.ohs.vaxlink.workflow.recordPregnancyOutcome
 import dev.ohs.vaxlink.workflow.recordWashCheck
 import dev.ohs.vaxlink.workflow.registerHousehold
 import dev.ohs.vaxlink.workflow.registerMember
@@ -94,6 +97,9 @@ object QuestionnaireIds {
   /** A postnatal contact for the mother or newborn (eCHIS record-pnc-contact). */
   const val RECORD_PNC_CONTACT = "record-pnc-contact"
 
+  /** Ends an ANC pregnancy with its outcome, which enrols postnatal care (VaxLink). */
+  const val RECORD_PREGNANCY_OUTCOME = "record-pregnancy-outcome"
+
   /** Family planning assessment that enrols the method's plan (eCHIS enrol-fp). */
   const val ENROL_FP = "enrol-fp"
 
@@ -105,7 +111,14 @@ object QuestionnaireIds {
 
   /** The forms launched from an adult woman's profile. */
   val PROGRAMME_FORMS =
-    listOf(ENROL_ANC, RECORD_ANC_CONTACT, RECORD_PNC_CONTACT, ENROL_FP, RECORD_FP_VISIT)
+    listOf(
+      ENROL_ANC,
+      RECORD_ANC_CONTACT,
+      RECORD_PREGNANCY_OUTCOME,
+      RECORD_PNC_CONTACT,
+      ENROL_FP,
+      RECORD_FP_VISIT,
+    )
 }
 
 /** Bundled Questionnaire JSON, keyed by the id it should be read under. */
@@ -118,6 +131,8 @@ private val BUNDLED_QUESTIONNAIRE_PATHS: Map<String, String> =
     QuestionnaireIds.REGISTER_NEWBORN to "files/configs/Questionnaire-RegisterNewborn.json",
     QuestionnaireIds.ENROL_ANC to "files/configs/Questionnaire-EnrolAnc.json",
     QuestionnaireIds.RECORD_ANC_CONTACT to "files/configs/Questionnaire-RecordAncContact.json",
+    QuestionnaireIds.RECORD_PREGNANCY_OUTCOME to
+      "files/configs/Questionnaire-RecordPregnancyOutcome.json",
     QuestionnaireIds.RECORD_PNC_CONTACT to "files/configs/Questionnaire-RecordPncContact.json",
     QuestionnaireIds.ENROL_FP to "files/configs/Questionnaire-EnrolFp.json",
     QuestionnaireIds.RECORD_FP_VISIT to "files/configs/Questionnaire-RecordFpVisit.json",
@@ -217,6 +232,15 @@ class QuestionnaireService(
         val patient = launchContext.patient()
         store(recordAncContact(response, patient.id!!, today()), patient, launchContext)
         QuestionnaireSubmissionResult("ANC contact recorded.")
+      }
+      QuestionnaireIds.RECORD_PREGNANCY_OUTCOME -> {
+        val patient = launchContext.patient()
+        val date = pregnancyOutcomeDate(response, today())
+        transactor.atomically {
+          repository.endPregnancy(patient.id!!, date)
+          store(recordPregnancyOutcome(response, patient.id!!, today()), patient, launchContext)
+        }
+        QuestionnaireSubmissionResult("Pregnancy outcome recorded.")
       }
       QuestionnaireIds.RECORD_PNC_CONTACT -> {
         val patient = launchContext.patient()

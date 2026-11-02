@@ -1,0 +1,105 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "record-pregnancy-outcome",
+  "url": "https://nawitech.github.io/vaxlink-ig/Questionnaire/record-pregnancy-outcome",
+  "title": "Pregnancy outcome",
+  "status": "active",
+  "subjectType": [
+    "Patient"
+  ],
+  "publisher": "Nawitech Limited",
+  "description": "VaxLink form: ends a pregnancy that was enrolled in antenatal care. Records the delivery, resolves the pregnancy and completes the ANC plan, which enrols postnatal care. Mapped in Kotlin (workflow/PregnancyOutcome.kt).",
+  "item": [
+    {
+      "linkId": "date",
+      "type": "date",
+      "text": "Date of the outcome",
+      "required": true,
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/fhirpath",
+            "expression": "today()"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "outcome",
+      "type": "choice",
+      "text": "How did the pregnancy end?",
+      "required": true,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "281050002",
+            "display": "Live birth"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "237364002",
+            "display": "Stillbirth"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "delivery-place",
+      "type": "choice",
+      "text": "Where was the baby delivered?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "22232009",
+            "display": "Hospital"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "264362003",
+            "display": "Home"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "74964007",
+            "display": "Other"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "delivery-abroad",
+      "type": "string",
+      "text": "Country of delivery, if abroad (ISO 3166 alpha-3)"
+    },
+    {
+      "linkId": "referred",
+      "type": "choice",
+      "text": "Refer the mother to a health facility?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "yes",
+            "display": "Yes"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0136",
+            "code": "no",
+            "display": "No"
+          }
+        }
+      ]
+    }
+  ]
+}
